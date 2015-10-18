@@ -7,3 +7,6 @@
 
 #include <vrm/core/independent_macros/likely_unlikely.hpp>
 #include <vrm/core/independent_macros/unreachable.hpp>
+
+// TODO: probably FWD(...) should go here as well
+// with some kind of protection macro to avoid clashes
