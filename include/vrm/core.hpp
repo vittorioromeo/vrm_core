@@ -16,3 +16,6 @@
 
 // Pretty assertions.
 #include <vrm/core/assert.hpp>
+
+// Safer and stricter casts.
+#include <vrm/core/casts.hpp>
