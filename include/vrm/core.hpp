@@ -19,3 +19,6 @@
 
 // Safer and stricter casts.
 #include <vrm/core/casts.hpp>
+
+// ForArgs snippet.
+#include <vrm/core/for_args.hpp>
