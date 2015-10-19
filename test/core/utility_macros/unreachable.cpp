@@ -1,11 +1,14 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/assert.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 int main()
 {
     using namespace vrm::core;
 
-    // TODO:
+    if(false)
+    {
+        VRM_CORE_UNREACHABLE();
+    }
 
     return 0;
 }

@@ -5,6 +5,10 @@
 
 #pragma once
 
-#include <vrm/core/assert/assert_macros.hpp>
-#include <vrm/core/assert/assert_macros_interface.hpp>
-#include <vrm/core/assert/assert.hpp>
+#include <utility>
+
+#define VRM_CORE_FWD(...) ::std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
+
+#if !defined(VRM_CORE_NO_FWD_MACRO)
+#define FWD(...) VRM_CORE_FWD(__VA_ARGS__)
+#endif

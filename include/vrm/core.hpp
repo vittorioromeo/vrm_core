@@ -11,8 +11,8 @@
 // Compiler/OS/target detection macros/utilities.
 #include <vrm/core/detection.hpp>
 
-// Macros that do not depend on non-preprocessor/compiler-specific code.
-#include <vrm/core/independent_macros.hpp>
+// Macros that do not strongly depend on other vrm_core modules.
+#include <vrm/core/utility_macros.hpp>
 
 // Pretty assertions.
 #include <vrm/core/assert.hpp>

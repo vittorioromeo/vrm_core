@@ -5,6 +5,6 @@
 
 #pragma once
 
-#include <vrm/core/assert/assert_macros.hpp>
-#include <vrm/core/assert/assert_macros_interface.hpp>
-#include <vrm/core/assert/assert.hpp>
+#include <vrm/core/utility_macros/likely_unlikely.hpp>
+#include <vrm/core/utility_macros/unreachable.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>

@@ -29,4 +29,4 @@ vrm_check_target()
 add_subdirectory(test)
 
 # Create header-only install target (automatically glob)
-vrm_cmake_header_only_install_glob("${VRM_CORE_SOURCE_DIR}" "include")
+vrm_cmake_header_only_install_glob("${VRM_CORE_INC_DIR}" "include")

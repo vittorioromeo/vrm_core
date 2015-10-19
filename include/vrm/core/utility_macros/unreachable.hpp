@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <vrm/core/detection.hpp>
 
-// Unreachable macro
 #if defined(VRM_CORE_COMPILER_CLANG) || defined(VRM_CORE_COMPILER_GCC)
 /// @macro Unreachable code. Uses `__builtin_unreachable`.
 /// Requires semicolon at the end.

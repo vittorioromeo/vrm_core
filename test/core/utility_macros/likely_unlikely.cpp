@@ -1,5 +1,5 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/independent_macros.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 int main()
 {

@@ -5,9 +5,7 @@
 
 #pragma once
 
-#include <string>
-#include <vrm/pp.hpp>
-#include <vrm/core/detection.hpp>
+#include <vrm/pp/utils.hpp>
 
 /// @macro Static assertion. Checked at compile-time.
 /// @details Wrapper for the standard `static_assert`.
@@ -22,7 +20,8 @@
 // enabling/disabling of assertions.
 // `VRM_CORE_ASSERT_FORCE_ON` has priority over `VRM_CORE_ASSERT_FORCE_OFF`.
 
-#if defined(VRM_CORE_ASSERT_FORCE_OFF) || !defined(VRM_CORE_DEBUG)
+#if(defined(VRM_CORE_ASSERT_FORCE_OFF) || !defined(VRM_CORE_DEBUG)) && \
+    !defined(VRM_CORE_ASSERT_FORCE_ON)
 #define VRM_CORE_IMPL_ASSERT_DISABLED 1
 #else
 #define VRM_CORE_IMPL_ASSERT_DISABLED 0
@@ -30,6 +29,12 @@
 
 #if defined(VRM_CORE_ASSERT_FORCE_ON)
 #define VRM_CORE_IMPL_ASSERT_DISABLED 0
+#endif
+
+#if VRM_CORE_IMPL_ASSERT_DISABLED
+#include <vrm/core/assert/assert_macros_disabled.hpp>
+#else
+#include <vrm/core/assert/assert_macros_enabled.hpp>
 #endif
 
 // TODO:

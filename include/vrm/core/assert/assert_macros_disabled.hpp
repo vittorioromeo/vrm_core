@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/independent_macros/likely_unlikely.hpp>
-#include <vrm/core/independent_macros/unreachable.hpp>
+/// @macro Assertion in release mode: this macro does nothing.
+#define VRM_CORE_IMPL_ASSERT(...)
 
-// TODO: probably FWD(...) should go here as well
-// with some kind of protection macro to avoid clashes
+/// @macro Assertion in release mode: this macro does nothing.
+#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(...)
