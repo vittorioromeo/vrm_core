@@ -14,7 +14,7 @@
     VRM_CORE_ASSERT_OP_MSG(lhs, op, rhs, "")
 
 #define VRM_CORE_ASSERT_MSG(expr, msg) \
-    VRM_CORE_ASSERT_OP_MSG(expr, ==, true, msg)
+    VRM_CORE_ASSERT_OP_MSG((expr), ==, true, msg)
 
 #define VRM_CORE_ASSERT(expr) VRM_CORE_ASSERT_MSG(expr, "")
 
@@ -27,6 +27,6 @@
     VRM_CORE_CONSTEXPR_ASSERT_OP_MSG(lhs, op, rhs, "")
 
 #define VRM_CORE_CONSTEXPR_ASSERT_MSG(expr, msg) \
-    VRM_CORE_CONSTEXPR_ASSERT_OP_MSG(expr, ==, true, msg)
+    VRM_CORE_CONSTEXPR_ASSERT_OP_MSG((expr), ==, true, msg)
 
 #define VRM_CORE_CONSTEXPR_ASSERT(expr) VRM_CORE_CONSTEXPR_ASSERT_MSG(expr, "")
