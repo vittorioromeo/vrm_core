@@ -4,8 +4,8 @@
 template <typename... Ts>
 auto func(Ts&&... xs)
 {
-    std::initializer_list<int>{(int)VRM_CORE_FWD(xs)...};
-    std::initializer_list<int>{(int)FWD(xs)...};
+    (void)std::initializer_list<int>{(int)VRM_CORE_FWD(xs)...};
+    (void)std::initializer_list<int>{(int)FWD(xs)...};
     return 0;
 }
 
