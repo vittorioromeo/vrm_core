@@ -3,7 +3,7 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
-#include <vrm/core/detection/os.hpp>
+#include <vrm/core/detection/os/os.hpp>
 
 VRM_CORE_NAMESPACE
 {

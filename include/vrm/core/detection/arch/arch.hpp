@@ -6,7 +6,7 @@
 #pragma once
 
 #include <vrm/core/internal.hpp>
-#include <vrm/core/detection/arch_macros.hpp>
+#include <vrm/core/detection/arch/arch_macros.hpp>
 
 VRM_CORE_NAMESPACE
 {
