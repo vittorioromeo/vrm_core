@@ -10,6 +10,12 @@
 #include <vrm/core/delegate/base_delegate.hpp>
 
 // TODO: WIP
+// * templatize fn_type
+// * templatize container
+// ** fixed_delegate<10>
+// ** fixed_unsubscribable_delegate<10>
+// ** delegate
+// ** unsubscribable_delegate
 
 VRM_CORE_NAMESPACE
 {
