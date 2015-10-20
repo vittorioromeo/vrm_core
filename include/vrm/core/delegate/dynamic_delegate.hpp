@@ -114,7 +114,7 @@ VRM_CORE_NAMESPACE
             return h;
         }
 
-        void operator-=(const handle_type& h) 
+        void operator-=(const handle_type& h)
         {
             VRM_CORE_ASSERT(valid_handle(h));
             ++(handle_data_from_handle(h)._counter);
