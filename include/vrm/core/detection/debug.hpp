@@ -5,18 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/internal.hpp>
-#include <vrm/core/detection/debug_macros.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {    
-        constexpr auto debug() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#if defined(VRM_CORE_API_HEADERONLY)
-#include <vrm/core/detection/debug.cpp>
-#endif
+#include <vrm/core/detection/debug/debug_macros.hpp>
+#include <vrm/core/detection/debug/debug.hpp>

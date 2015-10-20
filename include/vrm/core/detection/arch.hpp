@@ -5,25 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/internal.hpp>
-#include <vrm/core/detection/arch_macros.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        enum class architecture
-        {
-            x86,
-            x64,
-            unknown
-        };
-
-        constexpr auto current_architecture() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#if defined(VRM_CORE_API_HEADERONLY)
-#include <vrm/core/detection/arch.cpp>
-#endif
+#include <vrm/core/detection/arch/arch_macros.hpp>
+#include <vrm/core/detection/arch/arch.hpp>

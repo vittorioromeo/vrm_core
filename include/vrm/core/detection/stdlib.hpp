@@ -5,25 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/internal.hpp>
-#include <vrm/core/detection/stdlib_macros.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        enum class stdlib
-        {
-            libcxx,
-            libstdcxx,
-            unknown
-        };
-
-        constexpr auto current_stdlib() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#if defined(VRM_CORE_API_HEADERONLY)
-#include <vrm/core/detection/stdlib.cpp>
-#endif
+#include <vrm/core/detection/stdlib/stdlib_macros.hpp>
+#include <vrm/core/detection/stdlib/stdlib.hpp>

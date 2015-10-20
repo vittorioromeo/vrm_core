@@ -5,17 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/detection/os_macros.hpp>
 #include <vrm/core/detection/os.hpp>
-
-#include <vrm/core/detection/arch_macros.hpp>
 #include <vrm/core/detection/arch.hpp>
-
-#include <vrm/core/detection/compiler_macros.hpp>
 #include <vrm/core/detection/compiler.hpp>
-
-#include <vrm/core/detection/debug_macros.hpp>
 #include <vrm/core/detection/debug.hpp>
-
-#include <vrm/core/detection/stdlib_macros.hpp>
 #include <vrm/core/detection/stdlib.hpp>

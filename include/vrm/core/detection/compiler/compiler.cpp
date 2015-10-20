@@ -3,20 +3,20 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
-#include <vrm/core/detection/stdlib.hpp>
+#include <vrm/core/detection/compiler/compiler.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace detection
     {
-        VRM_CORE_API_INLINE constexpr auto current_stdlib() noexcept
+        VRM_CORE_API_INLINE constexpr auto current_compiler() noexcept
         {
-#if defined(VRM_CORE_STDLIB_LIBCXX)
-            return stdlib::libcxx;
-#elif defined(VRM_CORE_STDLIB_LIBSTDCXX)
-            return stdlib::libstdcxx;
+#if defined(VRM_CORE_COMPILER_CLANG)
+            return compiler::clang;
+#elif defined(VRM_CORE_COMPILER_GCC)
+            return compiler::gcc;
 #else
-            return stdlib::unknown;
+            return compiler::unknown;
 #endif
         }
     }

@@ -5,26 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/internal.hpp>
-#include <vrm/core/detection/os_macros.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        enum class operating_system
-        {
-            linux,
-            windows,
-            mac,
-            unknown
-        };
-
-        constexpr auto current_operating_system() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#if defined(VRM_CORE_API_HEADERONLY)
-#include <vrm/core/detection/os.cpp>
-#endif
+#include <vrm/core/detection/os/os_macros.hpp>
+#include <vrm/core/detection/os/os.hpp>
