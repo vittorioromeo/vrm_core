@@ -22,3 +22,9 @@
 
 // ForArgs snippet.
 #include <vrm/core/for_args.hpp>
+
+#include <vrm/core/ostream_utils.hpp>
+#include <vrm/core/overload.hpp>
+#include <vrm/core/resizable_buffer.hpp>
+#include <vrm/core/multi_vector.hpp>
+#include <vrm/core/delegate.hpp>

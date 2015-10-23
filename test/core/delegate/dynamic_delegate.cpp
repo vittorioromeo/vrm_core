@@ -133,5 +133,7 @@ int main()
     TEST_ASSERT_OP(fold_res(2), ==, 6);
     TEST_ASSERT_OP(fold_res(3), ==, 9);
 
+    (void) h_triple;
+
     return 0;
 }

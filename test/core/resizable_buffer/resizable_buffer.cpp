@@ -200,21 +200,21 @@ void run_test(const TAllocator& allocator = TAllocator{})
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
-    rb.grow(0, 10);
+    rb.grow_and_construct(0, 10);
 
     TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
-    rb.grow(10, 20);
+    rb.grow_and_construct(10, 20);
 
     TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 10);
     TEST_ASSERT_OP(dd, ==, 10);
 
-    rb.cleanup(20);
+    rb.destroy_and_deallocate(20);
 
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 10);
@@ -233,14 +233,14 @@ void run_test2(const TAllocator& allocator = TAllocator{})
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
-    rb.grow(0, 10);
+    rb.grow_and_construct(0, 10);
 
     TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
-    rb.grow(10, 20);
+    rb.grow_and_construct(10, 20);
 
     TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
@@ -249,8 +249,7 @@ void run_test2(const TAllocator& allocator = TAllocator{})
 
     auto rb2 = std::move(rb);
 
-    // rb.cleanup(0);
-    rb2.cleanup(20);
+    rb2.destroy_and_deallocate(20);
 }
 
 int main()
