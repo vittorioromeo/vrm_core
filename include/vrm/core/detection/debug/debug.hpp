@@ -11,7 +11,7 @@
 VRM_CORE_NAMESPACE
 {
     namespace detection
-    {    
+    {
         constexpr auto debug() noexcept;
     }
 }

@@ -34,7 +34,7 @@ VRM_CORE_NAMESPACE
     template <typename T, typename TStorage>
     VRM_CORE_ALWAYS_INLINE constexpr T* from_storage(
         TStorage * storage) noexcept
-    {   
+    {
         VRM_CORE_STATIC_ASSERT_NM(impl::valid_storage<T, TStorage>{});
         return reinterpret_cast<T*>(storage);
     }

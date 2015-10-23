@@ -13,10 +13,7 @@
 // TODO: WIP:
 // * use sparse int set?
 
-VRM_CORE_NAMESPACE 
-{
-    
-}
+VRM_CORE_NAMESPACE {}
 VRM_CORE_NAMESPACE_END
 
 VRM_CORE_NAMESPACE

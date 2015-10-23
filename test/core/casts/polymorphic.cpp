@@ -3,7 +3,7 @@
 
 struct base
 {
-    virtual ~base() { }
+    virtual ~base() {}
     virtual int x() const { return 0; }
 };
 
@@ -17,7 +17,7 @@ int main()
     using namespace vrm::core;
 
     derived d0;
-    
+
     base* bptr(&d0);
     base& bref(d0);
     const base* cbptr(&d0);

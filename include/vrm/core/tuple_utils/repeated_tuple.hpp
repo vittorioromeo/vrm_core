@@ -45,7 +45,7 @@ VRM_CORE_NAMESPACE
     /// // ...is equal to...
     /// std::tuple<int, int, int, int, int>
     /// @endcode
-    template <std::size_t TN, typename T , 
+    template <std::size_t TN, typename T,
         typename TIdxs = std::index_sequence<TN>>
     using repeated_tuple = typename impl::tuple_repeat_impl<T, TN>::type;
 

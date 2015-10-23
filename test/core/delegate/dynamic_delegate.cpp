@@ -126,14 +126,17 @@ int main()
     TEST_ASSERT_OP(fold_res(2), ==, 0);
     TEST_ASSERT_OP(fold_res(3), ==, 0);
 
-    auto h_triple = d += [](int x){ return x * 3; };
+    auto h_triple = d += [](int x)
+    {
+        return x * 3;
+    };
 
     TEST_ASSERT_OP(fold_res(0), ==, 0);
     TEST_ASSERT_OP(fold_res(1), ==, 3);
     TEST_ASSERT_OP(fold_res(2), ==, 6);
     TEST_ASSERT_OP(fold_res(3), ==, 9);
 
-    (void) h_triple;
+    (void)h_triple;
 
     return 0;
 }

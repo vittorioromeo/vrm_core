@@ -6,8 +6,8 @@
 #pragma once
 
 #define VRM_CORE_NAMESPACE \
-    namespace vrm         \
-    {                     \
+    namespace vrm          \
+    {                      \
     namespace core
 
 #define VRM_CORE_NAMESPACE_END }

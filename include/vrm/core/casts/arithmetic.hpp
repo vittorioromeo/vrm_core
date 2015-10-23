@@ -37,7 +37,7 @@ VRM_CORE_NAMESPACE
         ->std::enable_if_t<impl::num_convertible<TOut, TIn>{} &&
                                !impl::sign_compatible<TOut, TIn>{},
             TOut>
-    {        
+    {
         VRM_CORE_CONSTEXPR_ASSERT(x >= 0);
         return static_cast<TOut>(x);
     }

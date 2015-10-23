@@ -11,9 +11,9 @@ struct Trad
 
 int main()
 {
-    TEST_ASSERT_OP(Trad{}(2), ==, 1);    
-    TEST_ASSERT_OP(Trad{}(2.f), ==, 2);    
-    TEST_ASSERT_OP(Trad{}(2.0), ==, 3);    
+    TEST_ASSERT_OP(Trad{}(2), ==, 1);
+    TEST_ASSERT_OP(Trad{}(2.f), ==, 2);
+    TEST_ASSERT_OP(Trad{}(2.0), ==, 3);
 
     using namespace vrm::core;
 

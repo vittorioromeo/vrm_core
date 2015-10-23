@@ -264,7 +264,7 @@ int main()
         stack_allocator<item, sizeof(item) * 50> sa{store};
         run_test<decltype(sa)>(sa);
     }
-    
+
     {
         stack_store<sizeof(item) * 50> store;
         stack_allocator<item, sizeof(item) * 50> sa{store};

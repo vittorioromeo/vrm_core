@@ -16,7 +16,10 @@ int main()
     {
         return x;
     };
-    auto count = [](auto&&... xs){ return sizeof...(xs); };
+    auto count = [](auto&&... xs)
+    {
+        return sizeof...(xs);
+    };
 
     using namespace vrm::core;
 
