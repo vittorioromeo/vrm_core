@@ -252,12 +252,56 @@ void run_test2(const TAllocator& allocator = TAllocator{})
     rb2.destroy_and_deallocate(20);
 }
 
+template <typename TAllocator = ::std::allocator<item>>
+void run_test3(const TAllocator& allocator = TAllocator{})
+{
+    cc = dd = copies = 0;
+
+    vrm::core::resizable_buffer<item, TAllocator> rb{allocator};
+
+    TEST_ASSERT_NS_OP(rb.data(), ==, nullptr);
+    TEST_ASSERT_OP(cc, ==, 0);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb.grow_and_construct(0, 10);
+
+    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(cc, ==, 10);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb.grow_and_construct(10, 20);
+
+    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 10);
+    TEST_ASSERT_OP(dd, ==, 10);
+
+    auto rb2 = rb.copy(20);
+
+    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_NS_OP(rb2.data(), !=, nullptr);
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 30);
+    TEST_ASSERT_OP(dd, ==, 10);
+
+    rb.destroy_and_deallocate(20);
+    rb2.destroy_and_deallocate(20);
+
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 30);
+    TEST_ASSERT_OP(dd, ==, 50);
+}
+
+
 int main()
 {
     using namespace vrm::core;
 
     run_test();
     run_test2();
+    run_test3();
 
     {
         stack_store<sizeof(item) * 50> store;
@@ -269,6 +313,12 @@ int main()
         stack_store<sizeof(item) * 50> store;
         stack_allocator<item, sizeof(item) * 50> sa{store};
         run_test2<decltype(sa)>(sa);
+    }
+
+    {
+        stack_store<sizeof(item) * 50> store;
+        stack_allocator<item, sizeof(item) * 50> sa{store};
+        run_test3<decltype(sa)>(sa);
     }
 
     return 0;

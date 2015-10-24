@@ -16,30 +16,6 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <typename T, typename TAllocator = ::std::allocator<T>>
-        struct multi_vector_buffer
-        {
-            using value_type = T;
-            using allocator_type = TAllocator;
-            using resizable_buffer_type = resizable_buffer<T, TAllocator>;
-
-            resizable_buffer_type _resizable_buffer;
-
-            multi_vector_buffer() = default;
-
-            multi_vector_buffer(const TAllocator& allocator)
-                : _resizable_buffer(allocator)
-            {
-            }
-
-            multi_vector_buffer(const multi_vector_buffer&) = default;
-            multi_vector_buffer& operator=(
-                const multi_vector_buffer&) = default;
-
-            multi_vector_buffer(multi_vector_buffer&&) = default;
-            multi_vector_buffer& operator=(multi_vector_buffer&&) = default;
-        };
-
         template <typename... TBufferTypes>
         class VRM_CORE_CLASS_API multi_vector
         {
@@ -66,7 +42,7 @@ VRM_CORE_NAMESPACE
                 for_tuple(
                     [&f](auto& bx)
                     {
-                        f(bx._resizable_buffer);
+                        f(bx);
                     },
                     _buffers);
             }
@@ -151,13 +127,13 @@ VRM_CORE_NAMESPACE
             auto operator[](size_type pos) noexcept
             {
                 return value_reference_tuple{
-                    std::get<TBufferTypes>(_buffers)._resizable_buffer[pos]...};
+                    std::get<TBufferTypes>(_buffers)[pos]...};
             }
 
             auto operator[](size_type pos) const noexcept
             {
                 return const_value_reference_tuple{
-                    std::get<TBufferTypes>(_buffers)._resizable_buffer[pos]...};
+                    std::get<TBufferTypes>(_buffers)[pos]...};
             }
         };
     }

@@ -19,6 +19,7 @@ VRM_CORE_NAMESPACE
     public:
         using size_type = std::size_t;
         using value_type = T;
+        using data_ptr_type = T*;
         using allocator_type = TAllocator;
         using allocator_traits = ::std::allocator_traits<allocator_type>;
 
@@ -50,6 +51,8 @@ VRM_CORE_NAMESPACE
         void grow(size_type old_capacity, size_type new_capacity);
         void construct(size_type from, size_type to);
         void grow_and_construct(size_type old_capacity, size_type new_capacity);
+
+        auto copy(size_type n);
 
         auto data() noexcept;
         auto data() const noexcept;

@@ -6,3 +6,4 @@
 #pragma once
 
 #include <vrm/core/resizable_buffer/resizable_buffer.hpp>
+#include <vrm/core/resizable_buffer/multi_resizable_buffer.hpp>

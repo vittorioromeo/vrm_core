@@ -71,7 +71,7 @@ VRM_CORE_NAMESPACE
         resizable_buffer && rhs) noexcept
         : _allocator{std::move(rhs._allocator)},
           _data{std::move(rhs._data)}
-    {
+    {        
         rhs._data = nullptr;
     }
 
@@ -105,7 +105,10 @@ VRM_CORE_NAMESPACE
         // Move existing items to new data.
         for(auto i(0u); i < old_capacity; ++i)
         {
-            new_data[i] = std::move(_data[i]);
+            // TODO: conditionally do this:
+            // new (&new_data[i]) T(std::move(_data[i]));
+
+            new(&new_data[i]) T(_data[i]);
         }
 
         destroy_and_deallocate(old_capacity);
@@ -128,6 +131,20 @@ VRM_CORE_NAMESPACE
     {
         grow(old_capacity, new_capacity);
         construct(old_capacity, new_capacity);
+    }
+
+    template <typename T, typename TAllocator>
+    inline auto resizable_buffer<T, TAllocator>::copy(size_type n)
+    {
+        this_type result{_allocator};
+        result.grow(0, n);
+
+        for(size_type i(0); i < n; ++i)
+        {
+            new(&result[i]) T((*this)[i]);
+        }
+
+        return result;
     }
 
     template <typename T, typename TAllocator>
