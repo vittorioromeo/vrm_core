@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <ostream>
 #include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
 namespace std

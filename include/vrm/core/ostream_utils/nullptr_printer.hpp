@@ -5,13 +5,13 @@
 
 #pragma once
 
+#include <iosfwd>
 #include <cstddef>
-#include <ostream>
 #include <vrm/core/config.hpp>
 
 namespace std
 {
-    VRM_CORE_FN_API auto& operator<<(std::ostream& o, const std::nullptr_t&);
+    VRM_CORE_FN_API auto& operator<<(ostream& o, const nullptr_t&);
 }
 
 #if defined(VRM_CORE_INLINE_LIBRARY)

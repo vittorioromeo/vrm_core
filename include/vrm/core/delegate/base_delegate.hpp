@@ -123,3 +123,6 @@ VRM_CORE_NAMESPACE
     }
 }
 VRM_CORE_NAMESPACE_END
+
+// TODO:
+// * rewrite

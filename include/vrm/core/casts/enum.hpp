@@ -12,26 +12,36 @@
 
 VRM_CORE_NAMESPACE
 {
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto from_enum(const T& x) noexcept
+    template <typename TIn>
+    VRM_CORE_ALWAYS_INLINE constexpr auto from_enum(const TIn& x) noexcept
     {
-        return static_cast<std::underlying_type_t<T>>(x);
+        VRM_CORE_STATIC_ASSERT_NM(std::is_enum<TIn>{});
+
+        return static_cast<std::underlying_type_t<TIn>>(x);
+    }
+
+    template <typename TOut, typename TIn>
+    VRM_CORE_ALWAYS_INLINE constexpr auto from_enum(const TIn& x) noexcept
+    {
+        VRM_CORE_STATIC_ASSERT_NM(std::is_enum<TIn>{});
+        VRM_CORE_STATIC_ASSERT_NM(underlying_convertible_to<TIn, TOut>{});
+
+        return static_cast<TOut>(x);
     }
 
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(const TIn& x) noexcept
-        ->std::enable_if_t<num_convertible_to_enum<TOut, TIn>{}, TOut>
+        ->std::enable_if_t<number_convertible_to_enum<TOut, TIn>{}, TOut>
     {
         return static_cast<TOut>(x);
     }
 
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(const TIn& x) noexcept
-        ->std::enable_if_t<enum_convertible_to_enum<TOut, TIn>{}, TOut>
+        ->std::enable_if_t<are_both_enums<TOut, TIn>{}, TOut>
     {
         VRM_CORE_STATIC_ASSERT_NM(
-            std::is_convertible<std::underlying_type_t<TOut>,
-                std::underlying_type_t<TIn>>{});
+            are_underlying_types_convertible<TOut, TIn>{});
 
         return static_cast<TOut>(x);
     }

@@ -12,26 +12,39 @@
 VRM_CORE_NAMESPACE
 {
     template <typename TOut, typename TIn>
-    using num_convertible =
+    using are_both_numbers =
         bool_constant<std::is_arithmetic<TOut>{} && std::is_arithmetic<TIn>() &&
                       !std::is_enum<TOut>() && !std::is_enum<TIn>()>;
 
     template <typename TOut, typename TIn>
-    using sign_compatible =
+    using same_signedness =
         bool_constant<std::is_signed<TOut>{} == std::is_signed<TIn>{}>;
 
-    template <typename TOut, typename TIn>
-    using num_convertible_to_enum =
-        bool_constant<std::is_enum<TOut>() && !std::is_enum<TIn>() &&
-                      std::is_convertible<std::underlying_type_t<TOut>, TIn>{}>;
+    template <typename TEnum, typename TOut>
+    using underlying_convertible_to = bool_constant<
+        std::is_convertible<std::underlying_type_t<TEnum>, TOut>{}>;
 
     template <typename TOut, typename TIn>
-    using enum_convertible_to_enum =
+    using number_convertible_to_enum =
+        bool_constant<std::is_enum<TOut>() && !std::is_enum<TIn>() &&
+                      underlying_convertible_to<TOut, TIn>{}>;
+
+    template <typename TOut, typename TIn>
+    using are_both_enums =
         bool_constant<std::is_enum<TOut>() && std::is_enum<TIn>()>;
 
-    template <typename TBase, typename T>
+    template <typename TOut, typename TIn>
+    using are_underlying_types_convertible =
+        bool_constant<std::is_convertible<std::underlying_type_t<TOut>,
+            std::underlying_type_t<TIn>>{}>;
+
+    template <typename TBase, typename TDerived>
     using is_same_or_base_of =
-        bool_constant<std::is_same<TBase, T>{} || std::is_base_of<TBase, T>{}>;
+        bool_constant<std::is_same<TBase, TDerived>{} ||
+                      std::is_base_of<TBase, TDerived>{}>;
+
+    template <typename TDerived, typename TBase>
+    using is_same_or_derived_of = is_same_or_base_of<TBase, TDerived>;
 
     template <typename T, typename TStorage>
     using valid_storage =

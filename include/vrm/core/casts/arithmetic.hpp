@@ -15,15 +15,16 @@ VRM_CORE_NAMESPACE
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
         ->std::enable_if_t<
-            num_convertible<TOut, TIn>{} && sign_compatible<TOut, TIn>{}, TOut>
+            are_both_numbers<TOut, TIn>{} && same_signedness<TOut, TIn>{}, TOut>
     {
         return static_cast<TOut>(x);
     }
 
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
-        ->std::enable_if_t<
-            num_convertible<TOut, TIn>{} && !sign_compatible<TOut, TIn>{}, TOut>
+        ->std::enable_if_t<are_both_numbers<TOut, TIn>{} &&
+                               !same_signedness<TOut, TIn>{},
+            TOut>
     {
         VRM_CORE_CONSTEXPR_ASSERT(x >= 0);
         return static_cast<TOut>(x);

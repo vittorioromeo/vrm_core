@@ -22,22 +22,31 @@ VRM_CORE_NAMESPACE
     private:
         using this_type = multi_resizable_buffer<TBufferTypes...>;
 
+        template <typename TBuffer>
+        using buffer_data_ptr_type = typename TBuffer::data_ptr_type;
+
+        template <typename TBuffer>
+        using buffer_value_type = typename TBuffer::value_type;
+
+        using buffer_indices =
+            std::make_index_sequence<sizeof...(TBufferTypes)>;
+
+        using buffer_tuple = std::tuple<TBufferTypes...>;
+
     public:
         using size_type = std::size_t;
 
         using data_ptr_tuple =
-            std::tuple<typename TBufferTypes::data_ptr_type...>;
+            std::tuple<buffer_data_ptr_type<TBufferTypes>...>;
 
         using value_reference_tuple =
-            std::tuple<typename TBufferTypes::value_type&...>;
+            std::tuple<buffer_value_type<TBufferTypes>&...>;
 
         using const_value_reference_tuple =
-            std::tuple<const typename TBufferTypes::value_type&...>;
+            std::tuple<const buffer_value_type<TBufferTypes>&...>;
 
     private:
-        std::tuple<TBufferTypes...> _buffers;
-        using buffer_indices =
-            std::make_index_sequence<sizeof...(TBufferTypes)>;
+        buffer_tuple _buffers;
 
         template <typename TF>
         VRM_CORE_ALWAYS_INLINE void for_buffers(TF&& f)
@@ -199,3 +208,8 @@ VRM_CORE_NAMESPACE
     };
 }
 VRM_CORE_NAMESPACE_END
+
+// TODO:
+// * split to inl
+// * noexcept
+// * review
