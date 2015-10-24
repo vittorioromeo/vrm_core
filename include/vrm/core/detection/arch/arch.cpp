@@ -9,7 +9,7 @@ VRM_CORE_NAMESPACE
 {
     namespace detection
     {
-        VRM_CORE_API_INLINE constexpr auto current_architecture() noexcept
+        VRM_CORE_API constexpr auto current_architecture() noexcept
         {
 #if defined(VRM_CORE_ARCH_32)
             return architecture::x86;

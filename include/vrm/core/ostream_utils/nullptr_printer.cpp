@@ -9,7 +9,7 @@
 
 namespace std
 {
-    VRM_CORE_API_INLINE auto& operator<<(std::ostream& o, const std::nullptr_t&)
+    VRM_CORE_API auto& operator<<(std::ostream& o, const std::nullptr_t&)
     {
         o << "nullptr";
         return o;

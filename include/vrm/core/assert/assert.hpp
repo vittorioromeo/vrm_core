@@ -38,7 +38,7 @@ VRM_CORE_NAMESPACE_END
 
 #include <vrm/core/assert/assert.inl>
 
-#if defined(VRM_CORE_API_HEADERONLY)
+#if defined(VRM_CORE_INLINE_LIBRARY)
 #include <vrm/core/assert/assert.cpp>
 #endif
 

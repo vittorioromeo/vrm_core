@@ -9,7 +9,7 @@ VRM_CORE_NAMESPACE
 {
     namespace detection
     {
-        VRM_CORE_API_INLINE constexpr auto debug() noexcept
+        VRM_CORE_API constexpr auto debug() noexcept
         {
 #if defined(VRM_CORE_DEBUG)
             return true;

@@ -14,6 +14,6 @@ namespace std
     auto& operator<<(std::ostream& o, const std::nullptr_t&);
 }
 
-#if defined(VRM_CORE_API_HEADERONLY)
+#if defined(VRM_CORE_INLINE_LIBRARY)
 #include <vrm/core/ostream_utils/nullptr_printer.cpp>
 #endif

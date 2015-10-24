@@ -14,11 +14,14 @@
 
 #define VRM_CORE_ALWAYS_INLINE __attribute__((always_inline)) inline
 
-#define VRM_CORE_API_HEADERONLY 1
+#define VRM_CORE_INLINE_LIBRARY 1
 
-#if defined(VRM_CORE_API_HEADERONLY)
-#define VRM_CORE_API_INLINE inline
-#else
-// TODO:
-#error "TODO:"
+#if defined(VRM_CORE_INLINE_LIBRARY)
+#define VRM_CORE_API inline
+#elif defined(VRM_CORE_STATIC_LIBRARY)
+#define VRM_CORE_API
+#elif defined(VRM_CORE_EXPORT_LIBRARY)
+#define VRM_CORE_API __declspec(dllexport)
+#elif defined(VRM_CORE_IMPORT_LIBRARY)
+#define VRM_CORE_API __declspec(dllimport)
 #endif

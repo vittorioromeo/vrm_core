@@ -9,7 +9,7 @@ VRM_CORE_NAMESPACE
 {
     namespace detection
     {
-        VRM_CORE_API_INLINE constexpr auto current_operating_system() noexcept
+        VRM_CORE_API constexpr auto current_operating_system() noexcept
         {
 #if defined(VRM_CORE_OS_LINUX)
             return operating_system::linux;

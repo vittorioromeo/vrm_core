@@ -17,6 +17,6 @@ VRM_CORE_NAMESPACE
 }
 VRM_CORE_NAMESPACE_END
 
-#if defined(VRM_CORE_API_HEADERONLY)
+#if defined(VRM_CORE_INLINE_LIBRARY)
 #include <vrm/core/detection/debug/debug.cpp>
 #endif

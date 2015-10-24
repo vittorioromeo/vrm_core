@@ -9,7 +9,7 @@ VRM_CORE_NAMESPACE
 {
     namespace detection
     {
-        VRM_CORE_API_INLINE constexpr auto current_stdlib() noexcept
+        VRM_CORE_API constexpr auto current_stdlib() noexcept
         {
 #if defined(VRM_CORE_STDLIB_LIBCXX)
             return stdlib::libcxx;
