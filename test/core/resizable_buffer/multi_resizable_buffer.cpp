@@ -31,22 +31,24 @@ struct item
 
 
 
+using namespace vrm::core;
+template <typename T>
+bool all_null(const T& dt)
+{
+    bool result{true};
+
+    for_tuple(
+        [&result](const auto& p)
+        {
+            if(p != nullptr) result = false;
+        },
+        dt);
+
+    return result;
+}
+
 void run_test()
 {
-    using namespace vrm::core;
-    auto all_null = [](const auto& dt)
-    {
-        bool result{true};
-
-        for_tuple(
-            [&result](const auto& p)
-            {
-                if(p != nullptr) result = false;
-            },
-            dt);
-
-        return result;
-    };
 
     cc = dd = copies = 0;
 
@@ -81,20 +83,6 @@ void run_test()
 
 void run_test2()
 {
-    using namespace vrm::core;
-    auto all_null = [](const auto& dt)
-    {
-        bool result{true};
-
-        for_tuple(
-            [&result](const auto& p)
-            {
-                if(p != nullptr) result = false;
-            },
-            dt);
-
-        return result;
-    };
 
     cc = dd = copies = 0;
 
@@ -136,20 +124,7 @@ void run_test2()
 
 void run_test3()
 {
-    using namespace vrm::core;
-    auto all_null = [](const auto& dt)
-    {
-        bool result{true};
 
-        for_tuple(
-            [&result](const auto& p)
-            {
-                if(p != nullptr) result = false;
-            },
-            dt);
-
-        return result;
-    };
 
     cc = dd = copies = 0;
 

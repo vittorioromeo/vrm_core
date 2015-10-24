@@ -36,6 +36,8 @@ VRM_CORE_NAMESPACE
 
     private:
         std::tuple<TBufferTypes...> _buffers;
+        using buffer_indices =
+            std::make_index_sequence<sizeof...(TBufferTypes)>;
 
         template <typename TF>
         VRM_CORE_ALWAYS_INLINE void for_buffers(TF&& f)
@@ -154,7 +156,7 @@ VRM_CORE_NAMESPACE
             for_tuple_data(
                 [this, &result, &n](auto data, auto&)
                 {
-                    auto& my_buffer(nth_buffer<decltype(data)::index>());
+                    auto& my_buffer(this->nth_buffer<decltype(data)::index>());
                     auto& result_buffer(
                         result.nth_buffer<decltype(data)::index>());
 
@@ -165,15 +167,23 @@ VRM_CORE_NAMESPACE
             return result;
         }
 
-        auto data() noexcept
+    private:
+        template <std::size_t... TIs>
+        auto data_builder(std::index_sequence<TIs...>) noexcept
         {
-            return data_ptr_tuple{std::get<TBufferTypes>(_buffers).data()...};
+            return data_ptr_tuple{std::get<TIs>(_buffers).data()...};
         }
 
-        auto data() const noexcept
+        template <std::size_t... TIs>
+        auto data_builder(std::index_sequence<TIs...>) const noexcept
         {
-            return data_ptr_tuple{std::get<TBufferTypes>(_buffers).data()...};
+            return data_ptr_tuple{std::get<TIs>(_buffers).data()...};
         }
+
+    public:
+        auto data() noexcept { return data_builder(buffer_indices{}); }
+
+        auto data() const noexcept { return data_builder(buffer_indices{}); }
 
         auto operator[](size_type pos) noexcept
         {
