@@ -71,7 +71,7 @@ VRM_CORE_NAMESPACE
         resizable_buffer && rhs) noexcept
         : _allocator{std::move(rhs._allocator)},
           _data{std::move(rhs._data)}
-    {        
+    {
         rhs._data = nullptr;
     }
 
