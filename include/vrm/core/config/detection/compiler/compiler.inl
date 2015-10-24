@@ -15,6 +15,8 @@ VRM_CORE_NAMESPACE
             return compiler::clang;
 #elif defined(VRM_CORE_COMPILER_GCC)
             return compiler::gcc;
+#elif defined(VRM_CORE_COMPILER_MSCV)
+            return compiler::mscv;
 #else
             return compiler::unknown;
 #endif

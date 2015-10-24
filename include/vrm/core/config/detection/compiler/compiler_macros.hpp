@@ -7,12 +7,15 @@
 
 #include <vrm/core/config/names.hpp>
 
-#if(defined(__clang__))
+#if defined(__clang__)
 /// @macro This macro is defined if the current compiler is clang.
 #define VRM_CORE_COMPILER_CLANG 1
-#elif(defined(__GNUC__))
+#elif defined(__GNUC__)
 /// @macro This macro is defined if the current compiler is gcc.
 #define VRM_CORE_COMPILER_GCC 1
+#elif defined(_MSC_VER)
+/// @macro This macro is defined if the current compiler is MSCV.
+#define VRM_CORE_COMPILER_MSCV 1
 #else
 /// @macro This macro is defined if the current compiler is unknown.
 #define VRM_CORE_COMPILER_UNKNOWN 1

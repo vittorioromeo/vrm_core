@@ -16,6 +16,7 @@ VRM_CORE_NAMESPACE
         {
             clang,
             gcc,
+            mscv,
             unknown
         };
 
