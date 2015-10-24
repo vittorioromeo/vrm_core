@@ -7,18 +7,35 @@
 
 #include <vrm/core/internal.hpp>
 
-#if(defined(__linux) || defined(__unix) || defined(__posix) || \
-    defined(__LINUX__) || defined(__linux__))
+#if defined(__unix__) || defined(__unix)
+
+// ---
+#if defined(__ANDROID__)
+/// @macro This macro is defined if the current OS is Android.
+#define VRM_CORE_OS_ANDROID 1
+#elif defined(__linux__)
 /// @macro This macro is defined if the current OS is Linux.
 #define VRM_CORE_OS_LINUX 1
-#elif(defined(_WIN64) || defined(_WIN32) || defined(__CYGWIN32__) || \
-      defined(__MINGW32__))
+#elif defined(__FreeBSD__) || defined(__FreeBSD_kernel__)
+/// @macro This macro is defined if the current OS is FreeBSD.
+#define VRM_CORE_OS_FREEBSD 1
+#endif
+// ---
+
+#elif defined(_WIN64) || defined(_WIN32) || defined(__CYGWIN32__) || \
+    defined(__MINGW32__)
+
 /// @macro This macro is defined if the current OS is Windows.
 #define VRM_CORE_OS_WINDOWS 1
-#elif(defined(MACOSX) || defined(__DARWIN__) || defined(__APPLE__))
+
+#elif defined(MACOSX) || defined(__DARWIN__) || defined(__APPLE__)
+
 /// @macro This macro is defined if the current OS is Mac.
 #define VRM_CORE_OS_MAC 1
+
 #else
+
 /// @macro This macro is defined if the current OS is unknown.
 #define VRM_CORE_OS_UNKNOWN 1
+
 #endif

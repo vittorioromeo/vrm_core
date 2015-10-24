@@ -17,10 +17,16 @@ VRM_CORE_NAMESPACE
             linux,
             windows,
             mac,
+            android,
+            freebsd,
             unknown
         };
 
         constexpr auto current_operating_system() noexcept;
+        
+        constexpr auto on_unix() noexcept;
+        constexpr auto on_windows() noexcept;
+        constexpr auto on_mac() noexcept;
     }
 }
 VRM_CORE_NAMESPACE_END

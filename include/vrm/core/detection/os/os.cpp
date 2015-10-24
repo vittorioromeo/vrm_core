@@ -13,6 +13,10 @@ VRM_CORE_NAMESPACE
         {
 #if defined(VRM_CORE_OS_LINUX)
             return operating_system::linux;
+#elif defined(VRM_CORE_OS_ANDROID)
+            return operating_system::android;
+#elif defined(VRM_CORE_OS_FREEBSD)
+            return operating_system::freebsd;
 #elif defined(VRM_CORE_OS_WINDOWS)
             return operating_system::windows;
 #elif defined(VRM_CORE_OS_MAC)
@@ -20,6 +24,23 @@ VRM_CORE_NAMESPACE
 #else
             return operating_system::unknown;
 #endif
+        }
+
+        constexpr auto on_unix() noexcept
+        {
+            return current_operating_system() == operating_system::linux ||
+                   current_operating_system() == operating_system::android ||
+                   current_operating_system() == operating_system::freebsd;
+        }
+
+        constexpr auto on_windows() noexcept
+        {
+            return current_operating_system() == operating_system::windows;
+        }
+
+        constexpr auto on_mac() noexcept
+        {
+            return current_operating_system() == operating_system::mac;
         }
     }
 }
