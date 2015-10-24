@@ -6,8 +6,7 @@
 #pragma once
 
 #include <memory>
-#include <vrm/core/internal.hpp>
-#include <vrm/core/detection.hpp>
+#include <vrm/core/config.hpp>
 
 VRM_CORE_NAMESPACE
 {

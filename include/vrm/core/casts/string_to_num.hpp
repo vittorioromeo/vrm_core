@@ -7,7 +7,7 @@
 
 #include <type_traits>
 #include <string>
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/casts/arithmetic.hpp>
 
 VRM_CORE_NAMESPACE

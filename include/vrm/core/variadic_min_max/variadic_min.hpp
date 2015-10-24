@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 
 VRM_CORE_NAMESPACE
 {

@@ -7,7 +7,7 @@
 
 #include <cstddef>
 #include <ostream>
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 
 namespace std
 {

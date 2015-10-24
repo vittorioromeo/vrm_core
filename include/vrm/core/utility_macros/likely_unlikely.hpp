@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include <vrm/core/detection.hpp>
-
+#include <vrm/core/config.hpp>
 #if(defined(VRM_CORE_COMPILER_CLANG) || defined(VRM_CORE_COMPILER_GCC))
 /// @macro Micro-optimization telling the compiler that this condition is more
 /// likely to happen than the `else` branch.

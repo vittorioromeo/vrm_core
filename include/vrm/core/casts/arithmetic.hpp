@@ -6,7 +6,7 @@
 #pragma once
 
 #include <type_traits>
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 
 VRM_CORE_NAMESPACE

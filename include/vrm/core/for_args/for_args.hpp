@@ -7,7 +7,7 @@
 
 #include <tuple>
 #include <utility>
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 

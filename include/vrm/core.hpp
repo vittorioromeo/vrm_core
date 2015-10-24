@@ -6,10 +6,8 @@
 #pragma once
 
 // API configuration and name-related macros.
-#include <vrm/core/internal.hpp>
-
 // Compiler/OS/target detection macros/utilities.
-#include <vrm/core/detection.hpp>
+#include <vrm/core/config.hpp>
 
 // Macros that do not strongly depend on other vrm_core modules.
 #include <vrm/core/utility_macros.hpp>

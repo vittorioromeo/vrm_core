@@ -6,7 +6,7 @@
 #pragma once
 
 #include <memory>
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/ostream_utils/nullptr_printer.hpp>

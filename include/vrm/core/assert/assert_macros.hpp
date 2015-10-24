@@ -6,7 +6,7 @@
 #pragma once
 
 #include <vrm/pp/utils.hpp>
-#include <vrm/core/detection.hpp>
+#include <vrm/core/config.hpp>
 
 /// @macro Static assertion. Checked at compile-time.
 /// @details Wrapper for the standard `static_assert`.

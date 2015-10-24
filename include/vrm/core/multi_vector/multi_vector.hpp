@@ -7,8 +7,7 @@
 
 #include <memory>
 #include <tuple>
-#include <vrm/core/internal.hpp>
-#include <vrm/core/detection.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>

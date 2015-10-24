@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <vrm/core/internal.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/assert/assert_macros.hpp>
 #include <vrm/core/assert/assert_macros_interface.hpp>
 

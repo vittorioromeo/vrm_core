@@ -7,7 +7,7 @@
 
 #include <cassert>
 #include <cstdlib>
-#include <vrm/core/detection.hpp>
+#include <vrm/core/config.hpp>
 
 #if defined(VRM_CORE_COMPILER_CLANG) || defined(VRM_CORE_COMPILER_GCC)
 /// @macro Unreachable code. Uses `__builtin_unreachable`.

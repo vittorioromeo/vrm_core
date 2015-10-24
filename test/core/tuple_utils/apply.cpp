@@ -1,5 +1,5 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/detection.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/apply.hpp>
 
 int main()
