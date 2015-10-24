@@ -14,6 +14,8 @@
 // Implemented thanks to Daniel Frey:
 // http://stackoverflow.com/a/29901074/598696
 
+// TODO: cleanup with cppcon2015 implementation
+
 VRM_CORE_NAMESPACE
 {
     namespace impl
@@ -27,33 +29,36 @@ VRM_CORE_NAMESPACE
         {
             using swallow = bool[];
 
-#define IMPL_IMPL_FORNARGS_EXECN_BODY() f(std::get<TArity + Cs>(FWD(xs))...)
+#define VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY() \
+    f(std::get<TArity + Cs>(FWD(xs))...)
 
             template <std::size_t TArity, typename TF, typename TTpl,
                 typename... Ts>
-            VRM_CORE_ALWAYS_INLINE static constexpr void exec_n(TF&& f,
-                TTpl&& xs) noexcept(noexcept(IMPL_IMPL_FORNARGS_EXECN_BODY()))
+            VRM_CORE_ALWAYS_INLINE static constexpr void
+            exec_n(TF&& f, TTpl&& xs) noexcept(
+                noexcept(VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY()))
             {
-                IMPL_IMPL_FORNARGS_EXECN_BODY();
+                VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY();
             }
 
-#undef IMPL_IMPL_FORNARGS_EXECN_BODY
+#undef VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY
 
-#define IMPL_IMPL_FORNARGS_EXEC_BODY() \
+#define VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY() \
     (void) swallow { (exec_n<(Bs * sizeof...(Cs))>(f, FWD(xs)), true)..., true }
 
             template <typename TF, typename TTpl, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE static constexpr void exec(TF&& f,
-                TTpl&& xs) noexcept(noexcept(IMPL_IMPL_FORNARGS_EXEC_BODY()))
+            VRM_CORE_ALWAYS_INLINE static constexpr void
+            exec(TF&& f, TTpl&& xs) noexcept(
+                noexcept(VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY()))
             {
-                IMPL_IMPL_FORNARGS_EXEC_BODY();
+                VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY();
             }
 
-#undef IMPL_IMPL_FORNARGS_EXEC_BODY
+#undef VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY
         };
 
 
-#define IMPL_FORNARGS_BODY()                                                \
+#define VRM_CORE_IMPL_FORNARGS_BODY()                                       \
     impl::for_args_helper<std::make_index_sequence<sizeof...(Ts) / TArity>, \
         std::make_index_sequence<TArity>>::exec(FWD(f),                     \
         std::forward_as_tuple(FWD(xs)...))
@@ -62,8 +67,8 @@ VRM_CORE_NAMESPACE
         struct for_args_dispatch
         {
             template <typename TF, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr static void exec(
-                TF&& f, Ts&&... xs) noexcept(noexcept(IMPL_FORNARGS_BODY()))
+            VRM_CORE_ALWAYS_INLINE constexpr static void exec(TF&& f,
+                Ts&&... xs) noexcept(noexcept(VRM_CORE_IMPL_FORNARGS_BODY()))
             {
                 VRM_CORE_STATIC_ASSERT(
                     TArity > 0, "Unallowed arity: must be greater than 0");
@@ -71,11 +76,11 @@ VRM_CORE_NAMESPACE
                 VRM_CORE_STATIC_ASSERT(sizeof...(Ts) % TArity == 0,
                     "Unallowed arity: not divisible by number of arguments");
 
-                IMPL_FORNARGS_BODY();
+                VRM_CORE_IMPL_FORNARGS_BODY();
             }
         };
 
-#undef IMPL_FORNARGS_BODY
+#undef VRM_CORE_IMPL_FORNARGS_BODY
 
         template <>
         struct for_args_dispatch<1>

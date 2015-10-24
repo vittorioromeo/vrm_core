@@ -27,16 +27,16 @@ VRM_CORE_NAMESPACE
 
 
     template <typename T, typename TAllocator>
-    void resizable_buffer<T, TAllocator>::destroy(size_type n)
+    void resizable_buffer<T, TAllocator>::destroy(size_type from, size_type to)
     {
 #if VRM_CORE_DEBUG
-        if(n > 0)
+        if(to - from > 0)
         {
             VRM_CORE_ASSERT_OP(_data, !=, nullptr);
         }
 #endif
 
-        for(auto i(0u); i < n; ++i)
+        for(auto i(from); i < to; ++i)
         {
             destroy_at(i);
         }
@@ -55,7 +55,7 @@ VRM_CORE_NAMESPACE
     template <typename T, typename TAllocator>
     void resizable_buffer<T, TAllocator>::destroy_and_deallocate(size_type n)
     {
-        destroy(n);
+        destroy(0, n);
         deallocate(n);
     }
 
@@ -76,7 +76,7 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename T, typename TAllocator>
-    auto& resizable_buffer<T, TAllocator>::operator=(
+    resizable_buffer<T, TAllocator>& resizable_buffer<T, TAllocator>::operator=(
         resizable_buffer && rhs) noexcept
     {
         _allocator = std::move(rhs._allocator);
@@ -86,13 +86,13 @@ VRM_CORE_NAMESPACE
         return *this;
     }
 
-#if VRM_CORE_DEBUG
     template <typename T, typename TAllocator>
     resizable_buffer<T, TAllocator>::~resizable_buffer() noexcept
     {
+#if VRM_CORE_DEBUG
         VRM_CORE_ASSERT_OP(_data, ==, nullptr);
-    }
 #endif
+    }
 
     template <typename T, typename TAllocator>
     inline void resizable_buffer<T, TAllocator>::grow(
@@ -113,16 +113,21 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename T, typename TAllocator>
+    inline void resizable_buffer<T, TAllocator>::construct(
+        size_type from, size_type to)
+    {
+        for(auto i(from); i < to; ++i)
+        {
+            construct_at(i);
+        }
+    }
+
+    template <typename T, typename TAllocator>
     inline void resizable_buffer<T, TAllocator>::grow_and_construct(
         size_type old_capacity, size_type new_capacity)
     {
         grow(old_capacity, new_capacity);
-
-        // Default-construct new items.
-        for(auto i(old_capacity); i < new_capacity; ++i)
-        {
-            construct_at(i);
-        }
+        construct(old_capacity, new_capacity);
     }
 
     template <typename T, typename TAllocator>

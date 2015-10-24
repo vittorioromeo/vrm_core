@@ -5,13 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/ostream_utils/nullptr_printer.hpp>
-
-namespace std
-{
-    auto& operator<<(std::ostream& o, const std::nullptr_t&)
-    {
-        o << "nullptr";
-        return o;
-    }
-}
+#include <vrm/core/type_traits/bool_constant.hpp>
+#include <vrm/core/type_traits/common.hpp>

@@ -5,15 +5,12 @@
 
 #pragma once
 
-#include <cstddef>
-#include <ostream>
+#include <type_traits>
 #include <vrm/core/config.hpp>
 
-namespace std
+VRM_CORE_NAMESPACE
 {
-    VRM_CORE_FN_API auto& operator<<(std::ostream& o, const std::nullptr_t&);
+    template <bool TV>
+    using bool_constant = std::integral_constant<bool, TV>;
 }
-
-#if defined(VRM_CORE_INLINE_LIBRARY)
-#include <vrm/core/ostream_utils/nullptr_printer.cpp>
-#endif
+VRM_CORE_NAMESPACE_END

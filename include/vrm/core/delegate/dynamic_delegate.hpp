@@ -21,13 +21,13 @@ VRM_CORE_NAMESPACE
 
 
     template <typename>
-    class dynamic_delegate;
+    class VRM_CORE_CLASS_API dynamic_delegate;
 
     template <typename>
-    class dynamic_delegate_handle;
+    class VRM_CORE_CLASS_API dynamic_delegate_handle;
 
     template <typename TReturn, typename... TArgs>
-    class dynamic_delegate_handle<TReturn(TArgs...)>
+    class VRM_CORE_CLASS_API dynamic_delegate_handle<TReturn(TArgs...)>
     {
         template <typename>
         friend class dynamic_delegate;
@@ -44,7 +44,7 @@ VRM_CORE_NAMESPACE
     };
 
     template <typename TReturn, typename... TArgs>
-    class dynamic_delegate<TReturn(TArgs...)>
+    class VRM_CORE_CLASS_API dynamic_delegate<TReturn(TArgs...)>
         : public impl::base_delegate<TReturn(TArgs...)>
     {
     public:

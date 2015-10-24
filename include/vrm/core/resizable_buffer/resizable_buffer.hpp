@@ -11,7 +11,7 @@
 VRM_CORE_NAMESPACE
 {
     template <typename T, typename TAllocator = ::std::allocator<T>>
-    class resizable_buffer
+    class VRM_CORE_CLASS_API resizable_buffer
     {
     private:
         using this_type = resizable_buffer<T, TAllocator>;
@@ -30,19 +30,17 @@ VRM_CORE_NAMESPACE
         resizable_buffer(const TAllocator& allocator = TAllocator{});
 
         resizable_buffer(resizable_buffer&& rhs) noexcept;
-        auto& operator=(resizable_buffer&& rhs) noexcept;
+        resizable_buffer& operator=(resizable_buffer&& rhs) noexcept;
 
         resizable_buffer(const resizable_buffer&) = delete;
         resizable_buffer& operator=(const resizable_buffer&) = delete;
 
-#if VRM_CORE_DEBUG
         ~resizable_buffer() noexcept;
-#endif
 
         void construct_at(size_type idx);
         void destroy_at(size_type idx);
 
-        void destroy(size_type n);
+        void destroy(size_type from, size_type to);
         void deallocate(size_type n);
         void destroy_and_deallocate(size_type n);
 
@@ -50,6 +48,7 @@ VRM_CORE_NAMESPACE
         /// `new_capacity`.
         /// @details The new capacity must be greater or equal than the old one.
         void grow(size_type old_capacity, size_type new_capacity);
+        void construct(size_type from, size_type to);
         void grow_and_construct(size_type old_capacity, size_type new_capacity);
 
         auto data() noexcept;

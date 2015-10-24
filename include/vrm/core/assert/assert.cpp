@@ -13,7 +13,7 @@ VRM_CORE_NAMESPACE
     {
         namespace assert
         {
-            VRM_CORE_API state& get_state() noexcept
+            state& get_state() noexcept
             {
                 static state result;
                 return result;

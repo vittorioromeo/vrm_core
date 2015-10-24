@@ -8,27 +8,21 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    namespace impl
-    {
-        template <typename TBase, typename T>
-        using is_same_or_base_of = std::integral_constant<bool,
-            std::is_same<TBase, T>{} || std::is_base_of<TBase, T>{}>;
-    }
-
     template <typename T, typename TBase>
     VRM_CORE_ALWAYS_INLINE constexpr T& to_derived(TBase & base) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(impl::is_same_or_base_of<TBase, T>{});
+        VRM_CORE_STATIC_ASSERT_NM(is_same_or_base_of<TBase, T>{});
         return static_cast<T&>(base);
     }
 
     template <typename T, typename TBase>
     VRM_CORE_ALWAYS_INLINE constexpr T* to_derived(TBase * base) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(impl::is_same_or_base_of<TBase, T>{});
+        VRM_CORE_STATIC_ASSERT_NM(is_same_or_base_of<TBase, T>{});
         return static_cast<T*>(base);
     }
 
@@ -36,7 +30,7 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr const T& to_derived(
         const TBase& base) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(impl::is_same_or_base_of<TBase, T>{});
+        VRM_CORE_STATIC_ASSERT_NM(is_same_or_base_of<TBase, T>{});
         return static_cast<const T&>(base);
     }
 
@@ -44,7 +38,7 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr const T* to_derived(
         const TBase* base) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(impl::is_same_or_base_of<TBase, T>{});
+        VRM_CORE_STATIC_ASSERT_NM(is_same_or_base_of<TBase, T>{});
         return static_cast<const T*>(base);
     }
 }

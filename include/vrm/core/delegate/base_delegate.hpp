@@ -15,10 +15,10 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename>
-        class base_delegate;
+        class VRM_CORE_CLASS_API base_delegate;
 
         template <typename TReturn, typename... TArgs>
-        class base_delegate<TReturn(TArgs...)>
+        class VRM_CORE_CLASS_API base_delegate<TReturn(TArgs...)>
         {
         private:
             using this_type = base_delegate<TReturn(TArgs...)>;

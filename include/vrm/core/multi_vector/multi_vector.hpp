@@ -41,7 +41,7 @@ VRM_CORE_NAMESPACE
         };
 
         template <typename... TBufferTypes>
-        class multi_vector
+        class VRM_CORE_CLASS_API multi_vector
         {
             VRM_CORE_STATIC_ASSERT_NM(sizeof...(TBufferTypes) > 0);
 
@@ -87,7 +87,7 @@ VRM_CORE_NAMESPACE
             {
                 for_buffers([this](auto& b)
                     {
-                        b.destroy(_size);
+                        b.destroy(0, _size);
                         b.deallocate(_capacity);
                     });
             }
@@ -134,7 +134,7 @@ VRM_CORE_NAMESPACE
             {
                 for_buffers([this](auto& b)
                     {
-                        b.destroy(_size);
+                        b.destroy(0, _size);
                     });
 
                 _size = 0;

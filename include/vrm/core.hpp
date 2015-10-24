@@ -15,6 +15,9 @@
 // Pretty assertions.
 #include <vrm/core/assert.hpp>
 
+// Type-traits.
+#include <vrm/core/type_traits.hpp>
+
 // Safer and stricter casts.
 #include <vrm/core/casts.hpp>
 

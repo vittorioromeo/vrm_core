@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -19,17 +20,14 @@ VRM_CORE_NAMESPACE
 
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(const TIn& x) noexcept
-        ->std::enable_if_t<
-            std::is_enum<TOut>() && !std::is_enum<TIn>() &&
-                std::is_convertible<std::underlying_type_t<TOut>, TIn>{},
-            TOut>
+        ->std::enable_if_t<num_convertible_to_enum<TOut, TIn>{}, TOut>
     {
         return static_cast<TOut>(x);
     }
 
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(const TIn& x) noexcept
-        ->std::enable_if_t<std::is_enum<TOut>() && std::is_enum<TIn>(), TOut>
+        ->std::enable_if_t<enum_convertible_to_enum<TOut, TIn>{}, TOut>
     {
         VRM_CORE_STATIC_ASSERT_NM(
             std::is_convertible<std::underlying_type_t<TOut>,

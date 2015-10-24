@@ -8,35 +8,22 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    namespace impl
-    {
-        template <typename TOut, typename TIn>
-        using num_convertible = std::integral_constant<bool,
-            std::is_arithmetic<TOut>{} && std::is_arithmetic<TIn>() &&
-                !std::is_enum<TOut>() && !std::is_enum<TIn>()>;
-
-        template <typename TOut, typename TIn>
-        using sign_compatible = std::integral_constant<bool,
-            std::is_signed<TOut>{} == std::is_signed<TIn>{}>;
-    }
-
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
-        ->std::enable_if_t<impl::num_convertible<TOut, TIn>{} &&
-                               impl::sign_compatible<TOut, TIn>{},
-            TOut>
+        ->std::enable_if_t<
+            num_convertible<TOut, TIn>{} && sign_compatible<TOut, TIn>{}, TOut>
     {
         return static_cast<TOut>(x);
     }
 
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
-        ->std::enable_if_t<impl::num_convertible<TOut, TIn>{} &&
-                               !impl::sign_compatible<TOut, TIn>{},
-            TOut>
+        ->std::enable_if_t<
+            num_convertible<TOut, TIn>{} && !sign_compatible<TOut, TIn>{}, TOut>
     {
         VRM_CORE_CONSTEXPR_ASSERT(x >= 0);
         return static_cast<TOut>(x);

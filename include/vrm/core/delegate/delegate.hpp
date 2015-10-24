@@ -20,10 +20,10 @@
 VRM_CORE_NAMESPACE
 {
     template <typename>
-    class delegate;
+    class VRM_CORE_CLASS_API delegate;
 
     template <typename TReturn, typename... TArgs>
-    class delegate<TReturn(TArgs...)>
+    class VRM_CORE_CLASS_API delegate<TReturn(TArgs...)>
         : public impl::base_delegate<TReturn(TArgs...)>
     {
     private:
