@@ -6,7 +6,7 @@
 #pragma once
 
 #include <type_traits>
-#include <vrm/core/config.hpp>
+#include <vrm/core/config/names.hpp>
 #include <vrm/core/type_traits/bool_constant.hpp>
 
 VRM_CORE_NAMESPACE
