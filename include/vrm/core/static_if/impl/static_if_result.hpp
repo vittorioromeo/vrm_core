@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
+#include <vrm/core/config/names.hpp>
 #include <vrm/core/utility_macros.hpp>
 
 VRM_CORE_NAMESPACE

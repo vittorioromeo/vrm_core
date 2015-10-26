@@ -31,8 +31,11 @@ int main()
         {
             cc = dd = copies = 0;
 
-            using mv_type = impl::multi_vector<resizable_buffer<int>,
+            using mb_type = multi_resizable_buffer<resizable_buffer<int>,
                 resizable_buffer<float>, resizable_buffer<item>>;
+
+            using mv_type = impl::multi_vector<mb_type>;
+
             mv_type mv;
 
             TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity);

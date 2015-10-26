@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
+#include <vrm/core/config/names.hpp>
 #include <vrm/core/utility_macros.hpp>
 #include <vrm/core/static_if/impl/static_if_impl.hpp>
 #include <vrm/core/static_if/impl/static_if_result.hpp>

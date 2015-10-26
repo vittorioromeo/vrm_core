@@ -16,36 +16,25 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <typename... TBufferTypes>
+        template <typename TMultiBuffer>
         class VRM_CORE_CLASS_API multi_vector
         {
-            VRM_CORE_STATIC_ASSERT_NM(sizeof...(TBufferTypes) > 0);
-
         public:
             using size_type = std::size_t;
+            using multi_buffer_type = TMultiBuffer;
+
             static constexpr size_type initial_capacity{0};
 
             using value_reference_tuple =
-                std::tuple<typename TBufferTypes::value_type&...>;
+                typename multi_buffer_type::value_reference_tuple;
 
             using const_value_reference_tuple =
-                std::tuple<const typename TBufferTypes::value_type&...>;
+                typename multi_buffer_type::const_value_reference_tuple;
 
         private:
-            std::tuple<TBufferTypes...> _buffers;
+            multi_buffer_type _multi_buffer;
             size_type _capacity{0};
             size_type _size{0};
-
-            template <typename TF>
-            VRM_CORE_ALWAYS_INLINE void for_buffers(TF&& f)
-            {
-                for_tuple(
-                    [&f](auto& bx)
-                    {
-                        f(bx);
-                    },
-                    _buffers);
-            }
 
             void grow_if_necessary(size_type desired_size)
             {
@@ -55,19 +44,16 @@ VRM_CORE_NAMESPACE
                 }
             }
 
-
         public:
             multi_vector() = default;
 
             ~multi_vector()
             {
-                for_buffers([this](auto& b)
-                    {
-                        b.destroy(0, _size);
-                        b.deallocate(_capacity);
-                    });
+                _multi_buffer.destroy(0, _size);
+                _multi_buffer.deallocate(_capacity);
             }
 
+            // TODO: implement
             multi_vector(const multi_vector&) = default;
             multi_vector& operator=(const multi_vector&) = default;
 
@@ -82,11 +68,7 @@ VRM_CORE_NAMESPACE
             {
                 VRM_CORE_ASSERT_OP(new_capacity, >, _capacity);
 
-                for_buffers([this, &new_capacity](auto& b)
-                    {
-                        b.grow(_capacity, new_capacity);
-                    });
-
+                _multi_buffer.grow(_capacity, new_capacity);
                 _capacity = new_capacity;
             }
 
@@ -95,45 +77,36 @@ VRM_CORE_NAMESPACE
                 VRM_CORE_ASSERT_OP(new_size, >, _size);
                 grow_if_necessary(new_size);
 
-                for_buffers([this, &new_size](auto& b)
-                    {
-                        for(size_type i(_size); i < new_size; ++i)
-                        {
-                            b.construct_at(i);
-                        }
-                    });
+                for(size_type i(_size); i < new_size; ++i)
+                    _multi_buffer.construct_at(i);
 
                 _size = new_size;
             }
 
             void clear()
             {
-                for_buffers([this](auto& b)
-                    {
-                        b.destroy(0, _size);
-                    });
-
+                _multi_buffer.destroy(0, _size);
                 _size = 0;
             }
 
+            // TODO:
             void insert() {}
             void emplace() {}
             void erase() {}
 
+            // TODO:
             void push_back() {}
             void emplace_back() {}
             void pop_back() {}
 
             auto operator[](size_type pos) noexcept
             {
-                return value_reference_tuple{
-                    std::get<TBufferTypes>(_buffers)[pos]...};
+                return _multi_buffer[pos];
             }
 
             auto operator[](size_type pos) const noexcept
             {
-                return const_value_reference_tuple{
-                    std::get<TBufferTypes>(_buffers)[pos]...};
+                return _multi_buffer[pos];
             }
         };
     }

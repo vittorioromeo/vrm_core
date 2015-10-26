@@ -8,6 +8,7 @@
 #include <memory>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/static_if.hpp>
 #include <vrm/core/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
@@ -105,10 +106,15 @@ VRM_CORE_NAMESPACE
         // Move existing items to new data.
         for(auto i(0u); i < old_capacity; ++i)
         {
-            // TODO: conditionally do this:
-            // new (&new_data[i]) T(std::move(_data[i]));
-
-            new(&new_data[i]) T(_data[i]);
+            static_if(std::is_move_constructible<T>{})
+                .then([&](auto& old_data)
+                    {
+                        new(&new_data[i]) T(std::move(old_data[i]));
+                    })
+                .else_([&](auto& old_data)
+                    {
+                        new(&new_data[i]) T(old_data[i]);
+                    })(_data);
         }
 
         destroy_and_deallocate(old_capacity);
