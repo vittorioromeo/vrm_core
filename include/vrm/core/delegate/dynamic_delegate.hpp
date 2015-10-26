@@ -18,8 +18,6 @@ VRM_CORE_NAMESPACE_END
 
 VRM_CORE_NAMESPACE
 {
-
-
     template <typename>
     class VRM_CORE_CLASS_API dynamic_delegate;
 
