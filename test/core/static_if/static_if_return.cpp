@@ -25,16 +25,16 @@ template <typename T>
 auto eat_fruit(T fruit)
 {
     return vrm::core::static_if(is_banana<T>{})
-        .then([](auto& f)
+        .then([](auto&)
             {
                 return 0;
             })
         .else_if(is_apple<T>{})
-        .then([](auto& f)
+        .then([](auto&)
             {
                 return 10.f;
             })
-        .else_([](auto& f)
+        .else_([](auto&)
             {
                 return 'x';
             })(fruit);
