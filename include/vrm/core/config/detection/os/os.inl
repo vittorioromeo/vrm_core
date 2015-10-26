@@ -3,6 +3,8 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
+#pragma once
+
 #include <vrm/core/config/detection/os/os_macros.hpp>
 #include <vrm/core/config/detection/os/os.hpp>
 
