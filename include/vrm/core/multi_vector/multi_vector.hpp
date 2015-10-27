@@ -23,7 +23,13 @@ VRM_CORE_NAMESPACE
             using size_type = std::size_t;
             using multi_buffer_type = TMultiBuffer;
 
+            static constexpr std::size_t buffer_count{
+                multi_buffer_type::buffer_count};
+
             static constexpr size_type initial_capacity{0};
+
+            using value_tuple =
+                typename multi_buffer_type::value_tuple;
 
             using value_reference_tuple =
                 typename multi_buffer_type::value_reference_tuple;
@@ -43,6 +49,14 @@ VRM_CORE_NAMESPACE
                     reserve((_capacity + 10) * 2);
                 }
             }
+
+            template <std::size_t TN>
+            using nth_buffer_type =
+                typename multi_buffer_type::template nth_buffer_type<TN>;
+
+            template <std::size_t TN>
+            using nth_buffer_value_type =
+                typename multi_buffer_type::template nth_buffer_value_type<TN>;
 
         public:
             multi_vector() = default;
@@ -90,14 +104,68 @@ VRM_CORE_NAMESPACE
             }
 
             // TODO:
-            void insert() {}
-            void emplace() {}
-            void erase() {}
+            // void insert() {}
+            // void emplace() {}
+            // void erase() {}
 
             // TODO:
-            void push_back() {}
-            void emplace_back() {}
-            void pop_back() {}
+            template <typename... Ts>
+            void unsafe_emplace_back(
+                Ts&&... xs) // TODO: noexcept(noexcept(...))
+            {
+                VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) == buffer_count);
+
+                VRM_CORE_ASSERT_OP(_capacity, >, _size);
+                auto ref_tuple((*this)[_size]);
+
+                for_args_data(
+                    [&ref_tuple](auto data, auto&& r)
+                    {
+                        using type =
+                            nth_buffer_value_type<decltype(data)::index>;
+
+                        using type_ref = std::add_lvalue_reference_t<type>;
+
+                        auto address(&(std::get<type_ref>(ref_tuple)));
+
+                        auto placement_new([&](auto&&... args)
+                            {
+                                new(address) type(FWD(args)...);
+                            });
+
+                        apply(placement_new, r);
+                    },
+                    FWD(xs)...);
+
+                ++_size;
+            }
+
+            template <typename... Ts>
+            void unsafe_push_back(Ts&&... xs)
+            {
+                unsafe_emplace_back(std::make_tuple(FWD(xs))...);
+            }
+
+            template <typename... Ts>
+            void emplace_back(Ts&&... xs)
+            {
+                grow_if_necessary(_size + 1);
+                unsafe_emplace_back(FWD(xs)...);
+            }
+
+            template <typename... Ts>
+            void push_back(Ts&&... xs)
+            {
+                emplace_back(std::make_tuple(FWD(xs))...);
+            }
+
+            void pop_back()
+            {
+                VRM_CORE_ASSERT_OP(_size, >, 0);
+                _multi_buffer.destroy_at(_size - 1);
+                --_size;
+            }
+
 
             auto operator[](size_type pos) noexcept
             {
@@ -108,7 +176,15 @@ VRM_CORE_NAMESPACE
             {
                 return _multi_buffer[pos];
             }
+
+            auto back() noexcept { return (*this)[_size - 1]; }
+
+            auto back() const noexcept { return (*this)[_size - 1]; }
         };
     }
 }
 VRM_CORE_NAMESPACE_END
+
+// TODO:
+// * split to inl
+// * noexcept

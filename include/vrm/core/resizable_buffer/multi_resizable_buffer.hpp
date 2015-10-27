@@ -39,11 +39,21 @@ VRM_CORE_NAMESPACE
         using data_ptr_tuple =
             std::tuple<buffer_data_ptr_type<TBufferTypes>...>;
 
+        using value_tuple = std::tuple<buffer_value_type<TBufferTypes>...>;
+
         using value_reference_tuple =
             std::tuple<buffer_value_type<TBufferTypes>&...>;
 
         using const_value_reference_tuple =
             std::tuple<const buffer_value_type<TBufferTypes>&...>;
+
+        template <std::size_t TN>
+        using nth_buffer_type = std::tuple_element_t<TN, buffer_tuple>;
+
+        template <std::size_t TN>
+        using nth_buffer_value_type = buffer_value_type<nth_buffer_type<TN>>;
+
+        static constexpr std::size_t buffer_count{sizeof...(TBufferTypes)};
 
     private:
         buffer_tuple _buffers;
@@ -74,22 +84,6 @@ VRM_CORE_NAMESPACE
             const multi_resizable_buffer&) = delete;
 
         multi_resizable_buffer(multi_resizable_buffer&& rhs) = default;
-        /*{
-            for_tuple_data(
-                [this, &rhs](auto data, auto&)
-                {
-                    using my_buffer_type =
-                        std::tuple_element_t<decltype(data)::index,
-                            decltype(_buffers)>;
-
-                    auto& my_buffer(nth_buffer<decltype(data)::index>());
-                    auto& rhs_buffer(rhs.nth_buffer<decltype(data)::index>());
-
-                    new(&my_buffer) my_buffer_type(std::move(rhs_buffer));
-                },
-                _buffers);
-        }*/
-
         multi_resizable_buffer& operator=(multi_resizable_buffer&&) = default;
 
         void construct_at(size_type idx)
