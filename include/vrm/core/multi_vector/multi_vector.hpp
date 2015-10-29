@@ -28,8 +28,7 @@ VRM_CORE_NAMESPACE
 
             static constexpr size_type initial_capacity{0};
 
-            using value_tuple =
-                typename multi_buffer_type::value_tuple;
+            using value_tuple = typename multi_buffer_type::value_tuple;
 
             using value_reference_tuple =
                 typename multi_buffer_type::value_reference_tuple;
@@ -116,7 +115,7 @@ VRM_CORE_NAMESPACE
                 VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) == buffer_count);
 
                 VRM_CORE_ASSERT_OP(_capacity, >, _size);
-                auto ref_tuple((*this)[_size]);
+                auto ref_tuple(_multi_buffer[_size]);
 
                 for_args_data(
                     [&ref_tuple](auto data, auto&& r)
@@ -169,17 +168,26 @@ VRM_CORE_NAMESPACE
 
             auto operator[](size_type pos) noexcept
             {
+                VRM_CORE_ASSERT_OP(_size, >, pos);
                 return _multi_buffer[pos];
             }
 
             auto operator[](size_type pos) const noexcept
             {
+                VRM_CORE_ASSERT_OP(_size, >, pos);
                 return _multi_buffer[pos];
             }
 
             auto back() noexcept { return (*this)[_size - 1]; }
 
             auto back() const noexcept { return (*this)[_size - 1]; }
+
+            //template <typename T>
+            //auto& get(size_type pos) noexcept
+            //{
+                //VRM_CORE_ASSERT_OP(_size, >, pos);
+                //return _multi_buffer
+            //}
         };
     }
 }

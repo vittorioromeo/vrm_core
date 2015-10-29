@@ -12,5 +12,8 @@ VRM_CORE_NAMESPACE
 {
     template <bool TV>
     using bool_constant = std::integral_constant<bool, TV>;
+
+    template <bool TV>
+    using bool_ = bool_constant<TV>;
 }
 VRM_CORE_NAMESPACE_END

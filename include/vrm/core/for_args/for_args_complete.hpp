@@ -34,6 +34,12 @@ VRM_CORE_NAMESPACE
     {
     };
 
+    template <std::size_t TIteration>
+    struct static_for_args_data_type
+    {
+        static constexpr std::size_t iteration{TIteration};
+    };
+
     namespace impl
     {
         template <std::size_t TArity, typename TFunctionToCall>
@@ -49,79 +55,79 @@ VRM_CORE_NAMESPACE
 
             template <std::size_t TBegin, typename TF, std::size_t... TIdxs,
                 typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_n(
+            VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_n_no_iteration(
                 TF&& f, std::index_sequence<TIdxs...>, Ts&&... xs)
             {
                 auto t(std::forward_as_tuple(FWD(xs)...));
                 return f(FWD(std::get<TBegin + TIdxs>(t))...);
             }
+            
+            template <std::size_t TIteration, std::size_t TBegin, typename TF,
+                std::size_t... TIdxs, typename... Ts>
+            VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_n(
+                TF&& f, std::index_sequence<TIdxs...>, Ts&&... xs)
+            {
+                auto t(std::forward_as_tuple(FWD(xs)...));
+                static_for_args_data_type<TIteration> data{};
 
-            template <typename... Ts>
+                return f(data, FWD(std::get<TBegin + TIdxs>(t))...);
+            }
+
+
+            template <std::size_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
             {
                 auto to_call = [this](auto&&... vs)
                 {
-                    (*this)(FWD(vs)...);
+                    this->impl_<TNextIteration>(FWD(vs)...);
                 };
 
                 constexpr auto seq_n(sizeof...(xs)-TArity);
 
-                this->call_with_n<TArity>(
+                call_with_n_no_iteration<TArity>(
                     to_call, std::make_index_sequence<seq_n>(), FWD(xs)...);
             }
 
-            template <typename... Ts>
+            template <std::size_t TIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_arity(Ts&&... xs)
             {
-                return call_with_n<0>(
+                return call_with_n<TIteration, 0>(
                     _f, std::make_index_sequence<TArity>(), FWD(xs)...);
             }
 
-            template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) operator()(Ts&&... xs)
+            template <std::size_t TIteration, typename... Ts>
+            VRM_CORE_ALWAYS_INLINE decltype(auto) impl_(Ts&&... xs)
             {
                 // Make sure that the count of loop arguments is divisible by
                 // `TArity`.
                 VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) % TArity == 0);
 
                 // Get the return type of the current iteration.
-                using ret_t = decltype(call_with_arity(FWD(xs)...));
+                using ret_t = decltype(call_with_arity<TIteration>(FWD(xs)...));
 
                 // Aliases.
-                constexpr auto has_args(sizeof...(xs) > TArity);
                 using is_break = std::is_same<ret_t, break_t>;
                 using is_continue = std::is_same<ret_t, continue_t>;
 
-                using must_break = bool_<is_break{}>;
-                using must_exec = bool_<!is_continue{}>;
-                using must_iterate = bool_<has_args>;
+                if(is_break{}) return;
 
-                
+                if(!is_continue{})
+                {
+                    call_with_arity<TIteration>(FWD(xs)...);
+                }
 
-                static_if(must_break{})
-                    .then([&](auto&&...)
+                constexpr auto has_args(sizeof...(xs) > TArity);
+                static_if(bool_<has_args>{})
+                    .then([&](auto&&... ys)
                         {
-                            // If break is returned, do nothing.
-                        })
-                    .else_([&](auto&&... vs)
-                        {
-                            // Otherwise...
-
-                            // ...exec body if not skipping...
-                            static_if(must_exec{})
-                                .then([&](auto&&... ys)
-                                    {
-                                        this->call_with_arity(FWD(ys)...);
-                                    })(FWD(vs)...);
-
-                            // ...and go to the next iteration.
-                            static_if(must_iterate{})
-                                .then([&](auto&&... ys)
-                                    {
-                                        continue_(FWD(ys)...);
-                                    })(FWD(vs)...);
-
+                            continue_<TIteration + 1>(FWD(ys)...);
                         })(FWD(xs)...);
+            }
+
+            template <typename... Ts>
+            VRM_CORE_ALWAYS_INLINE decltype(auto) operator()(Ts&&... xs)
+            {
+                impl_<0>(FWD(xs)...);
             }
         };
     }

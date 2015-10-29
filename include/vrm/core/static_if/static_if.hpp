@@ -10,6 +10,7 @@
 
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/type_traits.hpp>
 #include <vrm/core/static_if/impl/static_if_impl.hpp>
 #include <vrm/core/static_if/impl/static_if_true.hpp>
 #include <vrm/core/static_if/impl/static_if_false.hpp>
@@ -22,5 +23,23 @@ VRM_CORE_NAMESPACE
     {
         return impl::static_if_<TPredicate{}>{};
     }
+
+    /*
+    template <typename TPredicate, typename TF>
+    VRM_CORE_ALWAYS_INLINE auto static_if_then(TPredicate, TF&& f) noexcept
+    {
+        return static_if(TPredicate{}).then(f);
+    }
+    */
 }
 VRM_CORE_NAMESPACE_END
+
+/*
+#define VRM_CORE_STATIC_IF(...) \
+    ::vrm::core::static_if(::vrm::core::bool_constant<__VA_ARGS__>{})
+
+#define VRM_CORE_THEN .then
+
+#define VRM_CORE_ELSE_IF(...) \
+    .else_if(::vrm::core::bool_constant<__VA_ARGS__>{})
+*/

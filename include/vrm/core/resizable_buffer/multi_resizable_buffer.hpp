@@ -69,15 +69,25 @@ VRM_CORE_NAMESPACE
                 _buffers);
         }
 
+
+    public:
         template <std::size_t TN>
         VRM_CORE_ALWAYS_INLINE auto& nth_buffer()
         {
+            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
             return std::get<TN>(_buffers);
         }
 
-    public:
-        multi_resizable_buffer() = default;
+        template <typename T>
+        VRM_CORE_ALWAYS_INLINE auto& buffer_of()
+        {
+            // TODO:
+            // return std::get<>(_buffers);
+        }
 
+
+
+        multi_resizable_buffer() = default;
 
         multi_resizable_buffer(const multi_resizable_buffer&) = delete;
         multi_resizable_buffer& operator=(
