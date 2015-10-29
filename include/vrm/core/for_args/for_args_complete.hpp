@@ -61,7 +61,7 @@ VRM_CORE_NAMESPACE
                 auto t(std::forward_as_tuple(FWD(xs)...));
                 return f(FWD(std::get<TBegin + TIdxs>(t))...);
             }
-            
+
             template <std::size_t TIteration, std::size_t TBegin, typename TF,
                 std::size_t... TIdxs, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_n(
@@ -73,6 +73,8 @@ VRM_CORE_NAMESPACE
                 return f(data, FWD(std::get<TBegin + TIdxs>(t))...);
             }
 
+// TODO:
+// continue_t -> `skip_next<N = 1> `
 
             template <std::size_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
