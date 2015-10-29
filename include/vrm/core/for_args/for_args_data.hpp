@@ -15,11 +15,19 @@
 // http://stackoverflow.com/a/29901074/598696
 
 // TODO: cleanup with cppcon2015 implementation
+// TODO: short circuiting with static_if
+// TODO: return value
+/*
+struct for_args_continue{};
+       struct for_args_break{};
+       struct for_args_return{};*/
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
+
+
         template <std::size_t TI>
         struct for_args_data_type
         {
