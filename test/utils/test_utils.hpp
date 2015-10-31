@@ -5,6 +5,14 @@
 #include <sstream>
 #include <iostream>
 
+#define DEPARENS(...) __VA_ARGS__
+
+#define SA_SAME(value, type) \
+    static_assert(std::is_same<DEPARENS value, DEPARENS type>{}, "")
+
+#define SA_TYPE(value, type) \
+    static_assert(std::is_same<decltype value, DEPARENS type>{}, "")
+
 namespace test_impl
 {
     template <typename T>
