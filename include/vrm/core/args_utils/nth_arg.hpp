@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/assert.hpp>
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 
 VRM_CORE_NAMESPACE
@@ -14,6 +15,8 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) nth_arg(
         Ts && ... xs) noexcept
     {
+        VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) > TN);
+
         using nth_arg_type =
             std::tuple_element_t<TN, decltype(make_ref_tpl(FWD(xs)...))>;
 

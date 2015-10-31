@@ -24,6 +24,9 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) args_slice(
         Ts && ... xs) noexcept
     {
+        VRM_CORE_STATIC_ASSERT_NM(TIEnd >= TIBegin);
+        VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) >= TIEnd - TIBegin);
+
         return impl::build_args_slice<TIBegin>(
             std::make_index_sequence<TIEnd - TIBegin>(), FWD(xs)...);
     }
