@@ -25,6 +25,13 @@ VRM_CORE_NAMESPACE
         return args_slice<sizeof...(xs)-TN, sizeof...(xs)>(FWD(xs)...);
     }
 
+    template <std::size_t TN, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_from(
+        Ts && ... xs) noexcept
+    {
+        return args_slice<TN, sizeof...(xs)>(FWD(xs)...);
+    }
+
     template <typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) first_arg(
         Ts && ... xs) noexcept

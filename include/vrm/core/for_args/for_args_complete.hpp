@@ -12,6 +12,8 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_traits.hpp>
 #include <vrm/core/static_if.hpp>
+#include <vrm/core/args_utils.hpp>
+#include <vrm/core/tuple_utils/apply.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
 // Implemented thanks to Daniel Frey:
@@ -45,56 +47,60 @@ VRM_CORE_NAMESPACE
         template <std::size_t TArity, typename TFunctionToCall>
         struct static_for_args_result
         {
+        private:
             TFunctionToCall _f;
 
+            template <std::size_t TIteration>
+            using data_type = static_for_args_data_type<TIteration>;
+
+        public:
             template <typename TFFwd>
             VRM_CORE_ALWAYS_INLINE static_for_args_result(TFFwd&& f) noexcept
                 : _f(FWD(f))
             {
             }
 
-            template <std::size_t TBegin, typename TF, std::size_t... TIdxs,
-                typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_n_no_iteration(
-                TF&& f, std::index_sequence<TIdxs...>, Ts&&... xs)
-            {
-                auto t(std::forward_as_tuple(FWD(xs)...));
-                return f(FWD(std::get<TBegin + TIdxs>(t))...);
-            }
-
-            template <std::size_t TIteration, std::size_t TBegin, typename TF,
-                std::size_t... TIdxs, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_n(
-                TF&& f, std::index_sequence<TIdxs...>, Ts&&... xs)
-            {
-                auto t(std::forward_as_tuple(FWD(xs)...));
-                static_for_args_data_type<TIteration> data{};
-
-                return f(data, FWD(std::get<TBegin + TIdxs>(t))...);
-            }
-
 // TODO:
 // continue_t -> `skip_next<N = 1> `
+
+#define LAMBDA_MEM_FN(fn)                                              \
+    [&](auto&& lambda_caller, auto&&... lambda_args) -> decltype(auto) \
+    {                                                                  \
+        return lambda_caller.fn(FWD(lambda_args)...);                  \
+    }
+
+#define FWD_LAMBDA(fn)                                          \
+    [&](auto&&... lambda_args_a) -> decltype(auto)              \
+    {                                                           \
+        return LAMBDA_MEM_FN(fn)(*this, FWD(lambda_args_a)...); \
+    }
 
             template <std::size_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
             {
-                auto to_call = [this](auto&&... vs)
-                {
-                    this->impl_<TNextIteration>(FWD(vs)...);
-                };
+                /*
+                return apply(FWD_LAMBDA(template impl_<TNextIteration>),
+                    all_args_from<TArity>(FWD(xs)...));
+                */
 
-                constexpr auto seq_n(sizeof...(xs)-TArity);
-
-                call_with_n_no_iteration<TArity>(
-                    to_call, std::make_index_sequence<seq_n>(), FWD(xs)...);
+                return apply(
+                    [this](auto&&... vs)
+                    {
+                        this->impl_<TNextIteration>(FWD(vs)...);
+                    },
+                    all_args_from<TArity>(FWD(xs)...));
             }
 
             template <std::size_t TIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_arity(Ts&&... xs)
             {
-                return call_with_n<TIteration, 0>(
-                    _f, std::make_index_sequence<TArity>(), FWD(xs)...);
+                // TODO: better syntax?
+                return apply(
+                    [this](auto&&... xargs)
+                    {
+                        _f(data_type<TIteration>{}, FWD(xargs)...);
+                    },
+                    first_n_args<TArity>(FWD(xs)...));
             }
 
             template <std::size_t TIteration, typename... Ts>
@@ -122,7 +128,7 @@ VRM_CORE_NAMESPACE
                 static_if(bool_<has_args>{})
                     .then([&](auto&&... ys)
                         {
-                            continue_<TIteration + 1>(FWD(ys)...);
+                            this->continue_<TIteration + 1>(FWD(ys)...);
                         })(FWD(xs)...);
             }
 
