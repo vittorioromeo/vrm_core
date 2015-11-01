@@ -89,19 +89,19 @@ int main()
         {
             using real_t = typename decltype(t)::type;
 
-            static_if(bool_<has_peel(real_t{})>{})
+            static_if(has_peel(real_t{}))
                 .then([](auto&& x)
                     {
                         x.peel();
                     })(real_t{});
 
-            static_if(bool_<has_eat_banana(real_t{})>{})
+            static_if(has_eat_banana(real_t{}))
                 .then([](auto&& x)
                     {
                         x.eat_banana();
                     })(real_t{});
 
-            static_if(bool_<has_eat_apple(real_t{})>{})
+            static_if(has_eat_apple(real_t{}))
                 .then([](auto&& x)
                     {
                         x.eat_apple();
