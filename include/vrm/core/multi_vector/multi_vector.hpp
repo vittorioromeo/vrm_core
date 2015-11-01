@@ -182,11 +182,11 @@ VRM_CORE_NAMESPACE
 
             auto back() const noexcept { return (*this)[_size - 1]; }
 
-            //template <typename T>
-            //auto& get(size_type pos) noexcept
+            // template <typename T>
+            // auto& get(size_type pos) noexcept
             //{
-                //VRM_CORE_ASSERT_OP(_size, >, pos);
-                //return _multi_buffer
+            // VRM_CORE_ASSERT_OP(_size, >, pos);
+            // return _multi_buffer
             //}
         };
     }

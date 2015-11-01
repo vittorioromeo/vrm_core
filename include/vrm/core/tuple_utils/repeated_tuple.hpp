@@ -49,7 +49,6 @@ VRM_CORE_NAMESPACE
         typename TIdxs = std::index_sequence<TN>>
     using repeated_tuple = typename impl::tuple_repeat_impl<T, TN>::type;
 
-
     template <std::size_t TN, typename T>
     VRM_CORE_ALWAYS_INLINE auto make_repeated_tuple(const T& x = T{}) noexcept
     {

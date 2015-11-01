@@ -9,6 +9,8 @@
 #pragma once
 
 #include <vrm/core/config/names.hpp>
+#include <vrm/core/assert.hpp>
+#include <vrm/core/is_valid.hpp>
 #include <vrm/core/utility_macros.hpp>
 #include <vrm/core/type_traits.hpp>
 #include <vrm/core/static_if/impl/static_if_impl.hpp>
@@ -18,9 +20,18 @@
 
 VRM_CORE_NAMESPACE
 {
+    namespace impl
+    {
+        auto is_valid_predicate(
+            is_valid([](auto x) -> decltype(decltype(x)::value)
+                {
+                }));
+    }
+
     template <typename TPredicate>
     VRM_CORE_ALWAYS_INLINE auto static_if(TPredicate) noexcept
     {
+        VRM_CORE_STATIC_ASSERT_NM(impl::is_valid_predicate(TPredicate{}));
         return impl::static_if_<TPredicate{}>{};
     }
 
