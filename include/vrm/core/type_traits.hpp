@@ -6,4 +6,5 @@
 #pragma once
 
 #include <vrm/core/type_traits/bool_constant.hpp>
+#include <vrm/core/type_traits/size_t_constant.hpp>
 #include <vrm/core/type_traits/common.hpp>
