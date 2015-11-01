@@ -44,28 +44,6 @@ VRM_CORE_NAMESPACE
 
     namespace impl
     {   
-        // TODO: remove
-        /*
-        template <typename TR, typename T, typename... Ts>
-        VRM_CORE_ALWAYS_INLINE auto lambda_mem_fn(TR (T::*ptr)(Ts...)) noexcept
-        {
-            return [ptr](auto&& caller, auto&&... args) -> decltype(auto)
-            {
-                return caller.*ptr(FWD(args)...);
-            };
-        }
-
-        template <typename TR, typename T, typename... Ts>
-        VRM_CORE_ALWAYS_INLINE auto lambda_fwder(
-            T&& caller, TR (T::*f)(Ts...)) noexcept
-        {
-            return [&](auto&&... args) -> decltype(auto)
-            {
-                return lambda_mem_fn(f)(caller, FWD(args)...);
-            };
-        }
-        */
-
         template <std::size_t TArity, typename TFunctionToCall>
         struct static_for_args_result
         {
@@ -82,38 +60,17 @@ VRM_CORE_NAMESPACE
             {
             }
 
-// TODO:
-// continue_t -> `skip_next<N = 1> `
-
-// TODO: ?
-#define LAMBDA_MEM_FN(...)                                                  \
-    [this](auto&& lambda_caller, auto&&... lambda_args) noexcept->decltype( \
-        auto)                                                               \
-    {                                                                       \
-        return lambda_caller.__VA_ARGS__(FWD(lambda_args)...);              \
-    }
-
-#define FWD_LAMBDA(...)                                                  \
-    [this](auto&&... lambda_args_a) noexcept->decltype(auto)             \
-    {                                                                    \
-        return LAMBDA_MEM_FN(__VA_ARGS__)(*this, FWD(lambda_args_a)...); \
-    }
 
             template <std::size_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
             {
-                // TODO: ?
-                return apply(FWD_LAMBDA(template impl_<TNextIteration>),
-                    all_args_from<TArity>(FWD(xs)...));
-
-                /*
+                
                 return apply(
                     [this](auto&&... vs)
                     {
                         this->impl_<TNextIteration>(FWD(vs)...);
                     },
-                    all_args_from<TArity>(FWD(xs)...));
-                */
+                    all_args_from<TArity>(FWD(xs)...));                
             }
 
             template <std::size_t TIteration, typename... Ts>
