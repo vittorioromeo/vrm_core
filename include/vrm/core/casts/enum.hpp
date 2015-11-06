@@ -12,6 +12,7 @@
 
 VRM_CORE_NAMESPACE
 {
+    /// @brief Converts an enum to its underlying type.
     template <typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto from_enum(const TIn& x) noexcept
     {
@@ -20,6 +21,7 @@ VRM_CORE_NAMESPACE
         return static_cast<std::underlying_type_t<TIn>>(x);
     }
 
+    /// @brief Converts an enum to a type convertible to its underlying type.
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto from_enum(const TIn& x) noexcept
     {
@@ -29,6 +31,7 @@ VRM_CORE_NAMESPACE
         return static_cast<TOut>(x);
     }
 
+    /// @brief Converts a number to an enum.
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(const TIn& x) noexcept
         ->std::enable_if_t<number_convertible_to_enum<TOut, TIn>{}, TOut>
@@ -36,6 +39,8 @@ VRM_CORE_NAMESPACE
         return static_cast<TOut>(x);
     }
 
+    /// @brief Converts an enum to another enum.
+    /// @details The underlying types must be convertible between each other.
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(const TIn& x) noexcept
         ->std::enable_if_t<are_both_enums<TOut, TIn>{}, TOut>
