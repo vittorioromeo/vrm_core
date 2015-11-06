@@ -10,21 +10,18 @@
 
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/casts/polymorphic.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
         template <typename TFunctionToCall>
-        class static_if_result
+        struct static_if_result : TFunctionToCall
         {
-        private:
-            TFunctionToCall _f;
-
-        public:
             template <typename TFFwd>
             VRM_CORE_ALWAYS_INLINE static_if_result(TFFwd&& f) noexcept
-                : _f(FWD(f))
+                : TFunctionToCall(FWD(f))
             {
             }
 
@@ -53,17 +50,18 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) operator()(
-                Ts&&... xs) noexcept(noexcept(_f(FWD(xs)...)))
+            VRM_CORE_ALWAYS_INLINE decltype(auto)
+            operator()(Ts&&... xs) noexcept(
+                noexcept(to_base<TFunctionToCall> (*this)(FWD(xs)...)))
             {
-                return _f(FWD(xs)...);
+                return to_base<TFunctionToCall> (*this)(FWD(xs)...);
             }
         };
 
         template <typename TF>
         VRM_CORE_ALWAYS_INLINE auto make_static_if_result(TF&& f) noexcept
         {
-            return static_if_result<decltype(f)>{FWD(f)};
+            return static_if_result<TF>{FWD(f)};
         }
     }
 }
