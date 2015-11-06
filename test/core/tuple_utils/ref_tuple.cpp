@@ -18,6 +18,6 @@ int main()
     SA_TYPE((std::get<1>(t)), (const int&));
     SA_TYPE((std::get<2>(t)), (int&));
     SA_TYPE((std::get<3>(t)), (int&));
- 
+
     return 0;
 }

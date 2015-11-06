@@ -12,6 +12,8 @@
 
 VRM_CORE_NAMESPACE
 {
+    /// @brief Converts a number to another number type.
+    /// @details Both types must have the same signedness.
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
         ->std::enable_if_t<
@@ -20,6 +22,9 @@ VRM_CORE_NAMESPACE
         return static_cast<TOut>(x);
     }
 
+    /// @brief Converts a number to another number type.
+    /// @details Types must have different signedness. Asserts that the signed
+    /// value is greater or equal than zero.
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
         ->std::enable_if_t<are_both_numbers<TOut, TIn>{} &&

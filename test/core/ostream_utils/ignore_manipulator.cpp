@@ -40,42 +40,42 @@ int main()
     TEST_ASSERT_OP(o.str(), ==, "hi"s);
     o.str("");
 
-{
-    const auto& somestr = "hi"s;
+    {
+        const auto& somestr = "hi"s;
 
-    o << make_ignore_manipulator(somestr);
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
+        o << make_ignore_manipulator(somestr);
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
 
-    o << std::setw(4) << make_ignore_manipulator(somestr);
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
-}
-{
-    auto somestr = "hi"s;
-    
-    o << make_ignore_manipulator(somestr);
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
+        o << std::setw(4) << make_ignore_manipulator(somestr);
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
+    }
+    {
+        auto somestr = "hi"s;
 
-    o << std::setw(4) << make_ignore_manipulator(somestr);
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
+        o << make_ignore_manipulator(somestr);
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
 
-    auto& ss2 = somestr;
+        o << std::setw(4) << make_ignore_manipulator(somestr);
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
 
-    o << make_ignore_manipulator(ss2);
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
+        auto& ss2 = somestr;
 
-    o << std::setw(4) << make_ignore_manipulator(ss2);
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
+        o << make_ignore_manipulator(ss2);
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
 
-    o << std::setw(4) << make_ignore_manipulator(std::move(somestr));
-    TEST_ASSERT_OP(o.str(), ==, "hi"s);
-    o.str("");
-}
+        o << std::setw(4) << make_ignore_manipulator(ss2);
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
+
+        o << std::setw(4) << make_ignore_manipulator(std::move(somestr));
+        TEST_ASSERT_OP(o.str(), ==, "hi"s);
+        o.str("");
+    }
 
     // o << std::setw(4) << "hi";
     // TEST_ASSERT_OP(o.str(), ==, "hi");

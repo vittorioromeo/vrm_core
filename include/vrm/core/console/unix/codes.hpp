@@ -90,7 +90,7 @@ VRM_CORE_NAMESPACE
                 return ids;
             }
 
-            // VRM_CORE_ALWAYS_INLINE const auto& style_codes() noexcept 
+            // VRM_CORE_ALWAYS_INLINE const auto& style_codes() noexcept
             // {}
         }
     }

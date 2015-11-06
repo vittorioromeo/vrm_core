@@ -12,13 +12,15 @@ int main()
                            float>{}>{})
                 .then([](auto&& v)
                     {
-                        std::cout << "skip " << decltype(data)::iteration << "\n";
+                        std::cout << "skip " << decltype(data)::iteration
+                                  << "\n";
                         return continue_t{};
                         // return break_t{};
                     })
                 .else_([](auto&& v)
                     {
-                        std::cout << decltype(data)::iteration << ": " <<v << "\n";
+                        std::cout << decltype(data)::iteration << ": " << v
+                                  << "\n";
                     })(x);
 
         })(1, "hello", 'a', 3, 4.f, 2, 1, 'b');
@@ -32,13 +34,15 @@ int main()
                            float>{}>{})
                 .then([](auto&& v)
                     {
-                        std::cout << "skip " << decltype(data)::iteration << "\n";
+                        std::cout << "skip " << decltype(data)::iteration
+                                  << "\n";
                         return continue_t{};
                         // return break_t{};
                     })
                 .else_([](auto&& v)
                     {
-                        std::cout << decltype(data)::iteration << ": " << v << "\n";
+                        std::cout << decltype(data)::iteration << ": " << v
+                                  << "\n";
                     })(x);
 
         })(1, "hello", 'a', 3, 4.f, 2, 1, 'b');

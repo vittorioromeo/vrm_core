@@ -16,7 +16,7 @@
 VRM_CORE_NAMESPACE
 {
     namespace impl
-    {     
+    {
         template <>
         struct static_if_<true>
         {

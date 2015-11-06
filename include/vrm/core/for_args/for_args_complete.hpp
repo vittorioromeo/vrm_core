@@ -43,11 +43,12 @@ VRM_CORE_NAMESPACE
     };
 
     namespace impl
-    {   
+    {
         template <std::size_t TArity, typename TFunctionToCall>
         struct static_for_args_result
         {
         private:
+            // TODO: EBCO optimization
             TFunctionToCall _f;
 
             template <std::size_t TIteration>
@@ -64,13 +65,13 @@ VRM_CORE_NAMESPACE
             template <std::size_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
             {
-                
+
                 return apply(
                     [this](auto&&... vs)
                     {
                         this->impl_<TNextIteration>(FWD(vs)...);
                     },
-                    all_args_from<TArity>(FWD(xs)...));                
+                    all_args_from<TArity>(FWD(xs)...));
             }
 
             template <std::size_t TIteration, typename... Ts>
