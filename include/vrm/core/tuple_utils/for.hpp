@@ -85,3 +85,5 @@ VRM_CORE_NAMESPACE_END
 
 #undef VRM_CORE_IMPL_TPLFOR_CALL
 #undef VRM_CORE_IMPL_DEFINE_TPLFOR_FN
+
+// TODO: implement using static_for? noexcept?
