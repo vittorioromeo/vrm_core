@@ -1,17 +1,15 @@
 #include "../../utils/test_utils.hpp"
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/resizable_buffer.hpp>
-
 #include <cassert>
-
 #include <cstddef>
-
 #include <functional>
-
 #include <new>
-
 #include <utility>
 
-template <std::size_t N>
+using vrm::core::sz_t;
+
+template <sz_t N>
 class stack_store
 {
 public:
@@ -21,7 +19,7 @@ public:
 
     stack_store& operator=(stack_store const&) = delete;
 
-    char* allocate(std::size_t n)
+    char* allocate(sz_t n)
     {
         assert(pointer_in_buffer(ptr_) &&
                "stack_allocator has outlived stack_store");
@@ -42,7 +40,7 @@ public:
         }
     }
 
-    void deallocate(char* const p, std::size_t n) noexcept
+    void deallocate(char* const p, sz_t n) noexcept
     {
         assert(pointer_in_buffer(ptr_) &&
                "stack_allocator has outlived stack_store");
@@ -65,12 +63,12 @@ public:
 
     void reset() noexcept { ptr_ = buf_; }
 
-    static constexpr ::std::size_t size() noexcept { return N; }
+    static constexpr ::sz_t size() noexcept { return N; }
 
-    ::std::size_t used() const { return ::std::size_t(ptr_ - buf_); }
+    ::sz_t used() const { return ::sz_t(ptr_ - buf_); }
 
 private:
-    static constexpr ::std::size_t align(::std::size_t const n) noexcept
+    static constexpr ::sz_t align(::sz_t const n) noexcept
     {
         return (n + (alignment - 1)) & -alignment;
     }
@@ -88,13 +86,13 @@ private:
     alignas(::max_align_t) char buf_[N];
 };
 
-template <class T, std::size_t N>
+template <class T, sz_t N>
 class stack_allocator
 {
 public:
     using store_type = stack_store<N>;
 
-    using size_type = ::std::size_t;
+    using size_type = ::sz_t;
 
     using difference_type = ::std::ptrdiff_t;
 
@@ -124,13 +122,13 @@ public:
 
     stack_allocator& operator=(stack_allocator const&) = delete;
 
-    T* allocate(::std::size_t const n)
+    T* allocate(::sz_t const n)
     {
         return static_cast<T*>(
             static_cast<void*>(store_->allocate(n * sizeof(T))));
     }
 
-    void deallocate(T* const p, ::std::size_t const n) noexcept
+    void deallocate(T* const p, ::sz_t const n) noexcept
     {
         store_->deallocate(
             static_cast<char*>(static_cast<void*>(p)), n * sizeof(T));
@@ -148,20 +146,20 @@ public:
         p->~T();
     }
 
-    template <class U, std::size_t M>
+    template <class U, sz_t M>
     inline bool operator==(stack_allocator<U, M> const& rhs) const noexcept
     {
         return store_ == rhs.store_;
     }
 
-    template <class U, std::size_t M>
+    template <class U, sz_t M>
     inline bool operator!=(stack_allocator<U, M> const& rhs) const noexcept
     {
         return !(*this == rhs);
     }
 
 private:
-    template <class U, std::size_t M>
+    template <class U, sz_t M>
     friend class stack_allocator;
 
     store_type* store_{};

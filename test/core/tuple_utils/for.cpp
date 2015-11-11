@@ -1,4 +1,5 @@
 #include "../../utils/test_utils.hpp"
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/for.hpp>
 
@@ -13,7 +14,7 @@ int main()
         return x;
     };
 
-    std::size_t last_index = 0;
+    vrm::core::sz_t last_index = 0;
     vrm::core::for_tuple_data(
         [&](auto data, auto&& y)
         {
