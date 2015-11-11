@@ -9,6 +9,7 @@
 #include <utility>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
 // Implemented thanks to Daniel Frey:
@@ -28,16 +29,16 @@ VRM_CORE_NAMESPACE
     {
 
 
-        template <std::size_t TI>
+        template <sz_t TI>
         struct for_args_data_type
         {
-            static constexpr std::size_t index{TI};
+            static constexpr sz_t index{TI};
         };
 
         template <typename, typename>
         struct for_args_data_helper;
 
-        template <std::size_t... Bs, std::size_t... Cs>
+        template <sz_t... Bs, sz_t... Cs>
         struct for_args_data_helper<std::index_sequence<Bs...>,
             std::index_sequence<Cs...>>
         {
@@ -46,8 +47,8 @@ VRM_CORE_NAMESPACE
 #define VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY() \
     f(for_args_data_type<TI>{}, std::get<TArity + Cs>(FWD(xs))...)
 
-            template <std::size_t TI, std::size_t TArity, typename TF,
-                typename TTpl, typename... Ts>
+            template <sz_t TI, sz_t TArity, typename TF, typename TTpl,
+                typename... Ts>
             VRM_CORE_ALWAYS_INLINE static constexpr void
             exec_n(TF&& f, TTpl&& xs) noexcept(
                 noexcept(VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY()))
@@ -81,7 +82,7 @@ VRM_CORE_NAMESPACE
         std::make_index_sequence<TArity>>::exec(FWD(f),   \
         std::forward_as_tuple(FWD(xs)...))
 
-        template <std::size_t TArity>
+        template <sz_t TArity>
         struct for_args_data_dispatch
         {
             template <typename TF, typename... Ts>
@@ -101,7 +102,7 @@ VRM_CORE_NAMESPACE
 #undef VRM_CORE_IMPL_FORNARGS_BODY
     }
 
-    template <std::size_t TArity = 1, typename TF, typename... Ts>
+    template <sz_t TArity = 1, typename TF, typename... Ts>
     VRM_CORE_ALWAYS_INLINE                                  // .
         constexpr void for_args_data(TF && f, Ts && ... xs) // .
         noexcept(noexcept(

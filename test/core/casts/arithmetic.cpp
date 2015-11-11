@@ -11,7 +11,7 @@ int main()
     TEST_ASSERT(to_int(i) == 1);
     TEST_ASSERT(to_float(i) == 1.f);
     TEST_ASSERT(to_double(i) == 1);
-    TEST_ASSERT(to_size_t(i) == 1);
+    TEST_ASSERT(to_sz_t(i) == 1);
     TEST_ASSERT(to_num<long>(i) == 1.f);
 
     // Will fire assertion:

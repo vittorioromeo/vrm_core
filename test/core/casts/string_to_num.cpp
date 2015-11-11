@@ -1,4 +1,5 @@
 #include "../../utils/test_utils.hpp"
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/casts/string_to_num.hpp>
 #include <utility>
 
@@ -19,9 +20,9 @@ int main()
     TEST_ASSERT(str_to_double("1.0") == 1.0);
     TEST_ASSERT(str_to_double("2.0") == 2.0);
 
-    TEST_ASSERT(str_to_size_t("0") == std::size_t(0));
-    TEST_ASSERT(str_to_size_t("1") == std::size_t(1));
-    TEST_ASSERT(str_to_size_t("2") == std::size_t(2));
+    TEST_ASSERT(str_to_size_t("0") == sz_t(0));
+    TEST_ASSERT(str_to_size_t("1") == sz_t(1));
+    TEST_ASSERT(str_to_size_t("2") == sz_t(2));
 
     TEST_ASSERT(str_to_int("0"s) == 0);
     TEST_ASSERT(str_to_int("1"s) == 1);
@@ -35,9 +36,9 @@ int main()
     TEST_ASSERT(str_to_double("1.0"s) == 1.0);
     TEST_ASSERT(str_to_double("2.0"s) == 2.0);
 
-    TEST_ASSERT(str_to_size_t("0"s) == std::size_t(0));
-    TEST_ASSERT(str_to_size_t("1"s) == std::size_t(1));
-    TEST_ASSERT(str_to_size_t("2"s) == std::size_t(2));
+    TEST_ASSERT(str_to_size_t("0"s) == sz_t(0));
+    TEST_ASSERT(str_to_size_t("1"s) == sz_t(1));
+    TEST_ASSERT(str_to_size_t("2"s) == sz_t(2));
 
     return 0;
 }

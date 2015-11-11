@@ -9,6 +9,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -19,13 +20,13 @@ VRM_CORE_NAMESPACE
 
         template <typename T, typename... Ts>
         struct tuple_index_of_helper<T, std::tuple<T, Ts...>>
-            : std::integral_constant<std::size_t, 0>
+            : std::integral_constant<sz_t, 0>
         {
         };
 
         template <typename T1, typename T2, typename... Ts>
         struct tuple_index_of_helper<T1, std::tuple<T2, Ts...>>
-            : std::integral_constant<std::size_t,
+            : std::integral_constant<sz_t,
                   1 + tuple_index_of_helper<T1, std::tuple<Ts...>>{}>
         {
         };

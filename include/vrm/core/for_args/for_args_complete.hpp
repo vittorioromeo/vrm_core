@@ -10,6 +10,7 @@
 
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits.hpp>
 #include <vrm/core/static_if.hpp>
 #include <vrm/core/args_utils.hpp>
@@ -36,22 +37,22 @@ VRM_CORE_NAMESPACE
     {
     };
 
-    template <std::size_t TIteration>
+    template <sz_t TIteration>
     struct static_for_args_data_type
     {
-        static constexpr std::size_t iteration{TIteration};
+        static constexpr sz_t iteration{TIteration};
     };
 
     namespace impl
     {
-        template <std::size_t TArity, typename TFunctionToCall>
+        template <sz_t TArity, typename TFunctionToCall>
         struct static_for_args_result
         {
         private:
             // TODO: EBCO optimization
             TFunctionToCall _f;
 
-            template <std::size_t TIteration>
+            template <sz_t TIteration>
             using data_type = static_for_args_data_type<TIteration>;
 
         public:
@@ -62,7 +63,7 @@ VRM_CORE_NAMESPACE
             }
 
 
-            template <std::size_t TNextIteration, typename... Ts>
+            template <sz_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
             {
 
@@ -74,7 +75,7 @@ VRM_CORE_NAMESPACE
                     all_args_from<TArity>(FWD(xs)...));
             }
 
-            template <std::size_t TIteration, typename... Ts>
+            template <sz_t TIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_arity(Ts&&... xs)
             {
                 // TODO: better syntax?
@@ -86,7 +87,7 @@ VRM_CORE_NAMESPACE
                     first_n_args<TArity>(FWD(xs)...));
             }
 
-            template <std::size_t TIteration, typename... Ts>
+            template <sz_t TIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) impl_(Ts&&... xs)
             {
                 // Make sure that the count of loop arguments is divisible by
@@ -123,7 +124,7 @@ VRM_CORE_NAMESPACE
         };
     }
 
-    template <std::size_t TArity = 1, typename TF>
+    template <sz_t TArity = 1, typename TF>
     VRM_CORE_ALWAYS_INLINE decltype(auto) static_for_args(TF && f)
     {
         return impl::static_for_args_result<TArity, decltype(f)>(FWD(f));

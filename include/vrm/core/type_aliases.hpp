@@ -5,4 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/type_traits/common.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/type_aliases/integral_constant.hpp>

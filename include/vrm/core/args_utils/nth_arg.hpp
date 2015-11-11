@@ -7,6 +7,7 @@
 
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 
 VRM_CORE_NAMESPACE
@@ -23,7 +24,7 @@ VRM_CORE_NAMESPACE
         return static_cast<TOut>(FWD(x));
     }
 
-    template <std::size_t TN, typename... Ts>
+    template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) nth_arg(
         Ts && ... xs) noexcept(noexcept(std::get<TN>(make_ref_tpl(FWD(xs)...))))
     {

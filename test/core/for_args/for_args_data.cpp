@@ -1,4 +1,5 @@
 #include "../../utils/test_utils.hpp"
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/for_args/for_args_data.hpp>
 
 int main()
@@ -10,8 +11,7 @@ int main()
         for_args_data(
             [&acc](auto data, auto x)
             {
-                TEST_ASSERT_OP(
-                    decltype(data)::index, ==, static_cast<std::size_t>(x));
+                TEST_ASSERT_OP(decltype(data)::index, ==, static_cast<sz_t>(x));
                 acc += x;
             },
             0, 1, 2, 3, 4, 5);
@@ -23,8 +23,7 @@ int main()
         for_args_data(
             [&acc](auto data, auto&& x)
             {
-                TEST_ASSERT_OP(
-                    decltype(data)::index, ==, static_cast<std::size_t>(x));
+                TEST_ASSERT_OP(decltype(data)::index, ==, static_cast<sz_t>(x));
                 acc += x;
             },
             0, 1, 2, 3, 4, 5);
@@ -69,7 +68,7 @@ int main()
         int acc{0};
         for_args_data([&, lastidx = 0 ](auto data, auto x) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
 
                 auto val(x());
@@ -89,7 +88,7 @@ int main()
         int acc{0};
         for_args_data<1>([&acc, lastidx = 0 ](auto data, auto x) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
                 acc += x;
             },
@@ -99,7 +98,7 @@ int main()
         acc = 0;
         for_args_data<1>([&acc, lastidx = 0 ](auto data, auto&& x) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
                 acc += x;
             },
@@ -111,7 +110,7 @@ int main()
         int acc{0};
         for_args_data<2>([&acc, lastidx = 0 ](auto data, auto x, auto y) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
                 acc += x + y;
             },
@@ -122,7 +121,7 @@ int main()
         for_args_data<2>(
             [&acc, lastidx = 0 ](auto data, auto&& x, auto&& y) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
                 acc += x + y;
             },
@@ -135,7 +134,7 @@ int main()
         for_args_data<3>(
             [&acc, lastidx = 0 ](auto data, auto x, auto y, auto z) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
                 acc += x + y + z;
             },
@@ -146,7 +145,7 @@ int main()
         for_args_data<3>([&acc, lastidx = 0 ](
                              auto data, auto&& x, auto&& y, auto&& z) mutable
             {
-                TEST_ASSERT_OP(decltype(data)::index, ==, (std::size_t)lastidx);
+                TEST_ASSERT_OP(decltype(data)::index, ==, (sz_t)lastidx);
                 ++lastidx;
                 acc += x + y + z;
             },

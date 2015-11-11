@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <vrm/core/config.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -17,7 +18,7 @@ VRM_CORE_NAMESPACE
         using this_type = resizable_buffer<T, TAllocator>;
 
     public:
-        using size_type = std::size_t;
+        using size_type = sz_t;
         using value_type = T;
         using data_ptr_type = T*;
         using allocator_type = TAllocator;

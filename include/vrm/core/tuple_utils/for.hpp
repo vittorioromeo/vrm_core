@@ -9,6 +9,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/for_args.hpp>
 #include <vrm/core/variadic_min_max.hpp>
 
@@ -24,22 +25,22 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <std::size_t TI>
+        template <sz_t TI>
         struct for_tuple_data_type
         {
-            static constexpr std::size_t index{TI};
+            static constexpr sz_t index{TI};
         };
 
-        template <std::size_t TS, typename... Ts>
+        template <sz_t TS, typename... Ts>
         struct for_tuple_data_helper
         {
-            template <std::size_t TI, typename TF>
+            template <sz_t TI, typename TF>
             VRM_CORE_ALWAYS_INLINE static std::enable_if_t<TI == TS, void> exec(
                 TF, Ts&&...) noexcept
             {
             }
 
-            template <std::size_t TI = 0, typename TF>
+            template <sz_t TI = 0, typename TF>
                 VRM_CORE_ALWAYS_INLINE static std::enable_if_t <
                 TI<TS, void> exec(TF&& f, Ts&&... ts) noexcept(
                     noexcept(VRM_CORE_IMPL_TPLFORHELPER_BODY()))
@@ -56,7 +57,7 @@ VRM_CORE_NAMESPACE
     /// element of every tuple to `f` simultaneously.
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
-    constexpr VRM_CORE_ALWAYS_INLINE void for_tuple_data(
+    VRM_CORE_ALWAYS_INLINE constexpr void for_tuple_data(
         TF && f, Ts && ... ts) noexcept(noexcept(VRM_CORE_IMPL_TPLFOR_CALL()))
     {
         VRM_CORE_IMPL_TPLFOR_CALL();

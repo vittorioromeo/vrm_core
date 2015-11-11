@@ -9,6 +9,7 @@
 #include <tuple>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
 
@@ -34,7 +35,7 @@ VRM_CORE_NAMESPACE
         using buffer_tuple = std::tuple<TBufferTypes...>;
 
     public:
-        using size_type = std::size_t;
+        using size_type = sz_t;
 
         using data_ptr_tuple =
             std::tuple<buffer_data_ptr_type<TBufferTypes>...>;
@@ -47,13 +48,13 @@ VRM_CORE_NAMESPACE
         using const_value_reference_tuple =
             std::tuple<const buffer_value_type<TBufferTypes>&...>;
 
-        template <std::size_t TN>
+        template <sz_t TN>
         using nth_buffer_type = std::tuple_element_t<TN, buffer_tuple>;
 
-        template <std::size_t TN>
+        template <sz_t TN>
         using nth_buffer_value_type = buffer_value_type<nth_buffer_type<TN>>;
 
-        static constexpr std::size_t buffer_count{sizeof...(TBufferTypes)};
+        static constexpr sz_t buffer_count{sizeof...(TBufferTypes)};
 
     private:
         buffer_tuple _buffers;
@@ -71,7 +72,7 @@ VRM_CORE_NAMESPACE
 
 
     public:
-        template <std::size_t TN>
+        template <sz_t TN>
         VRM_CORE_ALWAYS_INLINE auto& nth_buffer()
         {
             VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
@@ -181,13 +182,13 @@ VRM_CORE_NAMESPACE
         }
 
     private:
-        template <std::size_t... TIs>
+        template <sz_t... TIs>
         auto data_builder(std::index_sequence<TIs...>) noexcept
         {
             return data_ptr_tuple{std::get<TIs>(_buffers).data()...};
         }
 
-        template <std::size_t... TIs>
+        template <sz_t... TIs>
         auto data_builder(std::index_sequence<TIs...>) const noexcept
         {
             return data_ptr_tuple{std::get<TIs>(_buffers).data()...};

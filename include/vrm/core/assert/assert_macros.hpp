@@ -33,9 +33,3 @@
 #else
 #include <vrm/core/assert/assert_macros_enabled.hpp>
 #endif
-
-// TODO:
-// * check ssvu code
-// * think about constexpr assertions
-// * expression parsing for assertions
-// * maybe output to string for tests?

@@ -12,6 +12,9 @@
 // Macros that do not strongly depend on other vrm_core modules.
 #include <vrm/core/utility_macros.hpp>
 
+#include <vrm/core/type_aliases.hpp>
+#include <vrm/core/literals.hpp>
+
 // Pretty assertions.
 #include <vrm/core/assert.hpp>
 

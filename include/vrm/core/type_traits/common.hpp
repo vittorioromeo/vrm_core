@@ -7,7 +7,7 @@
 
 #include <type_traits>
 #include <vrm/core/config/names.hpp>
-#include <vrm/core/type_traits/bool_constant.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 VRM_CORE_NAMESPACE
 {

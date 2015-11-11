@@ -6,21 +6,22 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/args_utils/nth_arg.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <std::size_t TIBegin, std::size_t... TIdxs, typename... Ts>
+        template <sz_t TIBegin, sz_t... TIs, typename... Ts>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) build_args_slice(
-            std::index_sequence<TIdxs...>, Ts&&... xs) noexcept
+            std::index_sequence<TIs...>, Ts&&... xs) noexcept
         {
-            return make_ref_tpl(FWD(nth_arg<TIBegin + TIdxs>(FWD(xs)...))...);
+            return make_ref_tpl(FWD(nth_arg<TIBegin + TIs>(FWD(xs)...))...);
         }
     }
 
-    template <std::size_t TIBegin, std::size_t TIEnd, typename... Ts>
+    template <sz_t TIBegin, sz_t TIEnd, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) args_slice(
         Ts && ... xs) noexcept
     {

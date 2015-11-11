@@ -7,8 +7,8 @@
 
 #include <iosfwd>
 #include <vrm/core/config.hpp>
-#include <vrm/core/type_traits/bool_constant.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 VRM_CORE_NAMESPACE
 {

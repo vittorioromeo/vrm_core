@@ -9,6 +9,7 @@
 #include <tuple>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
 
@@ -20,11 +21,10 @@ VRM_CORE_NAMESPACE
         class VRM_CORE_CLASS_API multi_vector
         {
         public:
-            using size_type = std::size_t;
+            using size_type = sz_t;
             using multi_buffer_type = TMultiBuffer;
 
-            static constexpr std::size_t buffer_count{
-                multi_buffer_type::buffer_count};
+            static constexpr sz_t buffer_count{multi_buffer_type::buffer_count};
 
             static constexpr size_type initial_capacity{0};
 
@@ -49,11 +49,11 @@ VRM_CORE_NAMESPACE
                 }
             }
 
-            template <std::size_t TN>
+            template <sz_t TN>
             using nth_buffer_type =
                 typename multi_buffer_type::template nth_buffer_type<TN>;
 
-            template <std::size_t TN>
+            template <sz_t TN>
             using nth_buffer_value_type =
                 typename multi_buffer_type::template nth_buffer_value_type<TN>;
 

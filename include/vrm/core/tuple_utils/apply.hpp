@@ -9,13 +9,14 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/utility_macros.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <typename TF, typename TT, std::size_t... TIs>
+        template <typename TF, typename TT, sz_t... TIs>
         VRM_CORE_ALWAYS_INLINE decltype(auto) apply_helper(
             TF&& f, TT&& t, std::index_sequence<TIs...>) // .
             noexcept(noexcept(FWD(f)(std::get<TIs>(FWD(t))...)))
@@ -48,19 +49,18 @@ VRM_CORE_NAMESPACE
     template <typename... TTs>
     struct tuple_transposer
     {
-        static constexpr std::size_t columns{
-            variadic_min(std::tuple_size<TTs>{}...)};
+        static constexpr sz_t columns{variadic_min(std::tuple_size<TTs>{}...)};
 
-        static constexpr std::size_t rows{sizeof...(TTs)};
+        static constexpr sz_t rows{sizeof...(TTs)};
 
-        template <std::size_t TI>
+        template <sz_t TI>
         auto make_column_tuple(TTs&&... ts)
         {
             VRM_CORE_STATIC_ASSERT_NM(TI < columns);
             return std::forward_as_tuple(std::get<TI>(FWD(ts))...);
         }
 
-        template <std::size_t... TIs>
+        template <sz_t... TIs>
         auto exec_impl(TTs&&... ts)
         {
             return std::tuple_cat(make_column_tuple<TIs>(FWD(ts)...)...);

@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits.hpp>
 
 VRM_CORE_NAMESPACE
@@ -56,11 +57,11 @@ VRM_CORE_NAMESPACE
         return to_num<double>(x);
     }
 
-    /// @brief Converts a number to `std::size_t`.
+    /// @brief Converts a number to `sz_t`.
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_size_t(const T& x) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto to_sz_t(const T& x) noexcept
     {
-        return to_num<::std::size_t>(x);
+        return to_num<sz_t>(x);
     }
 }
 VRM_CORE_NAMESPACE_END

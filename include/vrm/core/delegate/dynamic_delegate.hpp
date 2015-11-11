@@ -9,6 +9,7 @@
 #include <functional>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/delegate/base_delegate.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 // TODO: WIP:
 // * use sparse int set?
@@ -31,10 +32,10 @@ VRM_CORE_NAMESPACE
         friend class dynamic_delegate;
 
     private:
-        std::size_t _index;
+        sz_t _index;
         int8_t _counter;
 
-        dynamic_delegate_handle(std::size_t index, int8_t counter) noexcept
+        dynamic_delegate_handle(sz_t index, int8_t counter) noexcept
             : _index{index},
               _counter{counter}
         {
@@ -51,10 +52,10 @@ VRM_CORE_NAMESPACE
     private:
         struct handle_data
         {
-            std::size_t _target_idx;
+            sz_t _target_idx;
             int8_t _counter;
 
-            handle_data(std::size_t target_idx, int8_t counter) noexcept
+            handle_data(sz_t target_idx, int8_t counter) noexcept
                 : _target_idx{target_idx},
                   _counter{counter}
             {
@@ -81,7 +82,7 @@ VRM_CORE_NAMESPACE
             return h._counter == handle_data_from_handle(h)._counter;
         }
 
-        void erase_at(std::size_t idx)
+        void erase_at(sz_t idx)
         {
             VRM_CORE_ASSERT_OP(this->_functions.size(), >, idx);
             this->_functions.erase(std::begin(this->_functions) + idx);

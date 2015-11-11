@@ -5,4 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/type_traits/common.hpp>
+#include <vrm/core/literals/llong_constant.hpp>

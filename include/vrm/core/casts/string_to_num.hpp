@@ -33,11 +33,11 @@ VRM_CORE_NAMESPACE
         return to_double(std::strtod(x, &end));
     }
 
-    /// @brief Converts a string to `std::size_t`.
+    /// @brief Converts a string to `sz_t`.
     VRM_CORE_ALWAYS_INLINE auto str_to_size_t(const char* x)
     {
         char* end;
-        return to_size_t(std::strtoll(x, &end, 10));
+        return to_sz_t(std::strtoll(x, &end, 10));
     }
 
     /// @brief Converts a string to `int`.
@@ -58,7 +58,7 @@ VRM_CORE_NAMESPACE
         return str_to_double(x.c_str());
     }
 
-    /// @brief Converts a string to `std::size_t`.
+    /// @brief Converts a string to `sz_t`.
     VRM_CORE_ALWAYS_INLINE auto str_to_size_t(const std::string& x)
     {
         return str_to_size_t(x.c_str());

@@ -5,15 +5,12 @@
 
 #pragma once
 
-#include <type_traits>
+#include <cstddef>
 #include <vrm/core/config/names.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    template <std::size_t TV>
-    using size_t_constant = std::integral_constant<std::size_t, TV>;
-
-    template <std::size_t TV>
-    using size_t_ = size_t_constant<TV>;
+    using llong = long long;
+    using sz_t = std::size_t;
 }
 VRM_CORE_NAMESPACE_END

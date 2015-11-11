@@ -9,6 +9,7 @@
 #include <functional>
 #include <vrm/core/config.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -116,7 +117,7 @@ VRM_CORE_NAMESPACE
                 return call_and_return_vector_impl(*this, FWD(xs)...);
             }
 
-            void reserve(std::size_t x) { _functions.reserve(x); }
+            void reserve(sz_t x) { _functions.reserve(x); }
             void clear() noexcept { _functions.clear(); }
             const auto& empty() const noexcept { return _functions.empty(); }
         };

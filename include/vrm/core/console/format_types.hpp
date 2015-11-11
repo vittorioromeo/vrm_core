@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <vrm/core/config/names.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -19,10 +20,10 @@ VRM_CORE_NAMESPACE
             using color_type = std::int8_t;
 
             /// @brief Number of styles.
-            constexpr std::size_t style_count{13};
+            constexpr sz_t style_count{13};
 
             /// @brief Number of colors.
-            constexpr std::size_t color_count{16};
+            constexpr sz_t color_count{16};
         }
 
         /// @brief Enum class representing all the possible styles.
