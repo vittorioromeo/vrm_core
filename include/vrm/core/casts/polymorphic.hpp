@@ -13,74 +13,64 @@
 
 VRM_CORE_NAMESPACE
 {
-    template <typename TDerived, typename TBase>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
-        TBase * base) noexcept
+    namespace impl
     {
-        VRM_CORE_STATIC_ASSERT_NM(is_same_or_base_of<TBase, TDerived>{});
-        VRM_CORE_ASSERT_OP(base, !=, nullptr);
+        template <typename TDerived, typename TBase, typename TOut,
+            typename TPtr>
+        VRM_CORE_ALWAYS_INLINE constexpr TOut polymorphic_cast(
+            TPtr&& ptr) noexcept
+        {
+            VRM_CORE_STATIC_ASSERT_NM(is_same_or_derived_of<TDerived, TBase>{});
+            VRM_CORE_ASSERT_OP(ptr, !=, nullptr);
 
-        return static_cast<TDerived*>(base);
+            return static_cast<TOut>(ptr);
+        }
     }
 
     template <typename TDerived, typename TBase>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
-        TBase & base) noexcept
+        TBase * base) noexcept
     {
-        return *to_derived<TDerived>(&base);
+        return impl::polymorphic_cast<TDerived, TBase, //.
+            TDerived*>(base);
     }
 
     template <typename TDerived, typename TBase>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
         const TBase* base) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(is_same_or_base_of<TBase, TDerived>{});
-        VRM_CORE_ASSERT_OP(base, !=, nullptr);
-
-        return static_cast<const TDerived*>(base);
+        return impl::polymorphic_cast<TDerived, TBase, //.
+            const TDerived*>(base);
     }
-
-    template <typename TDerived, typename TBase>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
-        const TBase& base) noexcept
-    {
-        return *to_derived<TDerived>(&base);
-    }
-
-
 
     template <typename TBase, typename TDerived>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
         TDerived * derived) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(is_same_or_derived_of<TDerived, TBase>{});
-        VRM_CORE_ASSERT_OP(derived, !=, nullptr);
-
-        return static_cast<TBase*>(derived);
-    }
-
-    template <typename TBase, typename TDerived>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
-        TDerived & derived) noexcept
-    {
-        return *to_base<TBase>(&derived);
+        return impl::polymorphic_cast<TDerived, TBase, //.
+            TBase*>(derived);
     }
 
     template <typename TBase, typename TDerived>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
         const TDerived* derived) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(is_same_or_derived_of<TDerived, TBase>{});
-        VRM_CORE_ASSERT_OP(derived, !=, nullptr);
+        return impl::polymorphic_cast<TDerived, TBase, //.
+            const TDerived*>(derived);
+    }
 
-        return static_cast<const TBase*>(derived);
+    template <typename TDerived, typename TBase>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
+        TBase && base) noexcept
+    {
+        return *to_derived<TDerived>(&base);
     }
 
     template <typename TBase, typename TDerived>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
-        const TDerived& derived) noexcept
+        TDerived && derived) noexcept
     {
-        return *to_base<TDerived>(&derived);
+        return *to_base<TBase>(&derived);
     }
 }
 VRM_CORE_NAMESPACE_END
