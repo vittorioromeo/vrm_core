@@ -1,7 +1,7 @@
 #include "../../utils/test_utils.hpp"
 #include <vrm/core/config.hpp>
 #include <typeinfo>
-#include <vrm/core/tuple_utils/apply.hpp>
+#include <vrm/core/tuple_utils/transpose.hpp>
 
 int main()
 {
@@ -11,6 +11,23 @@ int main()
     std::tuple<int, char, float> t1{1, 'b', 1.f};
     std::tuple<int, char, float> t2{2, 'c', 2.f};
 
+    auto t = std::make_tuple(0, 'a', 1, 'b');
+//    make_transposed_tuple<2>(t);
+
+    auto tt = make_transposed_tuple<2>(t);
+
+    TEST_ASSERT_OP(std::get<0>(t), ==, std::get<0>(tt));
+    TEST_ASSERT_OP(std::get<1>(t), ==, std::get<2>(tt));
+
+    TEST_ASSERT_OP(std::get<2>(t), ==, std::get<1>(tt));
+    TEST_ASSERT_OP(std::get<3>(t), ==, std::get<3>(tt));
+
+   // TEST_ASSERT_OP(std::get<4>(t), ==, std::get<2>(tt));
+   // TEST_ASSERT_OP(std::get<5>(t), ==, std::get<5>(tt));
+
+
+
+    /*
     using expected_tt_t = std::tuple<int&, int&, int&, char&, char&, char&,
         float&, float&, float&>;
 
@@ -22,8 +39,8 @@ int main()
     auto forward_as_tuple_fwder = [](auto&&... xs) -> decltype(auto)
     {
         return std::forward_as_tuple(FWD(xs)...);
-    };
-
+    };*/
+/*
     auto tt = tuple_transposer<decltype(t0), decltype(t1), decltype(t2)>{}.exec(
         forward_as_tuple_fwder, t0, t1, t2);
 
@@ -45,7 +62,7 @@ int main()
     TEST_ASSERT_OP(std::get<8>(tt), ==, std::get<2>(t2));
 
     static_assert(std::is_same<tt_t, expected_tt_t>{}, "");
-
+*/
     return 0;
 }
 

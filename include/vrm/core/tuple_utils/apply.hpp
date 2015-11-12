@@ -12,6 +12,7 @@
 #include <vrm/core/variadic_min_max.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/tuple_utils/transpose.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -47,38 +48,6 @@ VRM_CORE_NAMESPACE
         return impl::apply_helper(FWD(f), FWD(t), impl::get_indices<TT>{});
     }
 
-    template <typename... TTs>
-    struct tuple_transposer
-    {
-        static constexpr sz_t columns{variadic_min(std::tuple_size<TTs>{}...)};
-
-        static constexpr sz_t rows{sizeof...(TTs)};
-
-        template <sz_t TI, typename TF, typename... TTuples>
-        auto make_column_tuple_impl(TF&& f, TTuples&&... ts)
-        {
-            VRM_CORE_STATIC_ASSERT_NM(TI < columns);
-            return f(std::get<TI>(FWD(ts))...);
-        }
-
-        template <typename TF, typename... TTuples, sz_t... TIs>
-        auto exec_impl(std::index_sequence<TIs...>, TF&& f, TTuples&&... ts)
-        {
-            return std::tuple_cat(
-                make_column_tuple_impl<TIs>(f, FWD(ts)...)...);
-        }
-
-        template <typename TF, typename... TTuples>
-        auto exec(TF&& f, TTuples&&... ts)
-        {
-            return exec_impl(
-                std::make_index_sequence<columns>{}, f, FWD(ts)...);
-        }
-
-        // TODO: test, fix columns, static assert, noexcept, inline, etc
-        // TODO: transpose_args
-        // TODO: call_interleaved<arity>(f, args...)
-    };
 
     template <typename TF, typename... TTs>
     VRM_CORE_ALWAYS_INLINE decltype(auto) apply_all_sequential(
