@@ -158,12 +158,24 @@ public:
         return !(*this == rhs);
     }
 
+   void swap(stack_allocator& rhs)
+   {
+        using std::swap;
+       swap(store_, rhs.store_);
+   }
+
 private:
     template <class U, sz_t M>
     friend class stack_allocator;
 
     store_type* store_{};
 };
+
+template <class T, sz_t N>
+void swap(stack_allocator<T, N>& lhs, stack_allocator<T, N>& rhs)
+{
+    lhs.swap(rhs);
+}
 
 volatile int cc = 0;
 volatile int dd = 0;
@@ -292,6 +304,61 @@ void run_test3(const TAllocator& allocator = TAllocator{})
     TEST_ASSERT_OP(dd, ==, 50);
 }
 
+template <typename TAllocator = ::std::allocator<item>>
+void run_test4(const TAllocator& allocator = TAllocator{})
+{
+    cc = dd = copies = 0;
+
+    vrm::core::resizable_buffer<item, TAllocator> rb0{allocator};
+
+    TEST_ASSERT_NS_OP(rb0.data(), ==, nullptr);
+    TEST_ASSERT_OP(cc, ==, 0);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb0.grow_and_construct(0, 10);
+
+    TEST_ASSERT_NS_OP(rb0.data(), !=, nullptr);
+    TEST_ASSERT_OP(cc, ==, 10);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+
+
+    vrm::core::resizable_buffer<item, TAllocator> rb1{allocator};
+
+    TEST_ASSERT_NS_OP(rb1.data(), ==, nullptr);
+    TEST_ASSERT_OP(cc, ==, 10);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb1.grow_and_construct(0, 10);
+
+    TEST_ASSERT_NS_OP(rb1.data(), !=, nullptr);
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb0.swap(rb1);
+
+    TEST_ASSERT_NS_OP(rb0.data(), !=, nullptr);
+    TEST_ASSERT_NS_OP(rb1.data(), !=, nullptr);
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb0.destroy_and_deallocate(10);
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 10);
+
+    rb1.destroy_and_deallocate(10);
+    TEST_ASSERT_OP(cc, ==, 20);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 20);
+}
+
+
 
 int main()
 {
@@ -300,6 +367,7 @@ int main()
     run_test();
     run_test2();
     run_test3();
+    run_test4();
 
     {
         stack_store<sizeof(item) * 50> store;
@@ -317,6 +385,12 @@ int main()
         stack_store<sizeof(item) * 50> store;
         stack_allocator<item, sizeof(item) * 50> sa{store};
         run_test3<decltype(sa)>(sa);
+    }
+
+    {
+        stack_store<sizeof(item) * 50> store;
+        stack_allocator<item, sizeof(item) * 50> sa{store};
+        run_test4<decltype(sa)>(sa);
     }
 
     return 0;

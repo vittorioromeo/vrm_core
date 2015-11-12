@@ -28,6 +28,22 @@ VRM_CORE_NAMESPACE
 
 
     template <typename T, typename TAllocator>
+    VRM_CORE_ALWAYS_INLINE void swap(resizable_buffer<T, TAllocator> & lhs,
+        resizable_buffer<T, TAllocator> & rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
+    }
+
+    template <typename T, typename TAllocator>
+    void resizable_buffer<T, TAllocator>::swap(resizable_buffer & rhs) noexcept
+    {
+        using std::swap;
+
+        swap(_allocator, rhs._allocator);
+        swap(_data, rhs._data);
+    }
+
+    template <typename T, typename TAllocator>
     void resizable_buffer<T, TAllocator>::destroy(size_type from, size_type to)
     {
 #if VRM_CORE_DEBUG

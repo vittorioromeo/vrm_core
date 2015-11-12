@@ -6,6 +6,7 @@
 #pragma once
 
 #include <type_traits>
+#include <utility>
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/type_aliases.hpp>
 

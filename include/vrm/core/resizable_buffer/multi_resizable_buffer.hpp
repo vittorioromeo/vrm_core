@@ -16,6 +16,14 @@
 VRM_CORE_NAMESPACE
 {
     template <typename... TBufferTypes>
+    class multi_resizable_buffer;
+
+    template <typename... Ts>
+    void swap(multi_resizable_buffer<Ts...> & lhs,
+        multi_resizable_buffer<Ts...> & rhs) // .
+        noexcept(noexcept(lhs.swap(rhs)));
+
+    template <typename... TBufferTypes>
     class VRM_CORE_CLASS_API multi_resizable_buffer
     {
         VRM_CORE_STATIC_ASSERT_NM(sizeof...(TBufferTypes) > 0);
@@ -181,6 +189,12 @@ VRM_CORE_NAMESPACE
             return result;
         }
 
+        void swap(multi_resizable_buffer& rhs) noexcept
+        {
+            using std::swap;
+            swap(_buffers, rhs._buffers);
+        }
+
     private:
         template <sz_t... TIs>
         auto data_builder(std::index_sequence<TIs...>) noexcept
@@ -211,6 +225,14 @@ VRM_CORE_NAMESPACE
                 std::get<TBufferTypes>(_buffers)[pos]...};
         }
     };
+
+    template <typename... Ts>
+    VRM_CORE_ALWAYS_INLINE void swap(multi_resizable_buffer<Ts...> & lhs,
+        multi_resizable_buffer<Ts...> & rhs) // .
+        noexcept(noexcept(lhs.swap(rhs)))
+    {
+        lhs.swap(rhs);
+    }
 }
 VRM_CORE_NAMESPACE_END
 

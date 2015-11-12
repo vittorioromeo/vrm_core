@@ -9,21 +9,10 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
+#include <vrm/core/casts/self.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    // TODO:
-    template <typename TOut, typename TIn>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) self_cast(TIn && x) noexcept
-    {
-        using out_decay = std::decay_t<TOut>;
-        using in_decay = std::decay_t<TIn>;
-
-        VRM_CORE_STATIC_ASSERT_NM(std::is_same<out_decay, in_decay>{});
-
-        return static_cast<TOut>(FWD(x));
-    }
-
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) nth_arg(
         Ts && ... xs) noexcept(noexcept(std::get<TN>(make_ref_tpl(FWD(xs)...))))

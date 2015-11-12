@@ -11,3 +11,4 @@
 #include <vrm/core/casts/arithmetic.hpp>
 #include <vrm/core/casts/string_to_num.hpp>
 #include <vrm/core/casts/void_ptr.hpp>
+#include <vrm/core/casts/self.hpp>

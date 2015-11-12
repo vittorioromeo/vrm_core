@@ -8,10 +8,19 @@
 #include <memory>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/type_traits/common.hpp>
 
 VRM_CORE_NAMESPACE
 {
     template <typename T, typename TAllocator = ::std::allocator<T>>
+    class resizable_buffer;
+
+    template <typename T, typename TAllocator>
+    void swap(resizable_buffer<T, TAllocator> & lhs,
+        resizable_buffer<T, TAllocator> & rhs) // .
+        noexcept(noexcept(lhs.swap(rhs)));
+
+    template <typename T, typename TAllocator>
     class VRM_CORE_CLASS_API resizable_buffer
     {
     private:
@@ -52,6 +61,8 @@ VRM_CORE_NAMESPACE
         void grow(size_type old_capacity, size_type new_capacity);
         void construct(size_type from, size_type to);
         void grow_and_construct(size_type old_capacity, size_type new_capacity);
+
+        void swap(resizable_buffer&) noexcept;
 
         auto copy(size_type n);
 

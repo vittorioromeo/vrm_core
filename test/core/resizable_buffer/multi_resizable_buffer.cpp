@@ -171,6 +171,49 @@ void run_test3()
     TEST_ASSERT_OP(dd, ==, 100);
 }
 
+
+void run_test4()
+{
+    cc = dd = copies = 0;
+
+    using mrb_type =
+        multi_resizable_buffer<resizable_buffer<item>, resizable_buffer<item>,
+            resizable_buffer<int>, resizable_buffer<std::string>>;
+
+    mrb_type rb0, rb1;
+
+    TEST_ASSERT(all_null(rb0.data()));
+    TEST_ASSERT(all_null(rb1.data()));
+    TEST_ASSERT_OP(cc, ==, 0);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb0.grow_and_construct(0, 10);
+    rb1.grow_and_construct(0, 10);
+
+    TEST_ASSERT(!all_null(rb0.data()));
+    TEST_ASSERT(!all_null(rb1.data()));
+    TEST_ASSERT_OP(cc, ==, 40);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    using std::swap;
+    swap(rb0, rb1);
+
+    TEST_ASSERT(!all_null(rb0.data()));
+    TEST_ASSERT(!all_null(rb1.data()));
+    TEST_ASSERT_OP(cc, ==, 40);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 0);
+
+    rb0.destroy_and_deallocate(10);
+    rb1.destroy_and_deallocate(10);
+
+    TEST_ASSERT_OP(cc, ==, 40);
+    TEST_ASSERT_OP(copies, ==, 0);
+    TEST_ASSERT_OP(dd, ==, 40);
+}
+
 int main()
 {
     using namespace vrm::core;
@@ -178,6 +221,7 @@ int main()
     run_test();
     run_test2();
     run_test3();
+    run_test4();
 
     return 0;
 }

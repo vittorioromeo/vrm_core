@@ -9,6 +9,7 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/variadic_min_max.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/utility_macros.hpp>
 
@@ -53,22 +54,25 @@ VRM_CORE_NAMESPACE
 
         static constexpr sz_t rows{sizeof...(TTs)};
 
-        template <sz_t TI>
-        auto make_column_tuple(TTs&&... ts)
+        template <sz_t TI, typename TF, typename... TTuples>
+        auto make_column_tuple_impl(TF&& f, TTuples&&... ts)
         {
             VRM_CORE_STATIC_ASSERT_NM(TI < columns);
-            return std::forward_as_tuple(std::get<TI>(FWD(ts))...);
+            return f(std::get<TI>(FWD(ts))...);
         }
 
-        template <sz_t... TIs>
-        auto exec_impl(TTs&&... ts)
+        template <typename TF, typename... TTuples, sz_t... TIs>
+        auto exec_impl(std::index_sequence<TIs...>, TF&& f, TTuples&&... ts)
         {
-            return std::tuple_cat(make_column_tuple<TIs>(FWD(ts)...)...);
+            return std::tuple_cat(
+                make_column_tuple_impl<TIs>(f, FWD(ts)...)...);
         }
 
-        auto exec(TTs&&... ts)
+        template <typename TF, typename... TTuples>
+        auto exec(TF&& f, TTuples&&... ts)
         {
-            return exec_impl(std::make_index_sequence<columns>(FWD(ts)...));
+            return exec_impl(
+                std::make_index_sequence<columns>{}, f, FWD(ts)...);
         }
 
         // TODO: test, fix columns, static assert, noexcept, inline, etc
