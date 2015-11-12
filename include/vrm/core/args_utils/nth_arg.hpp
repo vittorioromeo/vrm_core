@@ -15,14 +15,14 @@ VRM_CORE_NAMESPACE
 {
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) nth_arg(
-        Ts && ... xs) noexcept(noexcept(std::get<TN>(make_ref_tpl(FWD(xs)...))))
+        Ts && ... xs) noexcept(noexcept(std::get<TN>(make_ref_tuple(FWD(xs)...))))
     {
         VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) > TN);
 
         using nth_arg_type =
-            std::tuple_element_t<TN, decltype(make_ref_tpl(FWD(xs)...))>;
+            std::tuple_element_t<TN, decltype(make_ref_tuple(FWD(xs)...))>;
 
-        return self_cast<nth_arg_type>(std::get<TN>(make_ref_tpl(FWD(xs)...)));
+        return self_cast<nth_arg_type>(std::get<TN>(make_ref_tuple(FWD(xs)...)));
     }
 }
 VRM_CORE_NAMESPACE_END

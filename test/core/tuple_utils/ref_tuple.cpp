@@ -7,7 +7,7 @@ int main()
     auto lv = 10;
     const auto clv = 15;
 
-    auto t = vrm::core::make_ref_tpl(lv, clv, 20, std::move(lv));
+    auto t = vrm::core::make_ref_tuple(lv, clv, 20, std::move(lv));
 
     SA_SAME((std::tuple_element_t<0, decltype(t)>), (int&));
     SA_SAME((std::tuple_element_t<1, decltype(t)>), (const int&));

@@ -12,116 +12,227 @@
 #include <vrm/core/variadic_min_max.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/tuple_utils/ref_tuple.hpp>
+#include <vrm/core/casts/self.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    template <sz_t TColumnCount, sz_t TRowCount>
-    struct tuple_transposer
+    namespace impl
     {
-        // static constexpr sz_t
-        // columns{variadic_min(std::tuple_size<TTs>{}...)};
-        // static constexpr sz_t rows{sizeof...(TTs)};
-
-        static constexpr sz_t columns{TColumnCount};
-        static constexpr sz_t rows{TRowCount};
-        /*
-                template <sz_t TI, typename TF, typename... TTuples>
-                auto make_column_tuple_impl(TF&& f, TTuples&&... ts)
-                {
-                    VRM_CORE_STATIC_ASSERT_NM(TI < columns);
-                    return f(std::get<TI>(FWD(ts))...);
-                }
-
-                template <typename TF, typename... TTuples, sz_t... TIs>
-                auto exec_impl(std::index_sequence<TIs...>, TF&& f, TTuples&&...
-           ts)
-                {
-                    return std::tuple_cat(
-                        make_column_tuple_impl<TIs>(f, FWD(ts)...)...);
-                }
-
-                template <typename TF, typename... TTuples>
-                auto exec(TF&& f, TTuples&&... ts)
-                {
-                    return exec_impl(
-                        std::make_index_sequence<columns>{}, f, FWD(ts)...);
-                }
-        */
-
-        // TODO: to utils
-        template <typename T0, typename T1, typename T2>
-        inline static constexpr auto index_1d_from_2d(
-            const T0& x, const T1& y, const T2& column_count) noexcept
+        template <sz_t TColumnCount, sz_t TRowCount>
+        struct tuple_transposer
         {
-            VRM_CORE_CONSTEXPR_ASSERT(column_count >= 0);
-            return x + y * column_count;
+            static constexpr sz_t column_count{TColumnCount};
+            static constexpr sz_t row_count{TRowCount};
+
+            // TODO: to utils
+            template <typename T0, typename T1, typename T2>
+            inline static constexpr auto index_1d_from_2d(
+                const T0& x, const T1& y, const T2& x_column_count) noexcept
+            {
+                VRM_CORE_CONSTEXPR_ASSERT(x_column_count >= 0);
+                return x + y * x_column_count;
+            }
+
+            template <sz_t TVX, sz_t TVY, typename TF, typename T>
+            inline static constexpr decltype(auto) get_normal(
+                TF&&, T&& t) noexcept
+            {
+                constexpr auto idx(index_1d_from_2d(TVX, TVY, column_count));
+
+                using nth_arg_type =
+                    std::tuple_element_t<idx, std::decay_t<decltype(FWD(t))>>;
+
+                // return self_cast<nth_arg_type>(std::get<idx>(FWD(t)));
+                return std::get<idx>(FWD(t));
+            }
+
+
+
+            template <sz_t TIColumn, typename TF, typename T, sz_t... TIs>
+            inline static constexpr decltype(auto)
+            make_column_tuple_single_impl(
+                std::index_sequence<TIs...>, TF&& f, T&& t)
+            {
+                return f(get_normal<TIColumn, TIs>(f, FWD(t))...);
+            }
+
+            template <typename TF, typename T, sz_t... TIs>
+            inline static constexpr decltype(auto) exec_single_impl(
+                std::index_sequence<TIs...>, TF&& f, T&& t)
+            {
+                return std::tuple_cat(make_column_tuple_single_impl<TIs>(
+                    std::make_index_sequence<row_count>{}, f, FWD(t))...);
+            }
+
+            template <typename TF, typename T>
+            inline static constexpr decltype(auto) exec_single(TF&& f, T&& t)
+            {
+                return exec_single_impl(
+                    std::make_index_sequence<column_count>{}, f, FWD(t));
+            }
+
+            // TODO: test, fix columns, static assert, noexcept, inline, etc
+            // TODO: transpose_args
+            // TODO: transpose_types<...>
+            // TODO: call_interleaved<arity>(f, args...)
+        };
+
+        template <sz_t TColumnCount, sz_t TRowCount, typename TF, typename T>
+        inline constexpr decltype(auto) invoke_tuple_transposer(
+            TF&& f, T&& t) noexcept
+        {
+            return tuple_transposer<TColumnCount, TRowCount>::exec_single(
+                f, FWD(t));
         }
 
-        template <std::size_t TVX, std::size_t TVY, typename T>
-        inline static constexpr decltype(auto) get_normal(
-            T&& t) noexcept
+        struct make_tuple_wrapper
         {
-            constexpr auto idx(index_1d_from_2d(TVX, TVY, columns));
-            return std::get<idx>(FWD(t));
+            template <typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&... xs)
+            {
+                return std::make_tuple(FWD(xs)...);
+            }
+        };
+
+        struct make_ref_tuple_wrapper
+        {
+            template <typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&... xs)
+            {
+                return make_ref_tuple(FWD(xs)...);
+            }
+        };
+
+        struct forward_as_tuple_wrapper
+        {
+            template <typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&... xs)
+            {
+                return std::forward_as_tuple(FWD(xs)...);
+            }
+        };
+
+        // TODO: move
+        template <typename T>
+        constexpr sz_t decay_tuple_size{std::tuple_size<std::decay_t<T>>{}};
+
+        template <sz_t TRowCount, typename T>
+        constexpr sz_t tuple_column_count{decay_tuple_size<T> / TRowCount};
+
+        template <sz_t TRowCount, typename TF, typename... Ts>
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+            make_generic_transposed_tuple(TF&& f, Ts&&... xs) noexcept
+        {
+            return invoke_tuple_transposer< //.
+                sizeof...(xs) / TRowCount, TRowCount>(f, f(FWD(xs)...));
         }
 
-
-
-        template <sz_t TIColumn, typename TF, typename T, sz_t... TIs>
-        inline static constexpr auto make_column_tuple_single_impl(
-            std::index_sequence<TIs...>, TF&& f, T&& t)
+        template <sz_t TRowCount, typename TF, typename T>
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+            to_generic_transposed_tuple(TF&& f, T&& t) noexcept
         {
-            return f(get_normal<TIColumn, TIs>(FWD(t))...);
+            return invoke_tuple_transposer< //.
+                tuple_column_count<TRowCount, T>, TRowCount>(f, FWD(t));
         }
 
-        template <typename TF, typename T, sz_t... TIs>
-        inline static constexpr auto exec_single_impl(
-            std::index_sequence<TIs...>, TF&& f, T&& t)
+        template <typename TF, typename... TRows>
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+            to_generic_transposed_tuple_from_rows(
+                TF&& f, TRows&&... rows) noexcept
         {
-            return std::tuple_cat(make_column_tuple_single_impl<TIs>(
-                std::make_index_sequence<rows>{}, f, FWD(t))...);
+            return f(std::tuple_cat(FWD(rows)...));
         }
+    }
 
-        template <typename TF, typename T>
-        inline static constexpr auto exec_single(TF&& f, T&& t)
-        {
-            return exec_single_impl(
-                std::make_index_sequence<columns>{}, f, FWD(t));
-        }
-
-        // TODO: test, fix columns, static assert, noexcept, inline, etc
-        // TODO: transpose_args
-        // TODO: transpose_types<...>
-        // TODO: call_interleaved<arity>(f, args...)
-    };
-
-    template <sz_t TRowSize, typename T>
-    auto make_transposed_tuple(T && t)
+    template <sz_t TRowCount, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        make_transposed_tuple(Ts && ... xs) noexcept
     {
-        // TODO: decay_tuple_size
+        return impl::make_generic_transposed_tuple<TRowCount>( // .
+            impl::make_tuple_wrapper{}, FWD(xs)...);
+    }
 
-        return tuple_transposer<std::tuple_size<std::decay_t<T>>{} / TRowSize, TRowSize>::
-            exec_single(
-                [&](auto&&... xs)
-                {
-                    return std::make_tuple(FWD(xs)...);
-                },
-                FWD(t));
+    template <sz_t TRowCount, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        make_transposed_ref_tuple(Ts && ... xs) noexcept
+    {
+        return impl::make_generic_transposed_tuple<TRowCount>( // .
+            impl::make_ref_tuple_wrapper{}, FWD(xs)...);
+    }
+
+
+    template <sz_t TRowCount, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        forward_as_transposed_tuple(Ts && ... xs) noexcept
+    {
+        return impl::make_generic_transposed_tuple<TRowCount>( // .
+            impl::forward_as_tuple_wrapper{}, FWD(xs)...);
+    }
+
+
+
+    template <sz_t TRowCount, typename T>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        to_transposed_tuple(T && t) noexcept
+    {
+        return impl::to_generic_transposed_tuple<TRowCount>( // .
+            impl::make_tuple_wrapper{}, FWD(t));
+    }
+
+    template <sz_t TRowCount, typename T>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        to_transposed_ref_tuple(T && t) noexcept
+    {
+        return impl::to_generic_transposed_tuple<TRowCount>( // .
+            impl::make_ref_tuple_wrapper{}, FWD(t));
+    }
+
+    template <sz_t TRowCount, typename T>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        to_forwarded_transposed_tuple(T && t) noexcept
+    {
+        return impl::to_generic_transposed_tuple<TRowCount>( // .
+            impl::forward_as_tuple_wrapper{}, FWD(t));
     }
 
     template <typename... TRows>
-    auto make_transposed_tuple_from_row_tuples(TRows && ... rows)
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        to_transposed_tuple_from_rows(TRows && ... rows)
     {
+        return impl::to_generic_transposed_tuple_from_rows(
+            [](auto&& t)
+            {
+                return to_transposed_tuple<sizeof...(rows)>(FWD(t));
+            },
+            FWD(rows)...);
     }
 
     template <typename... TRows>
-    auto make_transposed_ref_tuple_from_row_tuples(TRows && ... rows)
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        to_transposed_ref_tuple_from_rows(TRows && ... rows)
     {
+        return impl::to_generic_transposed_tuple_from_rows(
+            [](auto&& t)
+            {
+                return to_transposed_ref_tuple<sizeof...(rows)>(FWD(t));
+            },
+            FWD(rows)...);
     }
 
     template <typename... TRows>
-    auto forward_as_transposed_tuple_from_row_tuples(TRows && ... rows)
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        to_forwarded_transposed_tuple_from_rows(TRows && ... rows)
     {
+        return impl::to_generic_transposed_tuple_from_rows(
+            [](auto&& t)
+            {
+                return to_forwarded_transposed_tuple<sizeof...(rows)>(FWD(t));
+            },
+            FWD(rows)...);
     }
 }
 VRM_CORE_NAMESPACE_END

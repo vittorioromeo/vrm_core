@@ -12,7 +12,7 @@
 VRM_CORE_NAMESPACE
 {
     template <typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) make_ref_tpl(
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) make_ref_tuple(
         Ts && ... xs) noexcept
     {
         return std::tuple<Ts...>(FWD(xs)...);
