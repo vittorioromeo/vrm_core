@@ -50,9 +50,9 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto)
-            operator()(Ts&&... xs) noexcept(
-                noexcept(to_base<TFunctionToCall> (*this)(FWD(xs)...)))
+            VRM_CORE_ALWAYS_INLINE decltype(auto) operator()(Ts&&... xs)
+            // TODO: g++ pls
+            // noexcept(noexcept(to_base<TFunctionToCall> (*this)(FWD(xs)...)))
             {
                 return to_base<TFunctionToCall> (*this)(FWD(xs)...);
             }

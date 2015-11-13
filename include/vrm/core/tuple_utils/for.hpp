@@ -9,6 +9,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/utility_macros.hpp>
+#include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/for_args.hpp>
 #include <vrm/core/variadic_min_max.hpp>
@@ -16,9 +17,9 @@
 #define VRM_CORE_IMPL_TPLFORHELPER_BODY() \
     FWD(f)(for_tuple_data_type<TI>{}, std::get<TI>(FWD(ts))...)
 
-#define VRM_CORE_IMPL_TPLFOR_CALL()                                        \
-    ::vrm::core::impl::for_tuple_data_helper<                              \
-        ::vrm::core::variadic_min(std::tuple_size<std::decay_t<Ts>>()...), \
+#define VRM_CORE_IMPL_TPLFOR_CALL()                                          \
+    ::vrm::core::impl::for_tuple_data_helper<::vrm::core::variadic_min(      \
+                                                 decay_tuple_size<Ts>()...), \
         Ts...>::exec(FWD(f), FWD(ts)...)
 
 VRM_CORE_NAMESPACE

@@ -57,9 +57,24 @@ void test0()
 void test1()
 {
     auto t = std::make_tuple(0, 'a', 1, 'b', 2, 'c');
+    auto t_r = make_ref_tuple(0, 'a', 1, 'b', 2, 'c');
+    auto t_f = std::forward_as_tuple(0, 'a', 1, 'b', 2, 'c');
+
     auto tt = to_transposed_tuple<3>(t);
     auto tt_r = to_transposed_ref_tuple<3>(t);
     auto tt_f = to_forwarded_transposed_tuple<3>(t);
+
+    for_args(
+        [&](auto&& x)
+        {
+            TEST_ASSERT_OP(std::get<0>(t), ==, std::get<0>(x));
+            TEST_ASSERT_OP(std::get<1>(t), ==, std::get<1>(x));
+            TEST_ASSERT_OP(std::get<2>(t), ==, std::get<2>(x));
+            TEST_ASSERT_OP(std::get<3>(t), ==, std::get<3>(x));
+            TEST_ASSERT_OP(std::get<4>(t), ==, std::get<4>(x));
+            TEST_ASSERT_OP(std::get<5>(t), ==, std::get<5>(x));
+        },
+        t_r, t_f);
 
     for_args(
         [&](auto&& x)
@@ -91,7 +106,7 @@ void test2()
     SA_TYPE((t), (std::tuple<int, char, int, char>));
     SA_TYPE((t_r), (std::tuple<int, char, int, char>));
     SA_TYPE((t_f), (std::tuple<int&&, char&&, int&&, char&&>));
-
+    // ^ v - must be equal
     SA_TYPE((ttn), (std::tuple<int, int, char, char>));
     SA_TYPE((ttn_r), (std::tuple<int, int, char, char>));
     SA_TYPE((ttn_f), (std::tuple<int&&, int&&, char&&, char&&>));
@@ -131,12 +146,13 @@ void test2()
     SA_TYPE((std::get<0>(ttn_f)), (int&));
     SA_TYPE((std::get<0>(std::move(ttn_f))), (int&&));
 }
-/*
+
 void test3()
 {
     int i = 1;
     int i2 = 3;
     auto t = std::tuple<int, int&, int&&, int*>(0, i, 2, &i2);
+
     auto tt = to_transposed_tuple<2>(t);
     auto tt_r = to_transposed_ref_tuple<2>(t);
     auto tt_f = to_forwarded_transposed_tuple<2>(t);
@@ -168,16 +184,50 @@ void test3()
     SA_TYPE((std::get<2>(std::move(tt_f))), (int&));
     SA_TYPE((std::get<3>(std::move(tt_f))), (int*&));
 }
-*/
+
+void test4()
+{
+    auto t0(std::make_tuple(0, 1, 2));
+    auto t1(std::make_tuple(3, 4, 5));
+
+    auto tt0(to_transposed_tuple<1>(t0));
+    SA_TYPE((tt0), (std::tuple<int, int, int>));
+
+    auto tt0_r(to_transposed_ref_tuple<1>(t0));
+    SA_TYPE((tt0_r), (std::tuple<int&, int&, int&>));
+
+    auto tt0_f(to_forwarded_transposed_tuple<1>(t0));
+    SA_TYPE((tt0_f), (std::tuple<int&, int&, int&>));
+
+    auto tt(to_transposed_tuple_from_rows(t0, t1));
+    SA_TYPE((tt), (std::tuple<int, int, int, int, int, int>));
+
+    auto tt_r(to_transposed_ref_tuple_from_rows(t0, t1));
+    SA_TYPE((tt_r), (std::tuple<int&, int&, int&, int&, int&, int&>));
+
+    auto tt_f(to_forwarded_transposed_tuple_from_rows(t0, t1));
+    SA_TYPE((tt_f), (std::tuple<int&, int&, int&, int&, int&, int&>));
+
+    auto ttn(to_transposed_tuple_from_rows(
+        std::make_tuple(0, 1, 2), std::make_tuple(3, 4, 5)));
+    SA_TYPE((ttn), (std::tuple<int, int, int, int, int, int>));
+
+    auto ttn_r(to_transposed_ref_tuple_from_rows(
+        std::make_tuple(0, 1, 2), std::make_tuple(3, 4, 5)));
+    SA_TYPE((ttn_r), (std::tuple<int, int, int, int, int, int>));
+
+    auto ttn_f(to_forwarded_transposed_tuple_from_rows(
+        std::make_tuple(0, 1, 2), std::make_tuple(3, 4, 5)));
+    SA_TYPE((ttn_f), (std::tuple<int&&, int&&, int&&, int&&, int&&, int&&>));
+}
 
 int main()
 {
     test0();
     test1();
     test2();
-    // test3();
+    test3();
+    test4();
 
     return 0;
 }
-
-// TODO:

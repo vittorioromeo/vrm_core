@@ -48,5 +48,16 @@ VRM_CORE_NAMESPACE
     template <typename T, typename TStorage>
     using valid_storage = bool_<sizeof(typename TStorage::type) >= sizeof(T) &&
                                 alignof(typename TStorage::type) >= alignof(T)>;
+
+    // TODO: move to other file
+    template <typename T>
+    VRM_CORE_ALWAYS_INLINE constexpr auto decay_tuple_size() noexcept
+    {
+        return std::tuple_size<std::decay_t<T>>{};
+    }
+
+    template <typename T>
+    using make_tuple_index_sequence =
+        std::make_index_sequence<decay_tuple_size<T>()>;
 }
 VRM_CORE_NAMESPACE_END

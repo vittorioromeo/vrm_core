@@ -27,25 +27,18 @@ VRM_CORE_NAMESPACE
             // contents of the `t` tuple as the function parameters.
             return FWD(f)(std::get<TIs>(FWD(t))...);
         }
-
-        // We use `std::decay_t` here to get rid of the reference.
-        template <typename TT>
-        using get_indices =
-            std::make_index_sequence<std::tuple_size<std::decay_t<TT>>{}>;
     }
 
     template <typename TF, typename TT>
     VRM_CORE_ALWAYS_INLINE decltype(auto) apply(TF && f, TT && t) // .
-        noexcept(noexcept(
-            impl::apply_helper(FWD(f), FWD(t), impl::get_indices<TT>{})))
+        noexcept(noexcept(impl::apply_helper(
+            FWD(f), FWD(t), make_tuple_index_sequence<TT>{})))
     {
         // `apply_helper` requires an index sequence that goes from `0` to
         // the number of tuple items.
 
-        // We can build that using `std::make_index_sequence` and
-        // `std::tuple_size`.
-
-        return impl::apply_helper(FWD(f), FWD(t), impl::get_indices<TT>{});
+        return impl::apply_helper(
+            FWD(f), FWD(t), make_tuple_index_sequence<TT>{});
     }
 
 
