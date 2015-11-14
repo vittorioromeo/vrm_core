@@ -28,6 +28,9 @@ struct for_args_continue{};
        struct for_args_break{};
        struct for_args_return{};*/
 
+// TODO: to test, implement "std:cin choice switch" that returns choice int or
+// executes choice function
+
 VRM_CORE_NAMESPACE
 {
     struct break_t
