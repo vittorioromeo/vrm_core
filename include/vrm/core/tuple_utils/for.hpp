@@ -10,6 +10,7 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/utility_macros.hpp>
 #include <vrm/core/type_traits/common.hpp>
+#include <vrm/core/type_traits/tuple.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/for_args.hpp>
 #include <vrm/core/variadic_min_max.hpp>
@@ -31,6 +32,9 @@ VRM_CORE_NAMESPACE
         {
             static constexpr sz_t index{TI};
         };
+
+        template <sz_t TI>
+        constexpr sz_t for_tuple_data_type<TI>::index;
 
         template <sz_t TS, typename... Ts>
         struct for_tuple_data_helper

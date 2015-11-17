@@ -35,7 +35,6 @@ VRM_CORE_NAMESPACE
             impl::make_ref_tuple_wrapper{}, FWD(xs)...);
     }
 
-
     template <sz_t TRowCount, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
         forward_as_transposed_tuple(Ts && ... xs) noexcept

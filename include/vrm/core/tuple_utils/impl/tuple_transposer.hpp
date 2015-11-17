@@ -15,6 +15,7 @@
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/casts/self.hpp>
 #include <vrm/core/type_traits/common.hpp>
+#include <vrm/core/type_traits/tuple.hpp>
 
 VRM_CORE_NAMESPACE
 {

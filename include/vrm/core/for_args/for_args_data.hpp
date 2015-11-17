@@ -27,13 +27,14 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-
-
         template <sz_t TI>
         struct for_args_data_type
         {
             static constexpr sz_t index{TI};
         };
+
+        template <sz_t TI>
+        constexpr sz_t for_args_data_type<TI>::index;
 
         template <typename, typename>
         struct for_args_data_helper;
