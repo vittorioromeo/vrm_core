@@ -19,8 +19,8 @@ int main()
     (void) self_cast<int&&>(i);
     (void) self_cast<const int&>(i);
     (void) self_cast<const int&&>(i);
-    (void) self_cast<volatile int&>(i);
-    (void) self_cast<volatile int&&>(i);
+    (volatile int) self_cast<volatile int&>(i);
+    (volatile int) self_cast<volatile int&&>(i);
 
     return 0;
 }
