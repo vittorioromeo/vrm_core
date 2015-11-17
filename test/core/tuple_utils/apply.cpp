@@ -35,5 +35,9 @@ int main()
     TEST_ASSERT_OP(apply(count, t1), ==, 3);
     TEST_ASSERT_OP(apply(count, t2), ==, 3);
 
+    TEST_ASSERT_OP(apply_all_sequential(first, t0, t1, t2), ==, 0);
+    TEST_ASSERT_OP(apply_all_sequential(second, t0, t1, t2), ==, 1);
+    TEST_ASSERT_OP(apply_all_sequential(count, t0, t1, t2), ==, 4 + 3 + 3);
+
     return 0;
 }

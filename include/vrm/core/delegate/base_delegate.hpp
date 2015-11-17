@@ -58,12 +58,13 @@ VRM_CORE_NAMESPACE
                 std::vector<TReturn> result;
                 result.reserve(self._functions.size());
 
-                self.call_and_use_result(
-                    [&result](auto&& x)
-                    {
-                        result.emplace_back(FWD(x));
-                    },
-                    FWD(xs)...);
+                FWD(self)
+                    .call_and_use_result(
+                        [&result](auto&& x)
+                        {
+                            result.emplace_back(FWD(x));
+                        },
+                        FWD(xs)...);
 
                 return result;
             }
