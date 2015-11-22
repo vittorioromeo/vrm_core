@@ -31,6 +31,8 @@ struct for_args_continue{};
 // TODO: to test, implement "std:cin choice switch" that returns choice int or
 // executes choice function
 
+// TODO: what is more general? static_for_ints? static_for_args?
+
 VRM_CORE_NAMESPACE
 {
     struct break_t
@@ -49,11 +51,13 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <sz_t TArity, typename TFunctionToCall>
-        struct static_for_args_result
+        struct static_for_args_result : TFunctionToCall
         {
         private:
-            // TODO: EBCO optimization
-            TFunctionToCall _f;
+            VRM_CORE_ALWAYS_INLINE auto& as_f_to_call() noexcept
+            {
+                return static_cast<TFunctionToCall&>(*this);
+            }
 
             template <sz_t TIteration>
             using data_type = static_for_args_data_type<TIteration>;
@@ -61,7 +65,7 @@ VRM_CORE_NAMESPACE
         public:
             template <typename TFFwd>
             VRM_CORE_ALWAYS_INLINE static_for_args_result(TFFwd&& f) noexcept
-                : _f(FWD(f))
+                : TFunctionToCall(FWD(f))
             {
             }
 
@@ -69,7 +73,6 @@ VRM_CORE_NAMESPACE
             template <sz_t TNextIteration, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(Ts&&... xs)
             {
-
                 return apply(
                     [this](auto&&... vs)
                     {
@@ -85,7 +88,7 @@ VRM_CORE_NAMESPACE
                 return apply(
                     [this](auto&&... xargs)
                     {
-                        _f(data_type<TIteration>{}, FWD(xargs)...);
+                        as_f_to_call()(data_type<TIteration>{}, FWD(xargs)...);
                     },
                     first_n_args<TArity>(FWD(xs)...));
             }
@@ -130,7 +133,8 @@ VRM_CORE_NAMESPACE
     template <sz_t TArity = 1, typename TF>
     VRM_CORE_ALWAYS_INLINE decltype(auto) static_for_args(TF && f)
     {
-        return impl::static_for_args_result<TArity, decltype(f)>(FWD(f));
+        return impl::static_for_args_result<TArity, std::decay_t<decltype(f)>>(
+            FWD(f));
     }
 }
 VRM_CORE_NAMESPACE_END
