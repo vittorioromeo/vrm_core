@@ -7,6 +7,18 @@ enum class test_enum : int
     b = 20
 };
 
+enum class uint_enum : unsigned int
+{
+    a = 0,
+    b = 1
+};
+
+enum class int_enum : int
+{
+    a = -1,
+    b = -2
+};
+
 int main()
 {
     using namespace vrm::core;
@@ -22,6 +34,17 @@ int main()
 
     TEST_ASSERT(from_enum<float>(test_enum::a) == 10.f);
     TEST_ASSERT(from_enum<float>(test_enum::b) == 20.f);
+
+    // Fires runtime assertion as intended:
+    // (void) to_enum<uint_enum>(int_enum::a);
+
+    (void) to_enum<int_enum>(uint_enum::a);
+
+    (void) to_enum<uint_enum>(0);
+    (void) to_enum<uint_enum>(1);
+
+    // Fires runtime assertion as intended:
+    // (void) to_enum<uint_enum>(-1);
 
     return 0;
 }
