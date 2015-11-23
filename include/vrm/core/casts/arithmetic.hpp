@@ -5,34 +5,25 @@
 
 #pragma once
 
+#include <cfenv>
+#include <limits>
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits.hpp>
+#include <vrm/core/casts/impl/overflow_check.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    /// @brief Converts a number to another number type.
-    /// @details Both types must have the same signedness.
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
-        ->std::enable_if_t<
-            are_both_numbers<TOut, TIn>{} && same_signedness<TOut, TIn>{}, TOut>
     {
-        return static_cast<TOut>(x);
-    }
+        static_assert(are_both_numbers<TOut, TIn>{},
+            "`to_num` only works on numerical types.");
 
-    /// @brief Converts a number to another number type.
-    /// @details Types must have different signedness. Asserts that the signed
-    /// value is greater or equal than zero.
-    template <typename TOut, typename TIn>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
-        ->std::enable_if_t<are_both_numbers<TOut, TIn>{} &&
-                               !same_signedness<TOut, TIn>{},
-            TOut>
-    {
-        VRM_CORE_CONSTEXPR_ASSERT(x >= 0);
+        VRM_CORE_CONSTEXPR_ASSERT((!impl::will_overflow<TOut, TIn>(x)));
+
         return static_cast<TOut>(x);
     }
 
