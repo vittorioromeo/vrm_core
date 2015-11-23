@@ -8,35 +8,22 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/casts/arithmetic.hpp>
+#include <vrm/core/type_traits/qualifiers.hpp>
 
 VRM_CORE_NAMESPACE
 {
     template <typename T>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_void_ptr(T * x) noexcept
     {
-        return static_cast<void*>(x);
+        return static_cast<copy_cv_qualifiers<void, T>*>(x);
     }
 
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_void_ptr(const T* x) noexcept
-    {
-        return static_cast<const void*>(x);
-    }
-
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto num_to_void_ptr(
-        T & x) noexcept->std::enable_if_t<!std::is_pointer<T>{}, void*>
+    VRM_CORE_ALWAYS_INLINE constexpr auto num_to_void_ptr(T & x) noexcept
+        ->std::enable_if_t<!std::is_pointer<T>{}, copy_cv_qualifiers<void, T>*>
     {
         VRM_CORE_STATIC_ASSERT_NM(std::is_arithmetic<T>{});
-        return reinterpret_cast<void*>(x);
-    }
-
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto num_to_void_ptr(const T& x) noexcept
-        ->std::enable_if_t<!std::is_pointer<T>{}, const void*>
-    {
-        VRM_CORE_STATIC_ASSERT_NM(std::is_arithmetic<T>{});
-        return reinterpret_cast<const void*>(x);
+        return reinterpret_cast<copy_cv_qualifiers<void, T>*>(x);
     }
 }
 VRM_CORE_NAMESPACE_END

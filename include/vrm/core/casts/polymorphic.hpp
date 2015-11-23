@@ -10,6 +10,9 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_traits.hpp>
 #include <vrm/core/ostream_utils.hpp>
+#include <vrm/core/type_traits/common.hpp>
+#include <vrm/core/type_traits/qualifiers.hpp>
+#include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -17,7 +20,7 @@ VRM_CORE_NAMESPACE
     {
         template <typename TDerived, typename TBase, typename TOut,
             typename TPtr>
-        VRM_CORE_ALWAYS_INLINE constexpr TOut polymorphic_cast(
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) polymorphic_cast(
             TPtr&& ptr) noexcept
         {
             VRM_CORE_STATIC_ASSERT_NM(is_same_or_derived_of<TDerived, TBase>{});
@@ -32,15 +35,7 @@ VRM_CORE_NAMESPACE
         TBase * base) noexcept
     {
         return impl::polymorphic_cast<TDerived, TBase, //.
-            TDerived*>(base);
-    }
-
-    template <typename TDerived, typename TBase>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
-        const TBase* base) noexcept
-    {
-        return impl::polymorphic_cast<TDerived, TBase, //.
-            const TDerived*>(base);
+            copy_cv_qualifiers<TDerived, TBase>*>(base);
     }
 
     template <typename TBase, typename TDerived>
@@ -48,15 +43,7 @@ VRM_CORE_NAMESPACE
         TDerived * derived) noexcept
     {
         return impl::polymorphic_cast<TDerived, TBase, //.
-            TBase*>(derived);
-    }
-
-    template <typename TBase, typename TDerived>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
-        const TDerived* derived) noexcept
-    {
-        return impl::polymorphic_cast<TDerived, TBase, //.
-            const TDerived*>(derived);
+            copy_cv_qualifiers<TBase, TDerived>*>(derived);
     }
 
     template <typename TDerived, typename TBase>
