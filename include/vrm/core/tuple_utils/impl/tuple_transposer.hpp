@@ -29,34 +29,26 @@ VRM_CORE_NAMESPACE
 
             // TODO: to utils
             template <typename T0, typename T1, typename T2>
-            inline static constexpr auto index_1d_from_2d(
+            VRM_CORE_ALWAYS_INLINE static constexpr auto index_1d_from_2d(
                 const T0& x, const T1& y, const T2& x_column_count) noexcept
             {
                 VRM_CORE_CONSTEXPR_ASSERT(x_column_count >= 0);
                 return x + y * x_column_count;
             }
 
-            template <sz_t TVX, sz_t TVY, typename TF, typename T>
-            inline static constexpr decltype(auto) get_normal(
-                TF&&, T&& t) noexcept
+            template <sz_t TVX, sz_t TVY, typename T>
+            inline static constexpr decltype(auto) get_normal(T&& t) noexcept
             {
                 constexpr auto idx(index_1d_from_2d(TVX, TVY, column_count));
-
-                using nth_arg_type =
-                    std::tuple_element_t<idx, std::decay_t<decltype(FWD(t))>>;
-
-                // return self_cast<nth_arg_type>(std::get<idx>(FWD(t)));
                 return std::get<idx>(FWD(t));
             }
-
-
 
             template <sz_t TIColumn, typename TF, typename T, sz_t... TIs>
             inline static constexpr decltype(auto)
             make_column_tuple_single_impl(
                 std::index_sequence<TIs...>, TF&& f, T&& t)
             {
-                return f(get_normal<TIColumn, TIs>(f, FWD(t))...);
+                return f(get_normal<TIColumn, TIs>(FWD(t))...);
             }
 
             template <typename TF, typename T, sz_t... TIs>
@@ -126,15 +118,17 @@ VRM_CORE_NAMESPACE
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
             make_generic_transposed_tuple(TF&& f, Ts&&... xs) noexcept
         {
-            return invoke_tuple_transposer< //.
-                sizeof...(xs) / TRowCount, TRowCount>(f, f(FWD(xs)...));
+            constexpr auto column_count(sizeof...(xs) / TRowCount);
+
+            return invoke_tuple_transposer< // .
+                column_count, TRowCount>(f, f(FWD(xs)...));
         }
 
         template <sz_t TRowCount, typename TF, typename T>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
             to_generic_transposed_tuple(TF&& f, T&& t) noexcept
         {
-            return invoke_tuple_transposer< //.
+            return invoke_tuple_transposer< // .
                 tuple_column_count<TRowCount, T>, TRowCount>(f, FWD(t));
         }
 
@@ -154,8 +148,8 @@ VRM_CORE_NAMESPACE
             to_generic_transposed_tuple_from_rows(
                 TF&& f, TRows&&... rows) noexcept
         {
-            return f(std::tuple_cat(FWD(tuple_ref_to_ref_tuple(
-                FWD(rows), make_tuple_index_sequence<decltype(rows)>{}))...));
+            return f(std::tuple_cat(tuple_ref_to_ref_tuple(
+                FWD(rows), make_tuple_index_sequence<decltype(rows)>{})...));
         }
     }
 }

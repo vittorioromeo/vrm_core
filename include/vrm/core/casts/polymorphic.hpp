@@ -34,7 +34,7 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
         TBase * base) noexcept
     {
-        return impl::polymorphic_cast<TDerived, TBase, //.
+        return impl::polymorphic_cast<TDerived, TBase, // .
             copy_cv_qualifiers<TDerived, TBase>*>(base);
     }
 
@@ -42,7 +42,7 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
         TDerived * derived) noexcept
     {
-        return impl::polymorphic_cast<TDerived, TBase, //.
+        return impl::polymorphic_cast<TDerived, TBase, // .
             copy_cv_qualifiers<TBase, TDerived>*>(derived);
     }
 
