@@ -5,6 +5,28 @@ int main()
 {
     using namespace vrm::core;
 
+
+
+    static_for_args([](auto data, auto x_wrapper)
+        {
+            constexpr auto x(decltype(x_wrapper){});
+            std::cout << x << "\n";
+
+            return static_if(bool_<(x == 2)>{})
+                .then([](auto y)
+                    {
+                        return break_t{};
+                    })
+                .else_([](auto y)
+                    {
+                        return skip_t<1>{};
+                    })(x);
+
+        })(sz_t_<0>{}, sz_t_<1>{}, sz_t_<2>{}, sz_t_<3>{}, sz_t_<4>{},
+        sz_t_<5>{}, sz_t_<6>{});
+
+    return 0;
+
     static_for_args([](auto data, auto&& x)
         {
             return static_if(
@@ -14,7 +36,7 @@ int main()
                     {
                         std::cout << "skip " << decltype(data)::iteration
                                   << "\n";
-                        return continue_t{};
+                        // return continue_t{};
                         // return break_t{};
                     })
                 .else_([](auto&& v)
@@ -36,7 +58,7 @@ int main()
                     {
                         std::cout << "skip " << decltype(data)::iteration
                                   << "\n";
-                        return continue_t{};
+                        // return continue_t{};
                         // return break_t{};
                     })
                 .else_([](auto&& v)
