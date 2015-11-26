@@ -16,7 +16,8 @@ VRM_CORE_NAMESPACE
         struct static_if_;
 
         template <typename TPredicate>
-        VRM_CORE_ALWAYS_INLINE auto make_static_if(TPredicate) noexcept
+        VRM_CORE_ALWAYS_INLINE constexpr auto make_static_if(
+            TPredicate) noexcept
         {
             return static_if_<TPredicate{}>{};
         }

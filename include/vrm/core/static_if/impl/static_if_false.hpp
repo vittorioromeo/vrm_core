@@ -20,16 +20,17 @@ VRM_CORE_NAMESPACE
         template <>
         struct static_if_<false>
         {
-            template <typename F>
-            VRM_CORE_ALWAYS_INLINE auto& then(F&&)
+            VRM_CORE_ALWAYS_INLINE constexpr static_if_() {}
+
+            template <typename TF>
+            VRM_CORE_ALWAYS_INLINE constexpr auto& then(TF&&)
             {
                 // Ignore `then`, as the predicate is false.
-
                 return *this;
             }
 
-            template <typename F>
-            VRM_CORE_ALWAYS_INLINE auto else_(F&& f) noexcept
+            template <typename TF>
+            VRM_CORE_ALWAYS_INLINE constexpr auto else_(TF&& f) noexcept
             {
                 // Assuming that `else_` is after all `else_if` calls.
 
@@ -40,13 +41,14 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TPredicate>
-            VRM_CORE_ALWAYS_INLINE auto else_if(TPredicate) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto else_if(TPredicate) noexcept
             {
                 return make_static_if(TPredicate{});
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE auto operator()(Ts&&...) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&...) noexcept
             {
                 // If there are no `else` branches, we must ignore a call to a
                 // failed static if matching.

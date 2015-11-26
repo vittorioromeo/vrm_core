@@ -29,19 +29,11 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename TPredicate>
-    VRM_CORE_ALWAYS_INLINE auto static_if(TPredicate) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto static_if(TPredicate) noexcept
     {
         VRM_CORE_STATIC_ASSERT_NM(impl::is_valid_predicate(TPredicate{}));
-        return impl::static_if_<TPredicate{}>{};
+        return impl::make_static_if(TPredicate{});
     }
-
-    /*
-    template <typename TPredicate, typename TF>
-    VRM_CORE_ALWAYS_INLINE auto static_if_then(TPredicate, TF&& f) noexcept
-    {
-        return static_if(TPredicate{}).then(f);
-    }
-    */
 }
 VRM_CORE_NAMESPACE_END
 

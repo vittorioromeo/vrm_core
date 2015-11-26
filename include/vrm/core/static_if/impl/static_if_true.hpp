@@ -20,28 +20,27 @@ VRM_CORE_NAMESPACE
         template <>
         struct static_if_<true>
         {
+            VRM_CORE_ALWAYS_INLINE constexpr static_if_() {}
+
             template <typename TF>
-            VRM_CORE_ALWAYS_INLINE auto& else_(TF&&) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto& else_(TF&&) noexcept
             {
                 // Ignore `else_`, as the predicate is true.
-
                 return *this;
             }
 
             template <typename TF>
-            VRM_CORE_ALWAYS_INLINE auto then(TF&& f) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto then(TF&& f) noexcept
             {
                 // We found a matching branch, just make a result and ignore
                 // everything else.
-
                 return make_static_if_result(FWD(f));
             }
 
             template <typename TPredicate>
-            VRM_CORE_ALWAYS_INLINE auto& else_if(TPredicate) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto& else_if(TPredicate) noexcept
             {
                 // Ignore `else_if`, as the predicate is true.
-
                 return *this;
             }
         };

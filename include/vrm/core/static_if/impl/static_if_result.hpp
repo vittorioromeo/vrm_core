@@ -20,46 +20,46 @@ VRM_CORE_NAMESPACE
         struct static_if_result : TFunctionToCall
         {
             template <typename TFFwd>
-            VRM_CORE_ALWAYS_INLINE static_if_result(TFFwd&& f) noexcept
-                : TFunctionToCall(FWD(f))
+            VRM_CORE_ALWAYS_INLINE constexpr static_if_result(
+                TFFwd&& f) noexcept : TFunctionToCall(FWD(f))
             {
             }
 
             template <typename TF>
-            VRM_CORE_ALWAYS_INLINE auto& else_(TF&&) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto& else_(TF&&) noexcept
             {
                 // Ignore everything, we found a result.
-
                 return *this;
             }
 
             template <typename TF>
-            VRM_CORE_ALWAYS_INLINE auto& then(TF&&) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto& then(TF&&) noexcept
             {
                 // Ignore everything, we found a result.
-
                 return *this;
             }
 
             template <typename TPredicate>
-            VRM_CORE_ALWAYS_INLINE auto& else_if(TPredicate) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto& else_if(TPredicate) noexcept
             {
                 // Ignore everything, we found a result.
-
                 return *this;
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) operator()(Ts&&... xs)
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&... xs)
             // TODO: g++ pls
             // noexcept(noexcept(to_base<TFunctionToCall> (*this)(FWD(xs)...)))
             {
+                // TODO: can this be constexpr?
                 return to_base<TFunctionToCall> (*this)(FWD(xs)...);
             }
         };
 
         template <typename TF>
-        VRM_CORE_ALWAYS_INLINE auto make_static_if_result(TF&& f) noexcept
+        VRM_CORE_ALWAYS_INLINE constexpr auto make_static_if_result(
+            TF&& f) noexcept
         {
             return static_if_result<TF>{FWD(f)};
         }
