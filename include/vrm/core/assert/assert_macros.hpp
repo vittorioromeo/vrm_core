@@ -8,15 +8,6 @@
 #include <vrm/pp/utils.hpp>
 #include <vrm/core/config.hpp>
 
-/// @macro Static assertion. Checked at compile-time.
-/// @details Wrapper for the standard `static_assert`.
-#define VRM_CORE_STATIC_ASSERT(...) static_assert(__VA_ARGS__)
-
-/// @macro Static assertion. Checked at compile-time. No message.
-/// @details Wrapper for the standard `static_assert` with a default message.
-#define VRM_CORE_STATIC_ASSERT_NM(...) \
-    static_assert(__VA_ARGS__, VRM_PP_TOSTR(__VA_ARGS__))
-
 // `VRM_CORE_ASSERT_FORCE_OFF` and `VRM_CORE_ASSERT_FORCE_ON` macros force
 // enabling/disabling of assertions.
 // `VRM_CORE_ASSERT_FORCE_ON` has priority over `VRM_CORE_ASSERT_FORCE_OFF`.

@@ -17,7 +17,7 @@ VRM_CORE_NAMESPACE
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) build_args_slice(
             std::index_sequence<TIs...>, Ts&&... xs) noexcept
         {
-            return make_ref_tuple(FWD(nth_arg<TIBegin + TIs>(FWD(xs)...))...);
+            return make_ref_tuple(nth_arg<TIBegin + TIs>(FWD(xs)...)...);
         }
     }
 
