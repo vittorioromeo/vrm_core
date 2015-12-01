@@ -13,11 +13,6 @@
 VRM_CORE_NAMESPACE
 {
     template <typename TOut, typename TIn>
-    using are_both_numbers =
-        bool_<std::is_arithmetic<TOut>{} && std::is_arithmetic<TIn>() &&
-              !std::is_enum<TOut>() && !std::is_enum<TIn>()>;
-
-    template <typename TOut, typename TIn>
     using same_signedness =
         bool_<std::is_signed<TOut>{} == std::is_signed<TIn>{}>;
 
@@ -37,13 +32,6 @@ VRM_CORE_NAMESPACE
     using are_underlying_types_convertible =
         bool_<std::is_convertible<std::underlying_type_t<TOut>,
             std::underlying_type_t<TIn>>{}>;
-
-    template <typename TBase, typename TDerived>
-    using is_same_or_base_of = bool_<std::is_same<TBase, TDerived>{} ||
-                                     std::is_base_of<TBase, TDerived>{}>;
-
-    template <typename TDerived, typename TBase>
-    using is_same_or_derived_of = is_same_or_base_of<TBase, TDerived>;
 
     template <typename T, typename TStorage>
     using valid_storage = bool_<sizeof(typename TStorage::type) >= sizeof(T) &&

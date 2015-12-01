@@ -22,7 +22,7 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr auto num_to_void_ptr(T && x) noexcept
         ->std::enable_if_t<!std::is_pointer<T>{}, copy_cv_qualifiers<void, T>*>
     {
-        VRM_CORE_STATIC_ASSERT_NM(std::is_arithmetic<T>{});
+        VRM_CORE_STATIC_ASSERT_NM(std::is_arithmetic<std::decay_t<T>>{});
         return reinterpret_cast<copy_cv_qualifiers<void, T>*>(x);
     }
 }

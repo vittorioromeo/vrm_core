@@ -19,8 +19,11 @@ VRM_CORE_NAMESPACE
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
     {
-        static_assert(are_both_numbers<TOut, TIn>{},
-            "`to_num` only works on numerical types.");
+        VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TOut>{},
+            "`TOut` output type must be an arithmetic type.");
+
+        VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TIn>{},
+            "`TIn` input type must be an arithmetic type.");
 
         VRM_CORE_CONSTEXPR_ASSERT((!impl::will_overflow<TOut, TIn>(x)));
 
