@@ -16,6 +16,13 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
+        // TODO:
+        template <typename T, typename... Ts>
+        struct has_nothrow_call_operator
+            : bool_<noexcept((std::declval<T>())(std::declval<Ts>()...))>
+        {
+        };
+
         template <typename TFunctionToCall>
         struct static_if_result : TFunctionToCall
         {
@@ -48,11 +55,9 @@ VRM_CORE_NAMESPACE
 
             template <typename... Ts>
             VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&... xs)
-            // TODO: g++ pls
-            // noexcept(noexcept(to_base<TFunctionToCall> (*this)(FWD(xs)...)))
+                Ts&&... xs) noexcept(has_nothrow_call_operator<TFunctionToCall,
+                decltype(FWD(xs))...>{})
             {
-                // TODO: can this be constexpr?
                 return to_base<TFunctionToCall> (*this)(FWD(xs)...);
             }
         };
