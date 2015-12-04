@@ -6,5 +6,7 @@
 #pragma once
 
 #include <vrm/core/type_traits/common.hpp>
+#include <vrm/core/type_traits/referenceness.hpp>
+#include <vrm/core/type_traits/forward_like.hpp>
 #include <vrm/core/type_traits/tuple.hpp>
 #include <vrm/core/type_traits/qualifiers.hpp>
