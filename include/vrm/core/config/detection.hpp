@@ -10,3 +10,4 @@
 #include <vrm/core/config/detection/compiler.hpp>
 #include <vrm/core/config/detection/debug.hpp>
 #include <vrm/core/config/detection/stdlib.hpp>
+#include <vrm/core/config/detection/rtti.hpp>
