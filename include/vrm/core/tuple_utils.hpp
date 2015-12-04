@@ -10,3 +10,4 @@
 #include <vrm/core/tuple_utils/index_of.hpp>
 #include <vrm/core/tuple_utils/repeated_tuple.hpp>
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
+#include <vrm/core/tuple_utils/transpose.hpp>

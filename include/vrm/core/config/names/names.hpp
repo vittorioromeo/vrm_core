@@ -13,3 +13,6 @@
 #define VRM_CORE_NAMESPACE_END }
 
 #define VRM_CORE_ALWAYS_INLINE __attribute__((always_inline)) inline
+
+// TODO:
+#define VRM_CORE_NEVER_INLINE __attribute__((noinline))

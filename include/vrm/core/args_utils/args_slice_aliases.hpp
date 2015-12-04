@@ -23,7 +23,8 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) last_n_args(
         Ts && ... xs) noexcept
     {
-        return args_slice<sizeof...(xs)-TN, sizeof...(xs)>(FWD(xs)...);
+        constexpr auto begin_idx(sizeof...(xs)-TN);
+        return args_slice<begin_idx, begin_idx + TN>(FWD(xs)...);
     }
 
     template <sz_t TN, typename... Ts>

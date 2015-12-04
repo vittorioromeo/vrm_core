@@ -18,7 +18,7 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TOut, typename TIn>
-        VRM_CORE_ALWAYS_INLINE constexpr bool will_overflow_impl(
+        constexpr bool will_overflow_impl(
             const TIn& x, std::false_type, std::false_type) noexcept
         {
             if(x > std::numeric_limits<TOut>::max() ||
@@ -50,7 +50,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        VRM_CORE_ALWAYS_INLINE constexpr bool will_overflow_impl(
+        constexpr bool will_overflow_impl(
             const TIn& x, std::true_type, std::false_type) noexcept
         {
             if((long double)x > (long double)std::numeric_limits<TOut>::max() ||
@@ -64,7 +64,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        VRM_CORE_ALWAYS_INLINE constexpr bool will_overflow_impl(
+        constexpr bool will_overflow_impl(
             const TIn& x, std::false_type, std::true_type) noexcept
         {
             if((long double)x > (long double)std::numeric_limits<TOut>::max() ||
@@ -78,7 +78,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        VRM_CORE_ALWAYS_INLINE constexpr bool will_overflow_impl(
+        constexpr bool will_overflow_impl(
             const TIn& x, std::true_type, std::true_type) noexcept
         {
             using out_lim = std::numeric_limits<TOut>;
@@ -153,12 +153,11 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        VRM_CORE_ALWAYS_INLINE constexpr bool will_overflow(
-            const TIn& x) noexcept
+        constexpr bool will_overflow(const TIn& x) noexcept
         {
             return will_overflow_impl<TOut, TIn>(x,
-                bool_<std::is_integral<TOut>{}>{},
-                bool_<std::is_integral<TIn>{}>{});
+                bool_v<std::is_integral<TOut>{}>,
+                bool_v<std::is_integral<TIn>{}>);
         }
     }
 }

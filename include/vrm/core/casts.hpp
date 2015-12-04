@@ -12,3 +12,6 @@
 #include <vrm/core/casts/string_to_num.hpp>
 #include <vrm/core/casts/void_ptr.hpp>
 #include <vrm/core/casts/self.hpp>
+
+// TODO: check for possible additional improvements from meetingcpp lightning
+// talk code

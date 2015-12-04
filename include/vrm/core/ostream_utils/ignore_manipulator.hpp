@@ -37,13 +37,12 @@ VRM_CORE_NAMESPACE
         };
 
         template <typename>
-        struct is_ignore_manipulator : bool_constant<false>
+        struct is_ignore_manipulator : std::false_type
         {
         };
 
         template <typename T>
-        struct is_ignore_manipulator<ignore_manipulator<T>>
-            : bool_constant<true>
+        struct is_ignore_manipulator<ignore_manipulator<T>> : std::true_type
         {
         };
     }

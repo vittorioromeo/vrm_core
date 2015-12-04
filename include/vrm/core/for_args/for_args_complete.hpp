@@ -37,6 +37,9 @@ struct for_args_continue{};
 
 // TODO: what is more general? static_for_ints? static_for_args?
 
+// TODO: constexpr break_t break_v{};
+// ...and others.
+
 VRM_CORE_NAMESPACE
 {
     struct break_t
@@ -48,9 +51,11 @@ VRM_CORE_NAMESPACE
     };
 
     template <sz_t TSkipCount>
-    struct skip_t : skip_t_base, sz_t_constant<TSkipCount>
+    struct skip_t : skip_t_base, sz_t_<TSkipCount>
     {
     };
+
+    using continue_t = skip_t<0>;
 
     // Aliases.
     template <typename T>
@@ -182,7 +187,7 @@ VRM_CORE_NAMESPACE
                     .else_([&](auto&&... zs)
                         {
                             constexpr auto has_args(sizeof...(zs) > TArity);
-                            static_if(bool_<has_args>{})
+                            static_if(bool_v<has_args>)
                                 .then([&](auto&&... ys)
                                     {
                                         constexpr sz_t num_skip(
