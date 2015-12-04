@@ -11,6 +11,13 @@
 VRM_CORE_NAMESPACE
 {
     using llong = long long;
+
+    using uchar = unsigned char;
+    using ushort = unsigned short;
+    using uint = unsigned int;
+    using ulong = unsigned long;
+    using ullong = unsigned long long;
+
     using sz_t = std::size_t;
 }
 VRM_CORE_NAMESPACE_END

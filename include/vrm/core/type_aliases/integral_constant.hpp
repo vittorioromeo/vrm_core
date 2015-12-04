@@ -7,31 +7,44 @@
 
 #include <cstddef>
 #include <type_traits>
+#include <vrm/pp/cat.hpp>
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
+// TODO: comment
+// TODO: auto-generate literal operator (with extra macro parameter)?
+
+#define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(type, name)          \
+    template <type TV>                                                      \
+    using VRM_PP_CAT(name, _constant) = ::std::integral_constant<type, TV>; \
+                                                                            \
+    template <type TV>                                                      \
+    using VRM_PP_CAT(name, _) = VRM_PP_CAT(name, _constant)<TV>;            \
+                                                                            \
+    template <type TV>                                                      \
+    constexpr VRM_PP_CAT(name, _)<TV> VRM_PP_CAT(name, _, v){};
+
+#define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(x) \
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(x, x)
+
 VRM_CORE_NAMESPACE
 {
-    template <bool TV>
-    using bool_constant = std::integral_constant<bool, TV>;
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(char)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(short)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(int)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(long)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(llong)
 
-    template <bool TV>
-    using bool_ = bool_constant<TV>;
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(uchar)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(ushort)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(uint)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(ulong)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(ullong)
 
-
-
-    template <long long TV>
-    using llong_constant = std::integral_constant<long long, TV>;
-
-    template <long long TV>
-    using llong_ = llong_constant<TV>;
-
-
-
-    template <sz_t TV>
-    using sz_t_constant = std::integral_constant<sz_t, TV>;
-
-    template <sz_t TV>
-    using sz_t_ = sz_t_constant<TV>;
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(bool)
+    VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(sz_t)
 }
 VRM_CORE_NAMESPACE_END
+
+#undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN
+#undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER

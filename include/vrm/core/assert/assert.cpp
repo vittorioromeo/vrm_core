@@ -3,9 +3,11 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
-#include <vrm/core/assert/assert.hpp>
+#include <vrm/core/assert/assert_macros.hpp>
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
+
+#include <vrm/core/assert/assert.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -15,7 +17,7 @@ VRM_CORE_NAMESPACE
         {
             state& get_state() noexcept
             {
-                static state result;
+                thread_local state result;
                 return result;
             }
         }

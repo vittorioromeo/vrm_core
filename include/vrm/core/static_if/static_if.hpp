@@ -39,10 +39,10 @@ VRM_CORE_NAMESPACE_END
 
 /*
 #define VRM_CORE_STATIC_IF(...) \
-    ::vrm::core::static_if(::vrm::core::bool_constant<__VA_ARGS__>{})
+    ::vrm::core::static_if(::vrm::core::bool_v<__VA_ARGS__>)
 
 #define VRM_CORE_THEN .then
 
 #define VRM_CORE_ELSE_IF(...) \
-    .else_if(::vrm::core::bool_constant<__VA_ARGS__>{})
+    .else_if(::vrm::core::bool_v<__VA_ARGS__>)
 */
