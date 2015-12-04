@@ -55,5 +55,20 @@ int main()
     TEST_ASSERT_OP(movrl(nullptr), ==, 2);
     TEST_ASSERT_OP(movrl(nullptr), ==, 3);
 
+    auto tpl_ov = make_overload(
+        [](int)
+        {
+            return 1;
+        },
+        [](auto)
+        {
+            return 2;
+        });
+
+    TEST_ASSERT_OP(tpl_ov(0), ==, 1);
+    TEST_ASSERT_OP(tpl_ov(int{}), ==, 1);
+    TEST_ASSERT_OP(tpl_ov(0.f), ==, 2);
+    TEST_ASSERT_OP(tpl_ov(float{}), ==, 2);
+
     return 0;
 }
