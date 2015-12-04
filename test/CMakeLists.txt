@@ -9,8 +9,14 @@ include_directories(${VRM_CORE_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
+# TODO:
+# vrm_cmake_add_compiler_flag(HAS_SANITIZE_UNDEFINED -fsanitize=undefined)
+# vrm_cmake_add_compiler_flag(HAS_SANITIZE_ADDRESS -fsanitize=address)
+# vrm_cmake_add_compiler_flag(HAS_SANITIZE_INTEGER -fsanitize=integer)
+
 # Generate all the header unit tests.
 vrm_cmake_generate_public_header_tests_glob("*.hpp" "${VRM_CORE_SOURCE_DIR}/include")
 
 # Generate all the unit tests.
 vrm_cmake_generate_unit_tests_glob("*.cpp")
+
