@@ -12,109 +12,66 @@
 #include <vrm/core/ostream_utils.hpp>
 #include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/type_traits/qualifiers.hpp>
+#include <vrm/core/type_traits/forward_like.hpp>
 #include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
+        template <typename TOut, typename T>
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)
+        assert_correct_polymorphic(T* ptr, std::true_type) noexcept
+        {
+            VRM_CORE_ASSERT_OP(dynamic_cast<TOut>(ptr), ==, ptr);
+        }
+
+        template <typename TCasted, typename T>
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)
+        assert_correct_polymorphic(T*, std::false_type) noexcept
+        {
+        }
+
         template <typename TDerived, typename TBase, typename TOut, typename T>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) hierarchy_cast(
-            T&& ptr) noexcept
+            T* ptr) noexcept
         {
             VRM_CORE_STATIC_ASSERT_NM(std::is_base_of<TBase, TDerived>{});
             VRM_CORE_ASSERT_OP(ptr, !=, nullptr);
 
+            assert_correct_polymorphic<TOut>(ptr, std::is_polymorphic<TBase>{});
             return static_cast<TOut>(ptr);
         }
-
-        template <typename TDerived, typename TBase>
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived_impl(
-            TBase* base) noexcept
-        {
-            return hierarchy_cast<TDerived, TBase, // .
-                copy_cv_qualifiers<TDerived, TBase>*>(base);
-        }
-
-        template <typename TBase, typename TDerived>
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base_impl(
-            TDerived* derived) noexcept
-        {
-            return hierarchy_cast<TDerived, TBase, // .
-                copy_cv_qualifiers<TBase, TDerived>*>(derived);
-        }
     }
 
     template <typename TDerived, typename TBase>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
         TBase * base) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(!std::is_polymorphic<TBase>{});
-        return impl::to_derived_impl<TDerived, TBase>(base);
+        using result_type = copy_cv_qualifiers<TDerived, TBase>*;
+        return impl::hierarchy_cast<TDerived, TBase, result_type>(base);
     }
 
     template <typename TBase, typename TDerived>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
         TDerived * derived) noexcept
     {
-        VRM_CORE_STATIC_ASSERT_NM(!std::is_polymorphic<TBase>{});
-        return impl::to_base_impl<TBase, TDerived>(derived);
+        using result_type = copy_cv_qualifiers<TBase, TDerived>*;
+        return impl::hierarchy_cast<TDerived, TBase, result_type>(derived);
     }
 
     template <typename TDerived, typename TBase>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_derived(
         TBase && base) noexcept
     {
-        return *to_derived<TDerived>(&base);
+        return forward_like<decltype(base)>(*to_derived<TDerived>(&base));
     }
 
     template <typename TBase, typename TDerived>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_base(
         TDerived && derived) noexcept
     {
-        return *to_base<TBase>(&derived);
-    }
-
-
-
-    template <typename TDerived, typename TBase>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_polymorphic_derived(
-        TBase * base) noexcept
-    {
-        VRM_CORE_STATIC_ASSERT_NM(std::is_polymorphic<TBase>{});
-
-        decltype(auto) res(impl::to_derived_impl<TDerived, TBase>(base));
-        VRM_CORE_ASSERT_OP(dynamic_cast<decltype(res)>(base), ==, base);
-
-        return res;
-    }
-
-    template <typename TBase, typename TDerived>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_polymorphic_base(
-        TDerived * derived) noexcept
-    {
-        VRM_CORE_STATIC_ASSERT_NM(std::is_polymorphic<TBase>{});
-
-        decltype(auto) res(impl::to_base_impl<TBase, TDerived>(derived));
-        VRM_CORE_ASSERT_OP(dynamic_cast<decltype(res)>(derived), ==, derived);
-
-        return res;
-    }
-
-    template <typename TDerived, typename TBase>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_polymorphic_derived(
-        TBase && base) noexcept
-    {
-        return *to_polymorphic_derived<TDerived>(&base);
-    }
-
-    template <typename TBase, typename TDerived>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) to_polymorphic_base(
-        TDerived && derived) noexcept
-    {
-        return *to_polymorphic_base<TBase>(&derived);
+        return forward_like<decltype(derived)>(*to_base<TBase>(&derived));
     }
 }
 VRM_CORE_NAMESPACE_END
-
-// TODO: use `enable_if` instead of two functions?
