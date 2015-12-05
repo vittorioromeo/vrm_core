@@ -158,11 +158,11 @@ public:
         return !(*this == rhs);
     }
 
-   void swap(stack_allocator& rhs)
-   {
+    void swap(stack_allocator& rhs)
+    {
         using std::swap;
-       swap(store_, rhs.store_);
-   }
+        swap(store_, rhs.store_);
+    }
 
 private:
     template <class U, sz_t M>

@@ -38,10 +38,10 @@ int main()
     // Fires runtime assertion as intended:
     // (void) to_enum<uint_enum>(int_enum::a);
 
-    (void) to_enum<int_enum>(uint_enum::a);
+    (void)to_enum<int_enum>(uint_enum::a);
 
-    (void) to_enum<uint_enum>(0);
-    (void) to_enum<uint_enum>(1);
+    (void)to_enum<uint_enum>(0);
+    (void)to_enum<uint_enum>(1);
 
     // Fires runtime assertion as intended:
     // (void) to_enum<uint_enum>(-1);
