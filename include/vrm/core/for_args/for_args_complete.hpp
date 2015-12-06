@@ -21,9 +21,6 @@
 #include <iostream>
 #include <typeinfo>
 
-// Implemented thanks to Daniel Frey:
-// http://stackoverflow.com/a/29901074/598696
-
 // TODO: cleanup with cppcon2015 implementation
 // TODO: short circuiting with static_if
 // TODO: return value
@@ -35,49 +32,67 @@ struct for_args_continue{};
 // TODO: to test, implement "std:cin choice switch" that returns choice int or
 // executes choice function
 
-// TODO: what is more general? static_for_ints? static_for_args?
-
 // TODO: constexpr break_t break_v{};
 // ...and others.
 
 VRM_CORE_NAMESPACE
 {
-    template <typename T>
-    struct result_wrapper
+    struct no_return
     {
-        using type = T;
-    };
-
-    struct break_t
-    {
-    };
-
-    struct skip_t_base
-    {
-    };
-
-    template <sz_t TSkipCount>
-    struct skip_t : skip_t_base, sz_t_<TSkipCount>
-    {
-    };
-
-    using continue_t = skip_t<0>;
-
-    // Aliases.
-    template <typename T>
-    using is_break = std::is_same<break_t, std::decay_t<T>>;
-
-    template <typename T>
-    using is_skip = std::is_base_of<skip_t_base, std::decay_t<T>>;
-
-    template <typename T>
-    struct wrap
-    {
-        using type = T;
     };
 
     namespace impl
     {
+        struct break_t
+        {
+        };
+
+        struct skip_t_base
+        {
+        };
+
+        template <typename TReturn, sz_t TSkipCount>
+        struct skip_t : skip_t_base, sz_t_<TSkipCount>
+        {
+            using unwrap = TReturn;
+        };
+
+        template <typename TReturn>
+        using continue_t = skip_t<TReturn, 0>;
+
+        // Aliases.
+        template <typename T>
+        using is_break = std::is_same<break_t, std::decay_t<T>>;
+
+        template <typename T>
+        using is_skip = std::is_base_of<skip_t_base, std::decay_t<T>>;
+
+        template <typename T>
+        struct unwrapper
+        {
+            using type = typename T::unwrap;
+        };
+
+        template <>
+        struct unwrapper<void>
+        {
+            using type = no_return;
+        };
+
+        template <>
+        struct unwrapper<no_return>
+        {
+            using type = no_return;
+        };
+
+        template <typename T>
+        struct wrap
+        {
+            using type = T;
+            using unwrap = typename unwrapper<type>::type;
+        };
+
+
         // Wish we had `constexpr` lambdas.
         struct zero_returner
         {
@@ -97,66 +112,59 @@ VRM_CORE_NAMESPACE
                 return inner_type{};
             }
         };
-    }
 
-    template <typename T>
-    constexpr auto get_continue_count() noexcept
-    {
-        return static_if(is_skip<T>{})
-            .then(impl::skip_value_returner{})
-            .else_(impl::zero_returner{})(wrap<T>{});
-    }
-
-
-    template <sz_t TIteration, typename TLastReturn>
-    struct static_for_args_data_type
-    {
-        static constexpr sz_t iteration{TIteration};
-        using last_return_type = TLastReturn;
-    };
-
-    /*
-        template <sz_t TIncrement, typename>
-        struct data_type_inc_helper;
-
-        template <sz_t TIncrement, sz_t TIteration, typename TLastReturn>
-        struct data_type_inc_helper<
-            static_for_args_data_type<TIteration, TLastReturn>>
+        template <typename T>
+        constexpr auto get_continue_count() noexcept
         {
-            using type =
-                static_for_args_data_type<TIteration + TIncrement, TLastReturn>;
+            // If the return type is skip:
+            return static_if(is_skip<T>{})
+                // `true` branch -> return its inner value.
+                .then(impl::skip_value_returner{})
+                // `else` branch -> return `0`.
+                .else_(impl::zero_returner{})
+                // `wrap` is necessary to handle `void`.
+                (wrap<T>{});
+        }
+
+
+        template <sz_t TIteration, sz_t TArgIndex, typename TLastReturn>
+        struct static_for_metadata
+        {
+
+            VRM_CORE_ALWAYS_INLINE static constexpr auto iteration() noexcept
+            {
+                return TIteration;
+            }
+
+            VRM_CORE_ALWAYS_INLINE static constexpr auto arg_index() noexcept
+            {
+                return TArgIndex;
+            }
+
+            using last_return_type = TLastReturn;
         };
 
-        template <sz_t TIncrement, typename TDataType>
-        using incremented_data_type =
-            typename data_type_inc_helper<TIncrement, TDataType>::type;
-    */
 
-    namespace impl
-    {
         template <sz_t TArity, typename TFunctionToCall>
         struct static_for_args_result : TFunctionToCall
         {
+            VRM_CORE_STATIC_ASSERT_NM(TArity > 0);
+
+        public:
+            static constexpr sz_t arity{TArity};
+
+        private:
+            template <sz_t TIteration, sz_t TArgIndex, typename TLastResult>
+            using metadata =
+                static_for_metadata<TIteration, TArgIndex, TLastResult>;
+
         private:
             VRM_CORE_ALWAYS_INLINE auto& as_f_to_call() noexcept
             {
-                return static_cast<TFunctionToCall&>(*this);
+                return to_base<TFunctionToCall>(*this);
             }
 
-            template <sz_t TIteration, typename TLastResult>
-            using data_type =
-                static_for_args_data_type<TIteration, TLastResult>;
 
-            template <typename TCurrDataType, typename TRet, sz_t TNumSkip>
-            VRM_CORE_ALWAYS_INLINE constexpr auto get_next_data_type() noexcept
-            {
-                using return_type = data_type< // .
-                    TCurrDataType::iteration,  // .
-                    TRet                       // .
-                    >;
-
-                return return_type{};
-            }
 
         public:
             template <typename TFFwd>
@@ -165,78 +173,108 @@ VRM_CORE_NAMESPACE
             {
             }
 
-
-            // template <sz_t TNextIteration, sz_t TSkipCount, typename... Ts>
             template <typename TCurrRet, typename TCurrDataType, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(
                 TCurrDataType, Ts&&... xs)
             {
+                // Alias previous metadata.
+                constexpr auto previous_iteration(TCurrDataType::iteration());
+                constexpr auto previous_arg_index(TCurrDataType::arg_index());
+
+                // Compute number of arguments to skip from previous return
+                // type.
+                constexpr auto num_skip(get_continue_count<TCurrRet>());
+
+                // Compute next metadata.
+                constexpr auto next_iteration(previous_iteration + 1);
+                constexpr auto next_arg_index(previous_arg_index + num_skip);
+
                 // Executes the next iterator of the loop by applying all
                 // arguments, starting from TArity, to the `impl_` function.
 
-                constexpr sz_t num_skip(get_continue_count<TCurrRet>());
-
-                auto next_data_type_val( // .
-                    get_next_data_type<  // .
-                        TCurrDataType,   // .
-                        TCurrRet,        // .
-                        num_skip         // .
-                        >());
-
-                using next_data = decltype(next_data_type_val);
+                using next_data =
+                    metadata<next_iteration, next_arg_index, TCurrRet>;
 
                 constexpr auto skips(num_skip + 1);
+
+                // TODO: should be arg_index
                 constexpr auto real_next_iteration(
-                    next_data::iteration + skips);
+                    next_data::iteration() + skips);
                 constexpr auto slice_begin(TArity * skips);
 
-                return apply(
-                    [this](auto&&... vs)
-                    {
-                        return this->impl_(next_data{}, FWD(vs)...);
-                    },
-                    all_args_from<slice_begin>(FWD(xs)...));
+                return call_with_all_args_from<slice_begin>(
+                    get_impl_wrapper(next_data{}), FWD(xs)...);
+            }
+
+            template <typename TDataType>
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) get_fn_wrapper(
+                TDataType) noexcept
+            {
+                return [this](auto&&... xs) -> decltype(auto)
+                {
+                    return this->as_f_to_call()(TDataType{}, FWD(xs)...);
+                };
+            }
+
+            template <typename TDataType>
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) get_impl_wrapper(
+                TDataType) noexcept
+            {
+                return [this](auto&&... xs) -> decltype(auto)
+                {
+                    return this->impl_(TDataType{}, FWD(xs)...);
+                };
             }
 
             template <typename TDataType, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) call_with_arity(
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) call_with_arity(
                 TDataType, Ts&&... xs)
             {
-                // Calls the "stored" function with `TArity` args, instantiating
+                // Calls the "stored" function with `TArity` args,
+                // instantiating
                 // a `data_type` object depending on the current iteration.
-
-                // TODO: better syntax?
-                return apply(
-                    [this](auto&&... ys)
-                    {
-                        return as_f_to_call()(TDataType{}, FWD(ys)...);
-                    },
-                    first_n_args<TArity>(FWD(xs)...));
+                return call_with_first_n_args<TArity>(
+                    get_fn_wrapper(TDataType{}), FWD(xs)...);
             }
 
             template <typename TDataType, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) impl_(TDataType, Ts&&... xs)
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) impl_(
+                TDataType, Ts&&... xs)
             {
-                // Make sure that the count of loop arguments is divisible by
+                // Make sure that the count of loop arguments is divisible
+                // by
                 // `TArity`.
                 VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) % TArity == 0);
 
-                // Get the return type of the current iteration.
-                using curr_data_type = TDataType;
-                using ret_t =
-                    decltype(call_with_arity(curr_data_type{}, FWD(xs)...));
+                // TODO: excess argument policy/strategy?
+                // * discard
+                // * static_assert
+                // * fill with <X>
 
-                // TODO:
-                using next_data_type = data_type< // .
-                    curr_data_type::iteration,    // .
-                    ret_t                         // .
+                // Get current metadata.
+                // This is the initial metadata "(0, null)" in case of the
+                // first
+                // iteration.
+                using curr_metadata = TDataType;
+
+                // "Predict" what the current iteration will return.
+                using ret_t =
+                    decltype(call_with_arity(curr_metadata{}, FWD(xs)...));
+
+                // Compute the next metadata type.
+                // Next metadata will:
+                // * Have `iteration` incremented by one.
+                // * Have `arg_index` incremented by the skip count.
+                /*using next_data_type = metadata< // .
+                    curr_metadata::iteration,    // .
+                    ret_t                        // .
                     // typename curr_data_type::last_return_type // .
-                    >;
+                    >;*/
 
                 // Call the function, regardless of return type.
 
                 // decltype(auto) call_result(
-                call_with_arity(curr_data_type{}, FWD(xs)...);
+                call_with_arity(curr_metadata{}, FWD(xs)...);
                 // );
 
 
@@ -246,7 +284,7 @@ VRM_CORE_NAMESPACE
                 return static_if(is_break<ret_t>{})
                     .then([&](auto&&...)
                         {
-                            return result_wrapper<ret_t>{};
+                            return wrap<ret_t>{};
                         })
                     .else_([&](auto&&... zs)
                         {
@@ -257,29 +295,49 @@ VRM_CORE_NAMESPACE
                                         // this->continue_<TIteration +
                                         // 1>(FWD(ys)...);
                                         return this->continue_<ret_t>(
-                                            curr_data_type{}, FWD(ys)...);
+                                            curr_metadata{}, FWD(ys)...);
                                     })
                                 .else_([](auto&&...)
                                     {
-                                        return result_wrapper<ret_t>{};
+                                        return wrap<ret_t>{};
                                     })(FWD(zs)...);
                         })(FWD(xs)...);
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE decltype(auto) operator()(Ts&&... xs)
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&... xs)
             // TODO: noexcept
             {
-                return impl_(data_type<0, void>{}, FWD(xs)...);
+                // Runs the "static for" by calling the inner implementation
+                // function with "zeroth-iteration" metadata.
+
+                // The first metadata has iteration count `0`, arg index `0`
+                // and
+                // a special type to signal the lack of a previous return
+                // type.
+
+                using first_metadata = metadata<0, 0, no_return>;
+                return impl_(first_metadata{}, FWD(xs)...);
             }
         };
     }
 
-    template <sz_t TArity = 1, typename TF>
-    VRM_CORE_ALWAYS_INLINE decltype(auto) static_for_args(TF && f)
+    template <typename TReturn>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_continue(
+        TReturn = no_return{}) noexcept
     {
-        return impl::static_for_args_result<TArity, std::decay_t<decltype(f)>>(
-            FWD(f));
+        return impl::continue_t<TReturn>{};
+    }
+
+    template <sz_t TArity = 1, typename TF>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_args(TF && f)
+    {
+        // Returns a callable "static for" wrapper with user-specified
+        // arity.
+
+        using decayed_f = std::decay_t<decltype(f)>;
+        return impl::static_for_args_result<TArity, decayed_f>(FWD(f));
     }
 }
 VRM_CORE_NAMESPACE_END

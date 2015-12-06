@@ -20,7 +20,7 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TF, typename TT, sz_t... TIs>
-        VRM_CORE_ALWAYS_INLINE decltype(auto) apply_helper(
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) apply_helper(
             TF&& f, TT&& t, std::index_sequence<TIs...>) // .
         // noexcept(noexcept(FWD(f)(std::get<TIs>(FWD(t))...)))
         {
@@ -31,7 +31,7 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename TF, typename TT>
-    VRM_CORE_ALWAYS_INLINE decltype(auto) apply(TF && f, TT && t) // .
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) apply(TF && f, TT && t) // .
     // noexcept(noexcept(impl::apply_helper( FWD(f), FWD(t),
     // make_tuple_index_sequence<TT>{})))
     {
@@ -64,7 +64,7 @@ VRM_CORE_NAMESPACE
     }
 
     template <sz_t TColumnCount, typename TF, typename TT>
-    VRM_CORE_ALWAYS_INLINE decltype(auto) apply_interleaved(
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) apply_interleaved(
         TF && f, TT && t) // .
     {
         // TODO: test
@@ -74,7 +74,7 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename TF, typename... TTs>
-    VRM_CORE_ALWAYS_INLINE decltype(auto) apply_all_sequential(
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) apply_all_sequential(
         TF && f, TTs && ... ts) // .
     {
         return apply(FWD(f), tuple_cat_as_ref(FWD(ts)...));
@@ -83,7 +83,7 @@ VRM_CORE_NAMESPACE
 
 
     template <sz_t TColumnCount, typename TF, typename... TTs>
-    VRM_CORE_ALWAYS_INLINE decltype(auto) apply_all_interleaved(
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) apply_all_interleaved(
         TF && f, TTs && ... ts) // .
     {
         return apply_interleaved<TColumnCount>(

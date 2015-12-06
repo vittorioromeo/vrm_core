@@ -1,154 +1,80 @@
 #include "../../utils/test_utils.hpp"
+#include <vector>
 #include <vrm/core/for_args/for_args_complete.hpp>
 
 using namespace vrm::core;
 
-template <typename T0, typename T1>
-struct sum_int_c
+void test_empty_for()
 {
-    using type = int_<T0{} + T1{}>;
-};
+    std::vector<sz_t> iterations, arg_indices;
 
-template <typename T0, typename T1>
-using sum_int_c_t = typename sum_int_c<T0, T1>::type;
-
-void test_magic()
-{
-
-    // TODO: major refactoring/abstraction required
-
-    // The following call computes the sum of the int_v values at compile time,
-    // by recursively keeping track of the last returned type from the for args
-    // iterations.
-
-    // It is necessary to wrap the return type in a specific wrapper to allow
-    // usage of void and it is also currently not compatibl with
-    // continue/break/skip constructs.
-
-    // TODO: major work required
-
-    auto x = static_for_args<1>([&](auto metadata, auto x_wrapper)
+    // Assume arity is 1, if not specified.
+    // Assume `continue_t` is returned, if return type is `void`.
+    auto empty_for = static_for_args([&](auto metadata, auto)
         {
-            using metadata_type = decltype(metadata);
-            using lrt = typename metadata_type::last_return_type;
+            iterations.emplace_back(decltype(metadata)::iteration());
+        });
 
-            constexpr auto x(decltype(x_wrapper){});
-            // std::cout << typeid(lrt).name() << "\n";
+    using empty_for_t = decltype(empty_for);
+    static_assert(empty_for_t::arity == 1, "");
 
-            return static_if(bool_v<std::is_same<void, lrt>{}>)
-                .then([](auto y)
-                    {
-                        return y;
-                    })
-                .else_([](auto y)
-                    {
-                        return sum_int_c_t<lrt, decltype(y)>{};
-                    })(x);
+    {
+        iterations.clear();
+        arg_indices.clear();
 
-        })(int_v<1>, int_v<2>, int_v<3>, int_v<4>);
+        auto r0 = empty_for(0);
+        using r0_unwrap = decltype(r0)::unwrap;
+        SA_SAME((r0_unwrap), (no_return));
 
-    static_assert(std::is_same<decltype(x)::type, int_<1 + 2 + 3 + 4>>{}, "");
+        TEST_ASSERT_OP(iterations[0], ==, 0);
+
+        // TODO: arg indices
+    }
+    {
+
+        iterations.clear();
+        arg_indices.clear();
+
+        auto r1 = empty_for(0, 1, 2, 3, 4);
+        using r1_unwrap = decltype(r1)::unwrap;
+        SA_SAME((r1_unwrap), (no_return));
+
+        TEST_ASSERT_OP(iterations[0], ==, 0);
+        TEST_ASSERT_OP(iterations[1], ==, 1);
+        TEST_ASSERT_OP(iterations[2], ==, 2);
+        TEST_ASSERT_OP(iterations[3], ==, 3);
+        TEST_ASSERT_OP(iterations[4], ==, 4);
+
+        // TODO: arg indices
+    }
 }
 
-void test_continue()
+void test_unary_for()
 {
-    sz_t acc = 0;
-
-
-    static_for_args<1>([&](auto, auto x_wrapper)
+    auto unary_for = static_for_args([](auto, auto x)
         {
-            constexpr auto x(decltype(x_wrapper){});
-            return static_if(bool_v<(x >= 10)>)
-                .then([&](auto y)
-                    {
-                        return static_if(bool_v<(y == 99)>)
-                            .then([](auto)
-                                {
-                                    return break_t{};
-                                })
-                            .else_([](auto)
-                                {
-                                    return continue_t{};
-                                })(y);
-                    })
-                .else_([&](auto y)
-                    {
-                        acc += y;
-                        return y;
-                    })(x);
-        })(sz_t_v<1>, sz_t_v<10>, sz_t_v<1>, sz_t_v<10>, sz_t_v<99>, sz_t_v<1>);
+            return static_for_continue(x);
+        });
 
-    TEST_ASSERT_OP(acc, ==, 2);
+    using unary_for_t = decltype(unary_for);
+    static_assert(unary_for_t::arity == 1, "");
+
+    auto r0 = unary_for(0);
+    using r0_unwrap = decltype(r0)::unwrap;
+    SA_SAME((r0_unwrap), (int));
+
+    auto r1 = unary_for(0, 1, 2, 3, 4);
+    using r1_unwrap = decltype(r1)::unwrap;
+    SA_SAME((r1_unwrap), (int));
 }
 
 int main()
 {
-    test_magic();
-    // TODO:
-    return 0;
+    test_empty_for();
+    test_unary_for();
 
-    static_for_args([](auto data, auto x_wrapper)
-        {
-            constexpr auto x(decltype(x_wrapper){});
-            std::cout << x << "\n";
-
-            return static_if(bool_v<(x == 2)>)
-                .then([](auto y)
-                    {
-                        return break_t{};
-                    })
-                .else_([](auto y)
-                    {
-                        return skip_t<1>{};
-                    })(x);
-
-        })(sz_t_<0>{}, sz_t_<1>{}, sz_t_<2>{}, sz_t_<3>{}, sz_t_<4>{},
-        sz_t_<5>{}, sz_t_<6>{});
+    // TODO: test accumulation
+    // TODO: test other arities
 
     return 0;
-
-    static_for_args([](auto data, auto&& x)
-        {
-            return static_if(
-                       bool_v<std::is_same<std::remove_reference_t<decltype(x)>,
-                           float>{}>)
-                .then([](auto&& v)
-                    {
-                        std::cout << "skip " << decltype(data)::iteration
-                                  << "\n";
-                        // return continue_t{};
-                        // return break_t{};
-                    })
-                .else_([](auto&& v)
-                    {
-                        std::cout << decltype(data)::iteration << ": " << v
-                                  << "\n";
-                    })(x);
-
-        })(1, "hello", 'a', 3, 4.f, 2, 1, 'b');
-
-    std::cout << "\n\n";
-
-    static_for_args<2>([](auto data, auto&& x, auto&&)
-        {
-            return static_if(
-                       bool_v<std::is_same<std::remove_reference_t<decltype(x)>,
-                           float>{}>)
-                .then([](auto&& v)
-                    {
-                        std::cout << "skip " << decltype(data)::iteration
-                                  << "\n";
-                        // return continue_t{};
-                        // return break_t{};
-                    })
-                .else_([](auto&& v)
-                    {
-                        std::cout << decltype(data)::iteration << ": " << v
-                                  << "\n";
-                    })(x);
-
-        })(1, "hello", 'a', 3, 4.f, 2, 1, 'b');
-
-
-    test_continue();
 }
