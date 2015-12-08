@@ -93,11 +93,71 @@ VRM_CORE_NAMESPACE
             using type = no_return;
         };
 
+        // for implementation
+        template <class T, class = void>
+        struct is_tuple_ : std::false_type
+        {
+        };
+
+        template <class T>
+        struct is_tuple_<T,
+            typename std::enable_if<(std::tuple_size<T>::value >= 0)>::type>
+            : std::true_type
+        {
+        };
+
+        // ??
+        template <class T>
+        struct is_tuple : is_tuple_<T>
+        {
+        };
+
+        template <typename T>
+        VRM_CORE_ALWAYS_INLINE constexpr auto smart_unwrap() noexcept
+        {
+            return static_if(bool_v<std::is_same<no_return, T>{}>)
+                .then([](auto x)
+                    {
+                        return x;
+                    })
+                .else_([](auto x)
+                    {
+                        using ts = std::tuple_size<decltype(x)>;
+
+                        return static_if(bool_v<(ts{} > 1)>)
+                            .then([](auto y)
+                                {
+                                    return y;
+                                })
+                            .else_([](auto y)
+                                {
+                                    return static_if(bool_v<(ts{} == 0)>)
+                                        .then([](auto)
+                                            {
+                                                return no_return{};
+                                            })
+                                        .else_([](auto z)
+                                            {
+                                                return std::get<0>(z);
+                                            })(y);
+                                })(x);
+                    })(T{});
+        }
+
         template <typename T>
         struct wrap
         {
             using type = T;
             using unwrap = typename unwrapper<type>::type;
+
+            // Smart unwrap.
+            // If 0-ary result, returns `no_return`.
+            // If unary result, unwraps the tuple.
+            // If n-ary result, keeps the tuple.
+            VRM_CORE_ALWAYS_INLINE constexpr auto operator()() const noexcept
+            {
+                return decltype(smart_unwrap<unwrap>()){};
+            }
         };
 
 
@@ -151,23 +211,66 @@ VRM_CORE_NAMESPACE
                 return TArgIndex;
             }
 
-
             VRM_CORE_ALWAYS_INLINE constexpr auto last() noexcept
             {
                 using l_unwrap = typename last_return_type::unwrap;
-                return l_unwrap{};
+                return decltype(smart_unwrap<l_unwrap>()){};
             }
 
-            VRM_CORE_ALWAYS_INLINE constexpr auto has_return() noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto has_no_return() noexcept
             {
-                using last_return_t = decltype(last());
-                return bool_v<std::is_same<last_return_t, no_return>{}>;
+                using last_return = decltype(last());
+                return bool_v<std::is_same<last_return, no_return>{}>;
+            }
+
+
+
+            template <typename TSkip, typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr auto skip_with(
+                TSkip, Ts...) noexcept
+            {
+                return impl::skip_t<std::tuple<Ts...>, TSkip{}>{};
+            }
+
+            template <typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr auto continue_with(
+                Ts... xs) noexcept
+            {
+                return skip_with(int_v<0>, xs...);
+            }
+
+            template <typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr auto break_with(Ts...) noexcept
+            {
+                return impl::break_t<std::tuple<Ts...>>{};
+            }
+
+
+
+            template <typename TReturn = no_return>
+            VRM_CORE_ALWAYS_INLINE constexpr auto break_(TReturn = {}) noexcept
+            {
+                return break_with(TReturn{});
+            }
+
+            template <typename TSkip, typename TReturn = no_return>
+            VRM_CORE_ALWAYS_INLINE constexpr auto skip(
+                TSkip, TReturn = {}) noexcept
+            {
+                return skip_with(TSkip{}, TReturn{});
+            }
+
+            template <typename TReturn = no_return>
+            VRM_CORE_ALWAYS_INLINE constexpr auto continue_(
+                TReturn = {}) noexcept
+            {
+                return continue_with(TReturn{});
             }
         };
 
 
         template <sz_t TArity, typename TFunctionToCall>
-        struct static_for_args_result : TFunctionToCall
+        struct static_for_result : TFunctionToCall
         {
             VRM_CORE_STATIC_ASSERT_NM(TArity > 0);
 
@@ -189,7 +292,7 @@ VRM_CORE_NAMESPACE
 
         public:
             template <typename TFFwd>
-            VRM_CORE_ALWAYS_INLINE static_for_args_result(TFFwd&& f) noexcept
+            VRM_CORE_ALWAYS_INLINE static_for_result(TFFwd&& f) noexcept
                 : TFunctionToCall(FWD(f))
             {
             }
@@ -351,52 +454,17 @@ VRM_CORE_NAMESPACE
         };
     }
 
-    template <typename TMetadata>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_last_return(
-        TMetadata) noexcept
-    {
-        using last_ret = typename TMetadata::last_return_type;
-        using l_unwrap = typename last_ret::unwrap;
-        return l_unwrap{};
-    }
-
-    template <typename TMetadata>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_has_return(
-        TMetadata) noexcept
-    {
-        using last_return = decltype(static_for_last_return(TMetadata{}));
-        return bool_v<std::is_same<last_return, no_return>{}>;
-    }
-
-    template <typename TReturn = no_return>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_break(
-        TReturn = {}) noexcept
-    {
-        return impl::break_t<TReturn>{};
-    }
-
-    template <sz_t TSkip, typename TReturn = no_return>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_skip(
-        TReturn = {}) noexcept
-    {
-        return impl::skip_t<TReturn, TSkip>{};
-    }
-
-    template <typename TReturn = no_return>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_continue(
-        TReturn = {}) noexcept
-    {
-        return static_for_skip<0>(TReturn{});
-    }
-
     template <sz_t TArity = 1, typename TF>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_args(TF && f)
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for(TF && f)
     {
         // Returns a callable "static for" wrapper with user-specified
         // arity.
 
         using decayed_f = std::decay_t<decltype(f)>;
-        return impl::static_for_args_result<TArity, decayed_f>(FWD(f));
+        return impl::static_for_result<TArity, decayed_f>(FWD(f));
     }
 }
 VRM_CORE_NAMESPACE_END
+
+// TODO: please cleanup and comment
+// TODO: consider using std::tuple<> instead of no_return!
