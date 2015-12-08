@@ -21,29 +21,34 @@
 #include <iostream>
 #include <typeinfo>
 
-// TODO: cleanup with cppcon2015 implementation
-// TODO: short circuiting with static_if
-// TODO: return value
-/*
-struct for_args_continue{};
-       struct for_args_break{};
-       struct for_args_return{};*/
-
 // TODO: to test, implement "std:cin choice switch" that returns choice int or
 // executes choice function
 
-// TODO: constexpr break_t break_v{};
-// ...and others.
 
 VRM_CORE_NAMESPACE
 {
     struct no_return
     {
-        using unwrap = no_return;
     };
 
     namespace impl
     {
+        template <typename TReturn>
+        struct control_flow
+        {
+            template <sz_t TI = 0>
+            VRM_CORE_ALWAYS_INLINE constexpr auto get() const noexcept
+            {
+                return decltype(std::get<TI>(TReturn{})){};
+            }
+        };
+
+        template <sz_t TI = 0, typename T>
+        VRM_CORE_ALWAYS_INLINE constexpr auto unwrap(T) noexcept
+        {
+            return T{}.template get<TI>();
+        }
+
         struct break_t_base
         {
         };
@@ -53,20 +58,20 @@ VRM_CORE_NAMESPACE
         };
 
         template <typename TReturn>
-        struct break_t : break_t_base
+        struct break_t : control_flow<TReturn>, break_t_base
         {
-            using unwrap = TReturn;
         };
 
-
         template <typename TReturn, sz_t TSkipCount>
-        struct skip_t : skip_t_base, sz_t_<TSkipCount>
+        struct skip_t : control_flow<TReturn>, skip_t_base
         {
-            using unwrap = TReturn;
+            using skip_ic = sz_t_<TSkipCount>;
         };
 
         template <typename TReturn>
         using continue_t = skip_t<TReturn, 0>;
+
+        using void_continue_t = continue_t<std::tuple<no_return>>;
 
         // Aliases.
         template <typename T>
@@ -75,90 +80,6 @@ VRM_CORE_NAMESPACE
         template <typename T>
         using is_skip = std::is_base_of<skip_t_base, std::decay_t<T>>;
 
-        template <typename T>
-        struct unwrapper
-        {
-            using type = typename T::unwrap;
-        };
-
-        template <>
-        struct unwrapper<void>
-        {
-            using type = no_return;
-        };
-
-        template <>
-        struct unwrapper<no_return>
-        {
-            using type = no_return;
-        };
-
-        // for implementation
-        template <class T, class = void>
-        struct is_tuple_ : std::false_type
-        {
-        };
-
-        template <class T>
-        struct is_tuple_<T,
-            typename std::enable_if<(std::tuple_size<T>::value >= 0)>::type>
-            : std::true_type
-        {
-        };
-
-        // ??
-        template <class T>
-        struct is_tuple : is_tuple_<T>
-        {
-        };
-
-        template <typename T>
-        VRM_CORE_ALWAYS_INLINE constexpr auto smart_unwrap() noexcept
-        {
-            return static_if(bool_v<std::is_same<no_return, T>{}>)
-                .then([](auto x)
-                    {
-                        return x;
-                    })
-                .else_([](auto x)
-                    {
-                        using ts = std::tuple_size<decltype(x)>;
-
-                        return static_if(bool_v<(ts{} > 1)>)
-                            .then([](auto y)
-                                {
-                                    return y;
-                                })
-                            .else_([](auto y)
-                                {
-                                    return static_if(bool_v<(ts{} == 0)>)
-                                        .then([](auto)
-                                            {
-                                                return no_return{};
-                                            })
-                                        .else_([](auto z)
-                                            {
-                                                return std::get<0>(z);
-                                            })(y);
-                                })(x);
-                    })(T{});
-        }
-
-        template <typename T>
-        struct wrap
-        {
-            using type = T;
-            using unwrap = typename unwrapper<type>::type;
-
-            // Smart unwrap.
-            // If 0-ary result, returns `no_return`.
-            // If unary result, unwraps the tuple.
-            // If n-ary result, keeps the tuple.
-            VRM_CORE_ALWAYS_INLINE constexpr auto operator()() const noexcept
-            {
-                return decltype(smart_unwrap<unwrap>()){};
-            }
-        };
 
 
         // Wish we had `constexpr` lambdas.
@@ -176,8 +97,7 @@ VRM_CORE_NAMESPACE
             template <typename T>
             constexpr auto operator()(T)
             {
-                using inner_type = typename T::type;
-                return inner_type{};
+                return typename T::skip_ic{};
             }
         };
 
@@ -191,7 +111,7 @@ VRM_CORE_NAMESPACE
                 // `else` branch -> return `0`.
                 .else_(impl::zero_returner{})
                 // `wrap` is necessary to handle `void`.
-                (wrap<T>{});
+                (T{});
         }
 
         template <sz_t TIteration, sz_t TArgIndex, typename TLastReturn>
@@ -211,18 +131,17 @@ VRM_CORE_NAMESPACE
                 return TArgIndex;
             }
 
-            VRM_CORE_ALWAYS_INLINE constexpr auto last() noexcept
-            {
-                using l_unwrap = typename last_return_type::unwrap;
-                return decltype(smart_unwrap<l_unwrap>()){};
-            }
 
             VRM_CORE_ALWAYS_INLINE constexpr auto has_no_return() noexcept
             {
-                using last_return = decltype(last());
-                return bool_v<std::is_same<last_return, no_return>{}>;
+                return std::is_same<decltype(get()), no_return>{};
             }
 
+            template <sz_t TI = 0>
+            VRM_CORE_ALWAYS_INLINE constexpr auto get() const noexcept
+            {
+                return unwrap<TI>(last_return_type{});
+            }
 
 
             template <typename TSkip, typename... Ts>
@@ -267,6 +186,14 @@ VRM_CORE_NAMESPACE
                 return continue_with(TReturn{});
             }
         };
+
+
+        template <typename T>
+        using adapt_return_type = std::conditional_t< // .
+            std::is_same<void, T>{},                  // .
+            void_continue_t,                          // .
+            T>;
+
 
 
         template <sz_t TArity, typename TFunctionToCall>
@@ -328,9 +255,6 @@ VRM_CORE_NAMESPACE
 
                 constexpr auto skips(num_skip + 1);
 
-                // TODO: should be arg_index
-                constexpr auto real_next_iteration(
-                    next_data{}.iteration() + skips);
                 constexpr auto slice_begin(TArity * skips);
 
                 return call_with_all_args_from<slice_begin>(
@@ -388,34 +312,21 @@ VRM_CORE_NAMESPACE
                 // iteration.
                 using curr_metadata = TDataType;
 
+                auto fn_call = [this, &xs...]() -> decltype(auto)
+                {
+                    return call_with_arity(curr_metadata{}, FWD(xs)...);
+                };
+
                 // "Predict" what the current iteration will return.
-                using ret_t =
-                    decltype(call_with_arity(curr_metadata{}, FWD(xs)...));
+                using ret_t = adapt_return_type<decltype(fn_call())>;
 
-                // Compute the next metadata type.
-                // Next metadata will:
-                // * Have `iteration` incremented by one.
-                // * Have `arg_index` incremented by the skip count.
-                /*using next_data_type = metadata< // .
-                    curr_metadata::iteration,    // .
-                    ret_t                        // .
-                    // typename curr_data_type::last_return_type // .
-                    >;*/
-
-                // Call the function, regardless of return type.
-
-                // decltype(auto) call_result(
-                call_with_arity(curr_metadata{}, FWD(xs)...);
-                // );
-
-
-
-                // TODO: refactor
+                // Call the body of the `static_for`.
+                fn_call();
 
                 return static_if(is_break<ret_t>{})
                     .then([&](auto&&...)
                         {
-                            return wrap<ret_t>{};
+                            return ret_t{};
                         })
                     .else_([&](auto&&... zs)
                         {
@@ -423,14 +334,12 @@ VRM_CORE_NAMESPACE
                             return static_if(bool_v<has_args>)
                                 .then([&](auto&&... ys)
                                     {
-                                        // this->continue_<TIteration +
-                                        // 1>(FWD(ys)...);
                                         return this->continue_<ret_t>(
                                             curr_metadata{}, FWD(ys)...);
                                     })
                                 .else_([](auto&&...)
                                     {
-                                        return wrap<ret_t>{};
+                                        return ret_t{};
                                     })(FWD(zs)...);
                         })(FWD(xs)...);
             }
@@ -448,7 +357,7 @@ VRM_CORE_NAMESPACE
                 // a special type to signal the lack of a previous return
                 // type.
 
-                using first_metadata = metadata<0, 0, no_return>;
+                using first_metadata = metadata<0, 0, void_continue_t>;
                 return impl_(first_metadata{}, FWD(xs)...);
             }
         };
@@ -463,8 +372,9 @@ VRM_CORE_NAMESPACE
         using decayed_f = std::decay_t<decltype(f)>;
         return impl::static_for_result<TArity, decayed_f>(FWD(f));
     }
+
+    using impl::unwrap;
 }
 VRM_CORE_NAMESPACE_END
 
 // TODO: please cleanup and comment
-// TODO: consider using std::tuple<> instead of no_return!

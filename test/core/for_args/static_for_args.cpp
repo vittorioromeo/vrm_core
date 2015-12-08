@@ -24,8 +24,7 @@ void test_empty_for()
         arg_indices.clear();
 
         auto r0 = empty_for(0);
-        using r0_unwrap = decltype(r0)::unwrap;
-        SA_SAME((r0_unwrap), (no_return));
+        SA_TYPE((unwrap(r0)), (no_return));
 
         TEST_ASSERT_OP(iterations[0], ==, 0);
         TEST_ASSERT_OP(arg_indices[0], ==, 0);
@@ -36,8 +35,7 @@ void test_empty_for()
         arg_indices.clear();
 
         auto r1 = empty_for(0, 1, 2, 3, 4);
-        using r1_unwrap = decltype(r1)::unwrap;
-        SA_SAME((r1_unwrap), (no_return));
+        SA_TYPE((unwrap(r1)), (no_return));
 
         TEST_ASSERT_OP(iterations[0], ==, 0);
         TEST_ASSERT_OP(iterations[1], ==, 1);
@@ -72,7 +70,7 @@ void test_unary_for()
         arg_indices.clear();
 
         auto r = unary_for(0);
-        SA_TYPE((r()), (int));
+        SA_TYPE((unwrap(r)), (int));
 
         TEST_ASSERT_OP(iterations[0], ==, 0);
         TEST_ASSERT_OP(arg_indices[0], ==, 0);
@@ -83,7 +81,7 @@ void test_unary_for()
         arg_indices.clear();
 
         auto r1 = unary_for(0, 1, 2, 3, 4);
-        SA_TYPE((r1()), (int));
+        SA_TYPE((unwrap(r1)), (int));
 
         TEST_ASSERT_OP(iterations[0], ==, 0);
         TEST_ASSERT_OP(iterations[1], ==, 1);
@@ -130,7 +128,7 @@ void test_unary_for_break()
         auto r = unary_for(
             int_v<0>, int_v<1>, int_v<2>, int_v<3>, int_v<4>, int_v<5>);
 
-        SA_TYPE((r()), (int_<3>));
+        SA_TYPE((unwrap(r)), (int_<3>));
 
         TEST_ASSERT_OP(iterations.size(), ==, 4);
         TEST_ASSERT_OP(arg_indices.size(), ==, 4);
@@ -153,7 +151,7 @@ void test_unary_for_break()
         auto r = unary_for(
             int_v<0>, int_v<1>, int_v<2>, int_v<1>, int_v<2>, int_v<5>);
 
-        SA_TYPE((r()), (int_<5>));
+        SA_TYPE((unwrap(r)), (int_<5>));
 
         TEST_ASSERT_OP(iterations.size(), ==, 6);
         TEST_ASSERT_OP(arg_indices.size(), ==, 6);
@@ -205,7 +203,7 @@ void test_unary_for_skip()
         auto r = unary_for(int_v<0>, int_v<1>, int_v<-1>, int_v<2>, int_v<3>,
             int_v<-1>, int_v<4>, int_v<5>);
 
-        SA_TYPE((r()), (int_<5>));
+        SA_TYPE((unwrap(r)), (int_<5>));
 
         // Two iterations are skipped.
         TEST_ASSERT_OP(iterations.size(), ==, 6);
@@ -243,10 +241,10 @@ void test_unary_for_accumulate()
                 .then([](auto m, auto y)
                     {
                         static_assert(
-                            !is_int_constant<decltype(m.last())>{}, "");
+                            !is_int_constant<decltype(unwrap(m))>{}, "");
 
                         static_assert(
-                            std::is_same<decltype(m.last()), no_return>{}, "");
+                            std::is_same<decltype(unwrap(m)), no_return>{}, "");
 
                         static_assert(is_int_constant<decltype(y)>{}, "");
 
@@ -256,13 +254,13 @@ void test_unary_for_accumulate()
                 .else_([](auto m, auto y)
                     {
                         static_assert(
-                            is_int_constant<decltype(m.last())>{}, "");
+                            is_int_constant<decltype(unwrap(m))>{}, "");
 
                         static_assert(is_int_constant<decltype(y)>{}, "");
 
                         // "Recursive" case.
                         // Sum with previous return type.
-                        return m.continue_(int_v<m.last() + y>);
+                        return m.continue_(int_v<unwrap(m) + y>);
                     })(metadata, x);
         });
 
@@ -274,7 +272,7 @@ void test_unary_for_accumulate()
         arg_indices.clear();
 
         auto r = unary_for(int_v<1>, int_v<2>, int_v<3>);
-        SA_TYPE((r()), (int_<6>));
+        SA_TYPE((unwrap(r)), (int_<6>));
 
         // Two iterations are skipped.
         TEST_ASSERT_OP(iterations.size(), ==, 3);
@@ -301,24 +299,21 @@ void test_unary_for_accumulate2()
                     })
                 .else_([](auto my, auto y)
                     {
-                        return my.continue_(int_v<my.last() + y>);
+                        return my.continue_(int_v<unwrap(my) + y>);
                     })(mx, x);
         });
 
-    static_assert(                                                     // .
-        decltype(static_accumulator(int_v<1>, int_v<1>, int_v<1>)()){} // .
-            == int_v<1 + 1 + 1>,                                       // .
-        "");
+    SA_TYPE(                                                        // .
+        (unwrap(static_accumulator(int_v<1>, int_v<1>, int_v<1>))), // .
+        (int_<1 + 1 + 1>));
 
-    static_assert(                                                     // .
-        decltype(static_accumulator(int_v<1>, int_v<2>, int_v<3>)()){} // .
-            == int_v<1 + 2 + 3>,                                       // .
-        "");
+    SA_TYPE(                                                        // .
+        (unwrap(static_accumulator(int_v<1>, int_v<2>, int_v<3>))), // .
+        (int_<1 + 2 + 3>));
 
-    static_assert(                                             // .
-        decltype(static_accumulator(int_v<10>, int_v<20>)()){} // .
-            == int_v<10 + 20>,                                 // .
-        "");
+    SA_TYPE(                                                // .
+        (unwrap(static_accumulator(int_v<10>, int_v<20>))), // .
+        (int_<10 + 20>));
 }
 
 void test_unary_for_accumulate_binary()
@@ -332,11 +327,10 @@ void test_unary_for_accumulate_binary()
                     })
                 .else_([](auto my, auto y0, auto y1)
                     {
-                        auto l0 = std::get<0>(my.last());
-                        auto l1 = std::get<1>(my.last());
+                        auto l0 = unwrap<0>(my);
+                        auto l1 = unwrap<1>(my);
 
                         return my.continue_with(int_v<l0 + y0>, int_v<l1 + y1>);
-                        // return my.continue_(int_v<my.last() + y>);
                     })(mx, x0, x1);
         });
 
@@ -346,10 +340,8 @@ void test_unary_for_accumulate_binary()
         int_v<3>, int_v<10>, // .
         int_v<4>, int_v<10>);
 
-    using r_type = decltype(r());
-
-    static_assert(std::get<0>(r()) == int_v<1 + 2 + 3 + 4>);
-    static_assert(std::get<1>(r()) == int_v<10 + 10 + 10 + 10>);
+    static_assert(unwrap<0>(r) == int_v<1 + 2 + 3 + 4>, "");
+    static_assert(unwrap<1>(r) == int_v<10 + 10 + 10 + 10>, "");
 }
 
 int main()
