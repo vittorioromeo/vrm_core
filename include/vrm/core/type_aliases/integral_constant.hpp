@@ -14,15 +14,54 @@
 // TODO: comment
 // TODO: auto-generate literal operator (with extra macro parameter)?
 
-#define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(type, name)          \
-    template <type TV>                                                      \
-    using VRM_PP_CAT(name, _constant) = ::std::integral_constant<type, TV>; \
-                                                                            \
-    template <type TV>                                                      \
-    using VRM_PP_CAT(name, _) = VRM_PP_CAT(name, _constant)<TV>;            \
-                                                                            \
-    template <type TV>                                                      \
-    constexpr VRM_PP_CAT(name, _)<TV> VRM_PP_CAT(name, _, v){};
+#define VRM_CORE_IMPL_IC_ALIAS(type, name) VRM_PP_CAT(name, _constant)
+
+#define VRM_CORE_IMPL_IC_SHORT_ALIAS(type, name) VRM_PP_CAT(name, _)
+
+#define VRM_CORE_IMPL_IC_SHORT_ALIAS_V(type, name) VRM_PP_CAT(name, _v)
+
+#define VRM_CORE_IMPL_IS_IC_HELPER(type, name) \
+    VRM_PP_CAT(is_, name, _constant_helper)
+
+#define VRM_CORE_IMPL_IS_IC(type, name) VRM_PP_CAT(is_, name, _constant)
+
+#define VRM_CORE_IMPL_IS_IC_V(type, name) VRM_PP_CAT(is_, name, _constant_v)
+
+#define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(type, name)             \
+    template <type TV>                                                         \
+    using VRM_CORE_IMPL_IC_ALIAS(type, name) =                                 \
+        ::std::integral_constant<type, TV>;                                    \
+                                                                               \
+    template <type TV>                                                         \
+    using VRM_CORE_IMPL_IC_SHORT_ALIAS(type, name) =                           \
+        VRM_CORE_IMPL_IC_ALIAS(type, name)<TV>;                                \
+                                                                               \
+    template <type TV>                                                         \
+    constexpr VRM_CORE_IMPL_IC_SHORT_ALIAS(                                    \
+        type, name)<TV> VRM_CORE_IMPL_IC_SHORT_ALIAS_V(type, name){};          \
+                                                                               \
+    namespace impl                                                             \
+    {                                                                          \
+        template <typename T>                                                  \
+        struct VRM_CORE_IMPL_IS_IC_HELPER(type, name)                          \
+            : ::std::false_type                                                \
+        {                                                                      \
+        };                                                                     \
+                                                                               \
+        template <type TV>                                                     \
+        struct VRM_CORE_IMPL_IS_IC_HELPER(                                     \
+            type, name)<::std::integral_constant<type, TV>> : ::std::true_type \
+        {                                                                      \
+        };                                                                     \
+    }                                                                          \
+                                                                               \
+    template <typename T>                                                      \
+    using VRM_CORE_IMPL_IS_IC(type, name) =                                    \
+        impl::VRM_CORE_IMPL_IS_IC_HELPER(type, name)<T>;                       \
+                                                                               \
+    template <typename T>                                                      \
+    constexpr VRM_CORE_IMPL_IS_IC(type, name)<T> VRM_CORE_IMPL_IS_IC_V(        \
+        type, name){};
 
 #define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(x) \
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(x, x)
@@ -48,3 +87,9 @@ VRM_CORE_NAMESPACE_END
 
 #undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN
 #undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER
+#undef VRM_CORE_IMPL_IS_IC_V
+#undef VRM_CORE_IMPL_IS_IC
+#undef VRM_CORE_IMPL_IS_IC_HELPER
+#undef VRM_CORE_IMPL_IC_SHORT_ALIAS_V
+#undef VRM_CORE_IMPL_IC_SHORT_ALIAS
+#undef VRM_CORE_IMPL_IC_ALIAS
