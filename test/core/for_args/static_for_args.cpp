@@ -12,8 +12,8 @@ void test_empty_for()
     // Assume `continue_t` is returned, if return type is `void`.
     auto empty_for = static_for_args([&](auto metadata, auto)
         {
-            iterations.emplace_back(decltype(metadata)::iteration());
-            arg_indices.emplace_back(decltype(metadata)::arg_index());
+            iterations.emplace_back(metadata.iteration());
+            arg_indices.emplace_back(metadata.arg_index());
         });
 
     using empty_for_t = decltype(empty_for);
@@ -59,8 +59,8 @@ void test_unary_for()
 
     auto unary_for = static_for_args([&](auto metadata, auto x)
         {
-            iterations.emplace_back(decltype(metadata)::iteration());
-            arg_indices.emplace_back(decltype(metadata)::arg_index());
+            iterations.emplace_back(metadata.iteration());
+            arg_indices.emplace_back(metadata.arg_index());
             return static_for_continue(x);
         });
 
@@ -107,8 +107,8 @@ void test_unary_for_break()
 
     auto unary_for = static_for_args([&](auto metadata, auto x)
         {
-            iterations.emplace_back(decltype(metadata)::iteration());
-            arg_indices.emplace_back(decltype(metadata)::arg_index());
+            iterations.emplace_back(metadata.iteration());
+            arg_indices.emplace_back(metadata.arg_index());
 
             // Break when `3` is found, and return it.
             return static_if(bool_v<(x == 3)>)
@@ -184,8 +184,8 @@ void test_unary_for_skip()
 
     auto unary_for = static_for_args([&](auto metadata, auto x)
         {
-            iterations.emplace_back(decltype(metadata)::iteration());
-            arg_indices.emplace_back(decltype(metadata)::arg_index());
+            iterations.emplace_back(metadata.iteration());
+            arg_indices.emplace_back(metadata.arg_index());
 
             // Skip one argument when `-1` is found
             return static_if(bool_v<(x == -1)>)
@@ -240,15 +240,11 @@ void test_unary_for_accumulate()
 
     auto unary_for = static_for_args([&](auto metadata, auto x)
         {
-            iterations.emplace_back(decltype(metadata)::iteration());
-            arg_indices.emplace_back(decltype(metadata)::arg_index());
-
-            // TODO: better syntax
-            using last_ret = typename decltype(metadata)::last_return_type;
-            using l_unwrap = typename last_ret::unwrap;
+            iterations.emplace_back(metadata.iteration());
+            arg_indices.emplace_back(metadata.arg_index());
 
             // Skip one argument when `-1` is found
-            return static_if(bool_v<std::is_same<last_ret, no_return>{}>)
+            return static_if(metadata.has_return())
                 .then([](auto l, auto y)
                     {
                         static_assert(!is_int_constant<decltype(l)>{}, "");
@@ -265,7 +261,7 @@ void test_unary_for_accumulate()
                         // "Recursive" case.
                         // Sum with previous return type.
                         return static_for_continue(int_v<l + y>);
-                    })(l_unwrap{}, x);
+                    })(metadata.last(), x);
         });
 
     using unary_for_t = decltype(unary_for);

@@ -134,21 +134,35 @@ VRM_CORE_NAMESPACE
                 (wrap<T>{});
         }
 
-
         template <sz_t TIteration, sz_t TArgIndex, typename TLastReturn>
         struct static_for_metadata
         {
-            VRM_CORE_ALWAYS_INLINE static constexpr auto iteration() noexcept
+            using last_return_type = TLastReturn;
+            using this_type =
+                static_for_metadata<TIteration, TArgIndex, TLastReturn>;
+
+            VRM_CORE_ALWAYS_INLINE constexpr auto iteration() noexcept
             {
                 return TIteration;
             }
 
-            VRM_CORE_ALWAYS_INLINE static constexpr auto arg_index() noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto arg_index() noexcept
             {
                 return TArgIndex;
             }
 
-            using last_return_type = TLastReturn;
+
+            VRM_CORE_ALWAYS_INLINE constexpr auto last() noexcept
+            {
+                using l_unwrap = typename last_return_type::unwrap;
+                return l_unwrap{};
+            }
+
+            VRM_CORE_ALWAYS_INLINE constexpr auto has_return() noexcept
+            {
+                using last_return_t = decltype(last());
+                return bool_v<std::is_same<last_return_t, no_return>{}>;
+            }
         };
 
 
@@ -182,11 +196,11 @@ VRM_CORE_NAMESPACE
 
             template <typename TCurrRet, typename TCurrDataType, typename... Ts>
             VRM_CORE_ALWAYS_INLINE decltype(auto) continue_(
-                TCurrDataType, Ts&&... xs)
+                TCurrDataType cm, Ts&&... xs)
             {
                 // Alias previous metadata.
-                constexpr auto previous_iteration(TCurrDataType::iteration());
-                constexpr auto previous_arg_index(TCurrDataType::arg_index());
+                constexpr auto previous_iteration(cm.iteration());
+                constexpr auto previous_arg_index(cm.arg_index());
 
                 // Compute number of arguments to skip from previous return
                 // type.
@@ -213,7 +227,7 @@ VRM_CORE_NAMESPACE
 
                 // TODO: should be arg_index
                 constexpr auto real_next_iteration(
-                    next_data::iteration() + skips);
+                    next_data{}.iteration() + skips);
                 constexpr auto slice_begin(TArity * skips);
 
                 return call_with_all_args_from<slice_begin>(
@@ -335,6 +349,23 @@ VRM_CORE_NAMESPACE
                 return impl_(first_metadata{}, FWD(xs)...);
             }
         };
+    }
+
+    template <typename TMetadata>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_last_return(
+        TMetadata) noexcept
+    {
+        using last_ret = typename TMetadata::last_return_type;
+        using l_unwrap = typename last_ret::unwrap;
+        return l_unwrap{};
+    }
+
+    template <typename TMetadata>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_has_return(
+        TMetadata) noexcept
+    {
+        using last_return = decltype(static_for_last_return(TMetadata{}));
+        return bool_v<std::is_same<last_return, no_return>{}>;
     }
 
     template <typename TReturn = no_return>
