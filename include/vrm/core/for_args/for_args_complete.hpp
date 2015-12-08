@@ -39,17 +39,25 @@ VRM_CORE_NAMESPACE
 {
     struct no_return
     {
+        using unwrap = no_return;
     };
 
     namespace impl
     {
-        struct break_t
+        struct break_t_base
         {
         };
 
         struct skip_t_base
         {
         };
+
+        template <typename TReturn>
+        struct break_t : break_t_base
+        {
+            using unwrap = TReturn;
+        };
+
 
         template <typename TReturn, sz_t TSkipCount>
         struct skip_t : skip_t_base, sz_t_<TSkipCount>
@@ -62,7 +70,7 @@ VRM_CORE_NAMESPACE
 
         // Aliases.
         template <typename T>
-        using is_break = std::is_same<break_t, std::decay_t<T>>;
+        using is_break = std::is_base_of<break_t_base, std::decay_t<T>>;
 
         template <typename T>
         using is_skip = std::is_base_of<skip_t_base, std::decay_t<T>>;
@@ -130,7 +138,6 @@ VRM_CORE_NAMESPACE
         template <sz_t TIteration, sz_t TArgIndex, typename TLastReturn>
         struct static_for_metadata
         {
-
             VRM_CORE_ALWAYS_INLINE static constexpr auto iteration() noexcept
             {
                 return TIteration;
@@ -186,8 +193,15 @@ VRM_CORE_NAMESPACE
                 constexpr auto num_skip(get_continue_count<TCurrRet>());
 
                 // Compute next metadata.
+
+                // Next iteration is always incremented by one.
+                // Skipped arguments are not counted.
                 constexpr auto next_iteration(previous_iteration + 1);
-                constexpr auto next_arg_index(previous_arg_index + num_skip);
+
+                // `arg_index` is incremented by one plus the count of skipped
+                // arguments.
+                constexpr auto next_arg_index(
+                    previous_arg_index + 1 + num_skip);
 
                 // Executes the next iterator of the loop by applying all
                 // arguments, starting from TArity, to the `impl_` function.
@@ -323,11 +337,25 @@ VRM_CORE_NAMESPACE
         };
     }
 
-    template <typename TReturn>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_continue(
-        TReturn = no_return{}) noexcept
+    template <typename TReturn = no_return>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_break(
+        TReturn = {}) noexcept
     {
-        return impl::continue_t<TReturn>{};
+        return impl::break_t<TReturn>{};
+    }
+
+    template <sz_t TSkip, typename TReturn = no_return>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_skip(
+        TReturn = {}) noexcept
+    {
+        return impl::skip_t<TReturn, TSkip>{};
+    }
+
+    template <typename TReturn = no_return>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for_continue(
+        TReturn = {}) noexcept
+    {
+        return static_for_skip<0>(TReturn{});
     }
 
     template <sz_t TArity = 1, typename TF>
