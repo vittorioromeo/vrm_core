@@ -52,14 +52,6 @@ VRM_CORE_NAMESPACE
                 // Ignore everything, we found a result.
                 return *this;
             }
-
-            template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&... xs) noexcept(has_nothrow_call_operator<TFunctionToCall,
-                decltype(FWD(xs))...>{})
-            {
-                return to_base<TFunctionToCall> (*this)(FWD(xs)...);
-            }
         };
 
         template <typename TF>
