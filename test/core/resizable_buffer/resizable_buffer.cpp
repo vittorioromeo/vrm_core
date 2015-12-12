@@ -120,7 +120,7 @@ public:
     {
     }
 
-    stack_allocator& operator=(stack_allocator const&) = delete;
+    // stack_allocator& operator=(stack_allocator const&) = delete;
 
     T* allocate(::sz_t const n)
     {

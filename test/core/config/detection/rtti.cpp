@@ -1,6 +1,8 @@
 #include "../../../utils/test_utils.hpp"
 #include <vrm/core/config/detection.hpp>
 
+#include <typeinfo>
+
 int main()
 {
     using namespace vrm::core;
