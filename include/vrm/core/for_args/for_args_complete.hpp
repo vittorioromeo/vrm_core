@@ -262,13 +262,28 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TDataType>
+            struct binder
+            {
+                static_for_result* _this;
+
+                VRM_CORE_ALWAYS_INLINE constexpr binder(
+                    static_for_result* t) noexcept : _this(t)
+                {
+                }
+
+                template <typename... Ts>
+                VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                    Ts&&... xs)
+                {
+                    return _this->as_f_to_call()(TDataType{}, FWD(xs)...);
+                }
+            };
+
+            template <typename TDataType>
             VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) get_fn_wrapper(
                 TDataType) noexcept
             {
-                return [this](auto&&... xs) -> decltype(auto)
-                {
-                    return this->as_f_to_call()(TDataType{}, FWD(xs)...);
-                };
+                return binder<TDataType>{this};
             }
 
             template <typename TDataType>
@@ -293,6 +308,59 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TDataType, typename... Ts>
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) impl_fn_call(
+                TDataType, Ts&&... xs)
+            {
+                return call_with_arity(TDataType{}, std::forward<Ts>(xs)...);
+            }
+
+            template <typename TRetT>
+            struct then_branch
+            {
+                static_for_result* _this;
+
+                VRM_CORE_ALWAYS_INLINE constexpr then_branch(
+                    static_for_result* t) noexcept : _this(t)
+                {
+                }
+
+                template <typename... Ts>
+                VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                    Ts&&...)
+                {
+                    return TRetT{};
+                }
+            };
+
+            template <typename TRetT, typename TMetadata>
+            struct else_branch
+            {
+                static_for_result* _this;
+
+                VRM_CORE_ALWAYS_INLINE constexpr else_branch(
+                    static_for_result* t) noexcept : _this(t)
+                {
+                }
+
+                template <typename... Ts>
+                VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                    Ts&&... xs)
+                {
+                    constexpr auto has_args(sizeof...(xs) > TArity);
+                    return static_if(bool_v<has_args>)
+                        .then([&](auto&&... ys)
+                            {
+                                return _this->continue_<TRetT>(
+                                    TMetadata{}, FWD(ys)...);
+                            })
+                        .else_([](auto&&...)
+                            {
+                                return TRetT{};
+                            })(FWD(xs)...);
+                }
+            };
+
+            template <typename TDataType, typename... Ts>
             VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) impl_(
                 TDataType, Ts&&... xs)
             {
@@ -312,36 +380,17 @@ VRM_CORE_NAMESPACE
                 // iteration.
                 using curr_metadata = TDataType;
 
-                auto fn_call = [this, &xs...]() -> decltype(auto)
-                {
-                    return call_with_arity(curr_metadata{}, FWD(xs)...);
-                };
 
                 // "Predict" what the current iteration will return.
-                using ret_t = adapt_return_type<decltype(fn_call())>;
+                using ret_t = adapt_return_type<decltype(
+                    impl_fn_call(curr_metadata{}, std::forward<Ts>(xs)...))>;
 
                 // Call the body of the `static_for`.
-                fn_call();
+                impl_fn_call(curr_metadata{}, std::forward<Ts>(xs)...);
 
                 return static_if(is_break<ret_t>{})
-                    .then([&](auto&&...)
-                        {
-                            return ret_t{};
-                        })
-                    .else_([&](auto&&... zs)
-                        {
-                            constexpr auto has_args(sizeof...(zs) > TArity);
-                            return static_if(bool_v<has_args>)
-                                .then([&](auto&&... ys)
-                                    {
-                                        return this->continue_<ret_t>(
-                                            curr_metadata{}, FWD(ys)...);
-                                    })
-                                .else_([](auto&&...)
-                                    {
-                                        return ret_t{};
-                                    })(FWD(zs)...);
-                        })(FWD(xs)...);
+                    .then(then_branch<ret_t>{this})
+                    .else_(else_branch<ret_t, curr_metadata>{this})(FWD(xs)...);
             }
 
             template <typename... Ts>

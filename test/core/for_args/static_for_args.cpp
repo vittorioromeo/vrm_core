@@ -1,3 +1,5 @@
+#if 1
+
 #include "../../utils/test_utils.hpp"
 #include <vector>
 #include <vrm/core/for_args/for_args_complete.hpp>
@@ -340,8 +342,8 @@ void test_unary_for_accumulate_binary()
         int_v<3>, int_v<10>, // .
         int_v<4>, int_v<10>);
 
-    static_assert(unwrap<0>(r) == int_v<1 + 2 + 3 + 4>, "");
-    static_assert(unwrap<1>(r) == int_v<10 + 10 + 10 + 10>, "");
+    static_assert(decltype(unwrap<0>(r)){} == int_v<1 + 2 + 3 + 4>, "");
+    static_assert(decltype(unwrap<1>(r)){} == int_v<10 + 10 + 10 + 10>, "");
 }
 
 int main()
@@ -359,3 +361,8 @@ int main()
 
     return 0;
 }
+#else
+int main() {}
+#endif
+
+// TODO: RIP clang/gcc abi

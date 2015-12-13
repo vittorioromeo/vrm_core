@@ -26,7 +26,7 @@ VRM_CORE_NAMESPACE
 
             static constexpr sz_t buffer_count{multi_buffer_type::buffer_count};
 
-            static constexpr size_type initial_capacity{0};
+            static constexpr auto initial_capacity() { return sz_t(0); }
 
             using value_tuple = typename multi_buffer_type::value_tuple;
 

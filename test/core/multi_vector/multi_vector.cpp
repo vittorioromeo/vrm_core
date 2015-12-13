@@ -1,5 +1,6 @@
 #include "../../utils/test_utils.hpp"
 #include <vrm/core/multi_vector.hpp>
+#include <vrm/core/casts/arithmetic.hpp>
 
 volatile int cc = 0;
 volatile int dd = 0;
@@ -43,8 +44,8 @@ int main()
 
             mv_type mv;
 
-            TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity);
-            TEST_ASSERT_OP(mv.size(), ==, 0);
+            TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity());
+            TEST_ASSERT_OP(mv.size(), ==, to_sz_t(0));
             TEST_ASSERT_OP(cc, ==, 0);
             TEST_ASSERT_OP(copies, ==, 0);
             TEST_ASSERT_OP(dd, ==, 0);
@@ -60,32 +61,32 @@ int main()
 
             mv.reserve(100);
 
-            TEST_ASSERT_OP(mv.capacity(), ==, 100);
-            TEST_ASSERT_OP(mv.size(), ==, 0);
+            TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+            TEST_ASSERT_OP(mv.size(), ==, to_sz_t(0));
             TEST_ASSERT_OP(cc, ==, 0);
             TEST_ASSERT_OP(copies, ==, 0);
             TEST_ASSERT_OP(dd, ==, 0);
 
             mv.resize(50);
 
-            TEST_ASSERT_OP(mv.capacity(), ==, 100);
-            TEST_ASSERT_OP(mv.size(), ==, 50);
+            TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+            TEST_ASSERT_OP(mv.size(), ==, to_sz_t(50));
             TEST_ASSERT_OP(cc, ==, 50);
             TEST_ASSERT_OP(copies, ==, 0);
             TEST_ASSERT_OP(dd, ==, 0);
 
             mv.resize(100);
 
-            TEST_ASSERT_OP(mv.capacity(), ==, 100);
-            TEST_ASSERT_OP(mv.size(), ==, 100);
+            TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+            TEST_ASSERT_OP(mv.size(), ==, to_sz_t(100));
             TEST_ASSERT_OP(cc, ==, 100);
             TEST_ASSERT_OP(copies, ==, 0);
             TEST_ASSERT_OP(dd, ==, 0);
 
             mv.resize(150);
 
-            TEST_ASSERT_OP(mv.capacity(), >, 100);
-            TEST_ASSERT_OP(mv.size(), ==, 150);
+            TEST_ASSERT_OP(mv.capacity(), >, to_sz_t(100));
+            TEST_ASSERT_OP(mv.size(), ==, to_sz_t(150));
             TEST_ASSERT_OP(cc, ==, 150);
             TEST_ASSERT_OP(copies, ==, 100);
             TEST_ASSERT_OP(dd, ==, 100);
@@ -106,8 +107,8 @@ int main()
 
         mv_type mv;
 
-        TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity);
-        TEST_ASSERT_OP(mv.size(), ==, 0);
+        TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity());
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(0));
         TEST_ASSERT_OP(cc, ==, 0);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -122,8 +123,8 @@ int main()
 
         mv.reserve(100);
 
-        TEST_ASSERT_OP(mv.capacity(), ==, 100);
-        TEST_ASSERT_OP(mv.size(), ==, 0);
+        TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(0));
         TEST_ASSERT_OP(cc, ==, 0);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -131,8 +132,8 @@ int main()
         mv.unsafe_emplace_back(
             std::make_tuple(1), std::make_tuple(1.f), std::make_tuple());
 
-        TEST_ASSERT_OP(mv.capacity(), ==, 100);
-        TEST_ASSERT_OP(mv.size(), ==, 1);
+        TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(1));
         TEST_ASSERT_OP(cc, ==, 1);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -146,8 +147,8 @@ int main()
         mv.unsafe_emplace_back(
             std::make_tuple(10), std::make_tuple(21.f), std::make_tuple());
 
-        TEST_ASSERT_OP(mv.capacity(), ==, 100);
-        TEST_ASSERT_OP(mv.size(), ==, 2);
+        TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(2));
         TEST_ASSERT_OP(cc, ==, 2);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -160,8 +161,8 @@ int main()
 
         mv.unsafe_push_back(10, 21.f, ctorer{});
 
-        TEST_ASSERT_OP(mv.capacity(), ==, 100);
-        TEST_ASSERT_OP(mv.size(), ==, 3);
+        TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(3));
         TEST_ASSERT_OP(cc, ==, 3);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -176,8 +177,8 @@ int main()
 
         decltype(mv)::value_tuple p(mv.back());
 
-        TEST_ASSERT_OP(mv.capacity(), ==, 100);
-        TEST_ASSERT_OP(mv.size(), ==, 3);
+        TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(3));
         TEST_ASSERT_OP(cc, ==, 3);
         TEST_ASSERT_OP(copies, ==, 1);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -193,8 +194,8 @@ int main()
 
         mv.pop_back();
 
-        TEST_ASSERT_OP(mv.capacity(), ==, 100);
-        TEST_ASSERT_OP(mv.size(), ==, 2);
+        TEST_ASSERT_OP(mv.capacity(), ==, to_sz_t(100));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(2));
         TEST_ASSERT_OP(cc, ==, 3);
         TEST_ASSERT_OP(copies, ==, 1);
         TEST_ASSERT_OP(dd, ==, 1);
@@ -215,8 +216,8 @@ int main()
 
         mv_type mv;
 
-        TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity);
-        TEST_ASSERT_OP(mv.size(), ==, 0);
+        TEST_ASSERT_OP(mv.capacity(), ==, mv_type::initial_capacity());
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(0));
         TEST_ASSERT_OP(cc, ==, 0);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -232,8 +233,8 @@ int main()
         mv.emplace_back(
             std::make_tuple(1), std::make_tuple(1.f), std::make_tuple());
 
-        TEST_ASSERT_OP(mv.capacity(), >, 0);
-        TEST_ASSERT_OP(mv.size(), ==, 1);
+        TEST_ASSERT_OP(mv.capacity(), >, to_sz_t(0));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(1));
         TEST_ASSERT_OP(cc, ==, 1);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -247,8 +248,8 @@ int main()
         mv.emplace_back(
             std::make_tuple(10), std::make_tuple(21.f), std::make_tuple());
 
-        TEST_ASSERT_OP(mv.capacity(), >, 0);
-        TEST_ASSERT_OP(mv.size(), ==, 2);
+        TEST_ASSERT_OP(mv.capacity(), >, to_sz_t(0));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(2));
         TEST_ASSERT_OP(cc, ==, 2);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -261,8 +262,8 @@ int main()
 
         mv.push_back(10, 21.f, ctorer{});
 
-        TEST_ASSERT_OP(mv.capacity(), >, 0);
-        TEST_ASSERT_OP(mv.size(), ==, 3);
+        TEST_ASSERT_OP(mv.capacity(), >, to_sz_t(0));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(3));
         TEST_ASSERT_OP(cc, ==, 3);
         TEST_ASSERT_OP(copies, ==, 0);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -277,8 +278,8 @@ int main()
 
         decltype(mv)::value_tuple p(mv.back());
 
-        TEST_ASSERT_OP(mv.capacity(), >, 0);
-        TEST_ASSERT_OP(mv.size(), ==, 3);
+        TEST_ASSERT_OP(mv.capacity(), >, to_sz_t(0));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(3));
         TEST_ASSERT_OP(cc, ==, 3);
         TEST_ASSERT_OP(copies, ==, 1);
         TEST_ASSERT_OP(dd, ==, 0);
@@ -294,8 +295,8 @@ int main()
 
         mv.pop_back();
 
-        TEST_ASSERT_OP(mv.capacity(), >, 0);
-        TEST_ASSERT_OP(mv.size(), ==, 2);
+        TEST_ASSERT_OP(mv.capacity(), >, to_sz_t(0));
+        TEST_ASSERT_OP(mv.size(), ==, to_sz_t(2));
         TEST_ASSERT_OP(cc, ==, 3);
         TEST_ASSERT_OP(copies, ==, 1);
         TEST_ASSERT_OP(dd, ==, 1);

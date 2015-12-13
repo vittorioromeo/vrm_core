@@ -20,12 +20,7 @@ VRM_CORE_NAMESPACE
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
             args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs)
         {
-            return apply(
-                [&f](auto&&... ys) -> decltype(auto)
-                {
-                    return f(FWD(ys)...);
-                },
-                TFArgGetter{}(FWD(xs)...));
+            return apply(f, TFArgGetter{}(FWD(xs)...));
         }
 
         template <sz_t TN>
