@@ -31,15 +31,15 @@ namespace test_impl
     }
 
     template <typename TL, typename TR>
-    inline void test_assert_expected(
-        bool x, TL&& res, TR&& res_r, const char* expr, const char* expected)
+    inline void test_assert_expected(int line, bool x, TL&& res,
+        TR&& res_r, const char* expr, const char* expected)
     {
         using namespace std::literals;
 
         if(x) return;
         std::ostringstream error;
 
-        error << expr << "\n"
+        error << "line: " << line << "\n" << expr << "\n"
               << "result: " << res << "\n"
               << "expected: " << expected << " -> " << res_r << "\n";
 
@@ -85,15 +85,15 @@ namespace test_impl
         test_impl::test_assert(_t_x, expr, #expr); \
     } while(false)
 
-#define TEST_ASSERT_OP(lhs, op, rhs)                                 \
-    do                                                               \
-    {                                                                \
-        auto&& _t_xl = lhs;                                          \
-        auto&& _t_xr = rhs;                                          \
-        using ct = std::common_type_t<decltype(lhs), decltype(rhs)>; \
-        auto _t_x = ct(_t_xl) op ct(_t_xr);                          \
-        test_impl::test_assert_expected(                             \
-            _t_x, FWD(_t_xl), FWD(_t_xr), #lhs #op #rhs, #rhs);      \
+#define TEST_ASSERT_OP(lhs, op, rhs)                                      \
+    do                                                                    \
+    {                                                                     \
+        auto&& _t_xl = lhs;                                               \
+        auto&& _t_xr = rhs;                                               \
+        using ct = std::common_type_t<decltype(lhs), decltype(rhs)>;      \
+        auto _t_x = ct(_t_xl) op ct(_t_xr);                               \
+        test_impl::test_assert_expected(                                  \
+            __LINE__, _t_x, FWD(_t_xl), FWD(_t_xr), #lhs #op #rhs, #rhs); \
     } while(false)
 
 #define TEST_ASSERT_NS(expr)                          \

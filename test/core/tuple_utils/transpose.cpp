@@ -12,9 +12,17 @@ void test0()
     auto t_r = make_ref_tuple(0, 'a', 1, 'b');
     auto t_f = std::forward_as_tuple(0, 'a', 1, 'b');
 
+    SA_TYPE((t), (std::tuple<int, char, int, char>));
+    SA_TYPE((t_r), (std::tuple<int, char, int, char>));
+    SA_TYPE((t_f), (std::tuple<int&&, char&&, int&&, char&&>));
+
     auto tt = to_transposed_tuple<2>(t);
     auto tt_r = to_transposed_ref_tuple<2>(t);
     auto tt_f = to_forwarded_transposed_tuple<2>(t);
+
+    SA_TYPE((tt), (std::tuple<int, int, char, char>));
+    SA_TYPE((tt_r), (std::tuple<int&, int&, char&, char&>));
+    SA_TYPE((tt_f), (std::tuple<int&, int&, char&, char&>));
 
     SA_TYPE((std::get<0>(t)), (int&));
     SA_TYPE((std::get<0>(t_r)), (int&));
@@ -32,7 +40,7 @@ void test0()
             TEST_ASSERT_OP(std::get<2>(t), ==, std::get<2>(y));
             TEST_ASSERT_OP(std::get<3>(t), ==, std::get<3>(y));
         },
-        t, t_r, t_f);
+        t, t_r);
 
     for_args(
         [&](auto&& x)
@@ -74,7 +82,7 @@ void test1()
             TEST_ASSERT_OP(std::get<4>(t), ==, std::get<4>(x));
             TEST_ASSERT_OP(std::get<5>(t), ==, std::get<5>(x));
         },
-        t_r, t_f);
+        t_r);
 
     for_args(
         [&](auto&& x)
