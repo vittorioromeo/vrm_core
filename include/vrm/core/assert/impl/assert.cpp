@@ -7,7 +7,7 @@
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
 
-#include <vrm/core/assert/assert.hpp>
+#include <vrm/core/assert/impl/assert.hpp>
 
 VRM_CORE_NAMESPACE
 {

@@ -5,23 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        enum class compiler
-        {
-            clang,
-            gcc,
-            mscv,
-            unknown
-        };
-
-        constexpr auto current_compiler() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#include <vrm/core/config/detection/compiler/compiler.inl>
+#include <vrm/core/config/detection/compiler/impl/compiler.hpp>
+#include <vrm/core/config/detection/compiler/impl/compiler.inl>

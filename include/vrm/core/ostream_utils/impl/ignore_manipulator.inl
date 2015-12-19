@@ -6,7 +6,7 @@
 #pragma once
 
 #include <ostream>
-#include <vrm/core/ostream_utils/ignore_manipulator.hpp>
+#include <vrm/core/ostream_utils/impl/ignore_manipulator.hpp>
 
 VRM_CORE_NAMESPACE
 {

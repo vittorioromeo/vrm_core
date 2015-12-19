@@ -3,11 +3,13 @@
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
-#include <vrm/core/assert/assert.hpp>
+#include <vrm/core/assert/impl/assert.hpp>
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
 
 #include <iostream>
+#include <string>
+#include <sstream>
 
 VRM_CORE_NAMESPACE
 {

@@ -20,7 +20,7 @@
 #endif
 
 #if VRM_CORE_IMPL_ASSERT_DISABLED
-#include <vrm/core/assert/assert_macros_disabled.hpp>
+#include <vrm/core/assert/impl/assert_macros_disabled.hpp>
 #else
-#include <vrm/core/assert/assert_macros_enabled.hpp>
+#include <vrm/core/assert/impl/assert_macros_enabled.hpp>
 #endif

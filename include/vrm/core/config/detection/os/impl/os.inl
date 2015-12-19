@@ -5,8 +5,9 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/os/os_macros.hpp>
-#include <vrm/core/config/detection/os/os.hpp>
+#include <vrm/core/config/names.hpp>
+#include <vrm/core/config/detection/os/impl/os_macros.hpp>
+#include <vrm/core/config/detection/os/impl/os.hpp>
 
 VRM_CORE_NAMESPACE
 {

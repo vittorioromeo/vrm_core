@@ -5,15 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        constexpr auto rtti() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#include <vrm/core/config/detection/rtti/rtti.inl>
+#include <vrm/core/config/detection/rtti/impl/rtti.hpp>
+#include <vrm/core/config/detection/rtti/impl/rtti.inl>

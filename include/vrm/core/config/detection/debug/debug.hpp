@@ -5,15 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        constexpr auto debug() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#include <vrm/core/config/detection/debug/debug.inl>
+#include <vrm/core/config/detection/debug/impl/debug.hpp>
+#include <vrm/core/config/detection/debug/impl/debug.inl>

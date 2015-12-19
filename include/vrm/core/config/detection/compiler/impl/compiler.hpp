@@ -7,6 +7,19 @@
 
 #include <vrm/core/config/names.hpp>
 
-#if !defined(NDEBUG)
-#define VRM_CORE_DEBUG 1
-#endif
+VRM_CORE_NAMESPACE
+{
+    namespace detection
+    {
+        enum class compiler
+        {
+            clang,
+            gcc,
+            mscv,
+            unknown
+        };
+
+        constexpr auto current_compiler() noexcept;
+    }
+}
+VRM_CORE_NAMESPACE_END

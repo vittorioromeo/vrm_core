@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/rtti/rtti_macros.hpp>
 #include <vrm/core/config/detection/rtti/rtti.hpp>

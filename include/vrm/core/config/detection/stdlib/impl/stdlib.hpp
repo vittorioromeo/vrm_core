@@ -5,21 +5,20 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/debug/debug_macros.hpp>
-#include <vrm/core/config/detection/debug/debug.hpp>
+#include <vrm/core/config/names.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace detection
     {
-        inline constexpr auto debug() noexcept
+        enum class stdlib
         {
-#if defined(VRM_CORE_DEBUG)
-            return true;
-#else
-            return false;
-#endif
-        }
+            libcxx,
+            libstdcxx,
+            unknown
+        };
+
+        constexpr auto current_stdlib() noexcept;
     }
 }
 VRM_CORE_NAMESPACE_END

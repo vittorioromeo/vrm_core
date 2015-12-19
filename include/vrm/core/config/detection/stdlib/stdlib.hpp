@@ -5,22 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        enum class stdlib
-        {
-            libcxx,
-            libstdcxx,
-            unknown
-        };
-
-        constexpr auto current_stdlib() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#include <vrm/core/config/detection/stdlib/stdlib.inl>
+#include <vrm/core/config/detection/stdlib/impl/stdlib.hpp>
+#include <vrm/core/config/detection/stdlib/impl/stdlib.inl>

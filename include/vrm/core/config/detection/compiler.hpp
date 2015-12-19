@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/compiler/compiler_macros.hpp>
 #include <vrm/core/config/detection/compiler/compiler.hpp>

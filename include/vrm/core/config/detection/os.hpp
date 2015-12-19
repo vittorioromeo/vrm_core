@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/os/os_macros.hpp>
 #include <vrm/core/config/detection/os/os.hpp>

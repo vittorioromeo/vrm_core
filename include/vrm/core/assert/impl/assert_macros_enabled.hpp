@@ -9,7 +9,6 @@
 #include <vrm/pp/utils.hpp>
 #include <vrm/pp/sep_to_str.hpp>
 #include <vrm/core/utility_macros/likely_unlikely.hpp>
-#include <vrm/core/assert/assert.hpp>
 
 #define VRM_CORE_IMPL_ASSERT(lhs, op, rhs, msg)                                \
     do                                                                         \

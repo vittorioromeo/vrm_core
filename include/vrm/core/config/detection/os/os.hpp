@@ -5,29 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    namespace detection
-    {
-        enum class operating_system
-        {
-            linux,
-            windows,
-            mac,
-            android,
-            freebsd,
-            unknown
-        };
-
-        constexpr auto current_operating_system() noexcept;
-
-        constexpr auto on_unix() noexcept;
-        constexpr auto on_windows() noexcept;
-        constexpr auto on_mac() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
-
-#include <vrm/core/config/detection/os/os.inl>
+#include <vrm/core/config/detection/os/impl/os.hpp>
+#include <vrm/core/config/detection/os/impl/os.inl>

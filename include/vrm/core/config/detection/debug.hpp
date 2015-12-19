@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/debug/debug_macros.hpp>
 #include <vrm/core/config/detection/debug/debug.hpp>

@@ -9,7 +9,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/static_if.hpp>
-#include <vrm/core/resizable_buffer/resizable_buffer.hpp>
+#include <vrm/core/resizable_buffer/impl/resizable_buffer.hpp>
 #include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
 VRM_CORE_NAMESPACE

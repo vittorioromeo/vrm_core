@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/arch/arch_macros.hpp>
 #include <vrm/core/config/detection/arch/arch.hpp>
