@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/resizable_buffer/resizable_buffer.hpp>
-#include <vrm/core/resizable_buffer/multi_resizable_buffer.hpp>
+#include <vrm/core/experimental/delegate/delegate.hpp>
+#include <vrm/core/experimental/delegate/dynamic_delegate.hpp>

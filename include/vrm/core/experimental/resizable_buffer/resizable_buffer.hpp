@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/resizable_buffer/impl/resizable_buffer.hpp>
-#include <vrm/core/resizable_buffer/impl/resizable_buffer.inl>
+#include <vrm/core/experimental/resizable_buffer/impl/resizable_buffer.hpp>
+#include <vrm/core/experimental/resizable_buffer/impl/resizable_buffer.inl>

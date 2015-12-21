@@ -9,8 +9,8 @@
 #include <cstdint>
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/make_array.hpp>
-#include <vrm/core/console/format_types.hpp>
-#include <vrm/core/console/format_state.hpp>
+#include <vrm/core/experimental/console/format_types.hpp>
+#include <vrm/core/experimental/console/format_state.hpp>
 
 VRM_CORE_NAMESPACE
 {

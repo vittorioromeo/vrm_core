@@ -1,5 +1,5 @@
-#include "../../utils/test_utils.hpp"
-#include <vrm/core/resizable_buffer.hpp>
+#include "../../../utils/test_utils.hpp"
+#include <vrm/core/experimental/resizable_buffer.hpp>
 
 #include <cassert>
 #include <cstddef>

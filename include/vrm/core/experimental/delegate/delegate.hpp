@@ -7,7 +7,7 @@
 
 #include <vector>
 #include <functional>
-#include <vrm/core/delegate/base_delegate.hpp>
+#include <vrm/core/experimental/delegate/base_delegate.hpp>
 
 // TODO: WIP
 // * templatize fn_type

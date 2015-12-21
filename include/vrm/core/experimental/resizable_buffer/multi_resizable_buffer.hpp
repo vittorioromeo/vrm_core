@@ -10,7 +10,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/resizable_buffer/resizable_buffer.hpp>
+#include <vrm/core/experimental/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
 
 VRM_CORE_NAMESPACE

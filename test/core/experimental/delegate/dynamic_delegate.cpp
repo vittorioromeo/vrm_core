@@ -1,13 +1,12 @@
-#include "../../utils/test_utils.hpp"
-#include <vrm/core/delegate.hpp>
+#include "../../../utils/test_utils.hpp"
+#include <vrm/core/experimental/delegate.hpp>
 
-int main()
+using namespace vrm::core;
+
+void prev_tests()
 {
-    using namespace vrm::core;
-
-
     bool testState{false};
-    delegate<void()> del1;
+    dynamic_delegate<void()> del1;
     del1 += [&testState]
     {
         testState = !testState;
@@ -18,7 +17,7 @@ int main()
     del1();
     TEST_ASSERT(testState == false);
 
-    delegate<int(int)> del2;
+    dynamic_delegate<int(int)> del2;
     del2 += [](int x)
     {
         return x + x;
@@ -40,7 +39,7 @@ int main()
     TEST_ASSERT(del2result[1] == 9);
     TEST_ASSERT(del2result.size() == 2);
 
-    delegate<void()> del3;
+    dynamic_delegate<void()> del3;
     del3 += [&del1]
     {
         del1();
@@ -48,7 +47,7 @@ int main()
     del3();
     TEST_ASSERT(testState == true);
 
-    delegate<void(int&)> del4;
+    dynamic_delegate<void(int&)> del4;
     del4 += [](int& i)
     {
         i += 1;
@@ -70,7 +69,7 @@ int main()
 
     {
         int i = 0;
-        delegate<int()> del5;
+        dynamic_delegate<int()> del5;
         del5 += [i]() mutable
         {
             i += 1;
@@ -84,6 +83,60 @@ int main()
         TEST_ASSERT_OP(del5.call_and_return_vector()[0], ==, 6);
         TEST_ASSERT_OP(del5.call_and_return_vector()[0], ==, 7);
     }
+}
+
+int main()
+{
+    prev_tests();
+
+    dynamic_delegate<int(int)> d;
+    auto h_doubler = d += [](int x)
+    {
+        return x * 2;
+    };
+    auto h_adder = d += [](int x)
+    {
+        return x + 1;
+    };
+
+    auto fold_res([&d](auto x)
+        {
+            auto v = d.call_and_return_vector(x);
+            int acc = 0;
+            for(auto dv : v) acc += dv;
+            return acc;
+        });
+
+    TEST_ASSERT_OP(fold_res(0), ==, 1);
+    TEST_ASSERT_OP(fold_res(1), ==, 4);
+    TEST_ASSERT_OP(fold_res(2), ==, 7);
+    TEST_ASSERT_OP(fold_res(3), ==, 10);
+
+    d -= h_adder;
+
+    TEST_ASSERT_OP(fold_res(0), ==, 0);
+    TEST_ASSERT_OP(fold_res(1), ==, 2);
+    TEST_ASSERT_OP(fold_res(2), ==, 4);
+    TEST_ASSERT_OP(fold_res(3), ==, 6);
+
+    d -= h_doubler;
+
+    TEST_ASSERT_OP(fold_res(0), ==, 0);
+    TEST_ASSERT_OP(fold_res(1), ==, 0);
+    TEST_ASSERT_OP(fold_res(2), ==, 0);
+    TEST_ASSERT_OP(fold_res(3), ==, 0);
+
+    auto h_triple = d += [](int x)
+    {
+        return x * 3;
+    };
+
+    TEST_ASSERT_OP(fold_res(0), ==, 0);
+    TEST_ASSERT_OP(fold_res(1), ==, 3);
+    TEST_ASSERT_OP(fold_res(2), ==, 6);
+    TEST_ASSERT_OP(fold_res(3), ==, 9);
+
+    (void)h_triple;
 
     return 0;
 }

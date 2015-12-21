@@ -8,7 +8,7 @@
 #include <vector>
 #include <functional>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/delegate/base_delegate.hpp>
+#include <vrm/core/experimental/delegate/base_delegate.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
 // TODO: WIP:

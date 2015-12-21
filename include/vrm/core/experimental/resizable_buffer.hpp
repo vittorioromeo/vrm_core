@@ -5,4 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/multi_vector/multi_vector.hpp>
+#include <vrm/core/experimental/resizable_buffer/resizable_buffer.hpp>
+#include <vrm/core/experimental/resizable_buffer/multi_resizable_buffer.hpp>

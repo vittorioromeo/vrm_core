@@ -5,5 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/delegate/delegate.hpp>
-#include <vrm/core/delegate/dynamic_delegate.hpp>
+#include <vrm/core/experimental/multi_vector/multi_vector.hpp>
