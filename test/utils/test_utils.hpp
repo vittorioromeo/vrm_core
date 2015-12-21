@@ -1,5 +1,15 @@
 #pragma once
 
+// TODO: workflow module
+// <vrm/core/workflow/test_utils.hpp>
+// <vrm/core/workflow/test_debug.hpp>
+// VRMCW_PRINT_SIZE(x) -> VRM_CORE_WORKFLOW_PRINT_SIZE(x) => "[VRMCW] sizeof(x):
+// 1234"
+// VRMCW_PRINT_VAR(x) -> VRM_CORE_WORKFLOW_PRINT_VAR(x) => "[VRMCW] x: 44"
+// VRMCW_TEST(x) -> VRM_CORE_WORKFLOW_TEST(x) -> TEST_ASSERT(x)
+// VRMCW_TEST_OP(l, op, r) -> VRM_CORE_WORKFLOW_TEST_OP(l, op, r) ->
+// TEST_ASSERT_OP(l, op, r)
+
 #include <exception>
 #include <string>
 #include <sstream>
