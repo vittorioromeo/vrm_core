@@ -9,7 +9,7 @@ include_directories(${VRM_CORE_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-# TODO:
+# TODO: how to add compiler/linker arguments to every test target?
 # vrm_cmake_add_compiler_flag(HAS_SANITIZE_UNDEFINED -fsanitize=undefined)
 # vrm_cmake_add_compiler_flag(HAS_SANITIZE_ADDRESS -fsanitize=address)
 # vrm_cmake_add_compiler_flag(HAS_SANITIZE_INTEGER -fsanitize=integer)

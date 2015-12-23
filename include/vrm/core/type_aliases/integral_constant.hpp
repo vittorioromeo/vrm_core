@@ -11,22 +11,30 @@
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
-// TODO: comment
 // TODO: auto-generate literal operator (with extra macro parameter)?
 
+/// @macro `xxx_constant` alias token.
 #define VRM_CORE_IMPL_IC_ALIAS(type, name) VRM_PP_CAT(name, _constant)
 
+/// @macro `xxx_` alias token.
 #define VRM_CORE_IMPL_IC_SHORT_ALIAS(type, name) VRM_PP_CAT(name, _)
 
+/// @macro `xxx_v` variable template name token.
 #define VRM_CORE_IMPL_IC_SHORT_ALIAS_V(type, name) VRM_PP_CAT(name, _v)
 
+/// @macro `is_xxx_constant_helper` struct name token.
 #define VRM_CORE_IMPL_IS_IC_HELPER(type, name) \
     VRM_PP_CAT(is_, name, _constant_helper)
 
+/// @macro `is_xxx_constant` alias token.
 #define VRM_CORE_IMPL_IS_IC(type, name) VRM_PP_CAT(is_, name, _constant)
 
+/// @macro `is_xxx_constant_v` variable template name
+/// token.
 #define VRM_CORE_IMPL_IS_IC_V(type, name) VRM_PP_CAT(is_, name, _constant_v)
 
+/// @macro Defines an `integral-constant`-like type with
+/// helper classes and aliases.
 #define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(type, name)             \
     template <type TV>                                                         \
     using VRM_CORE_IMPL_IC_ALIAS(type, name) =                                 \
@@ -63,23 +71,29 @@
     constexpr VRM_CORE_IMPL_IS_IC(type, name)<T> VRM_CORE_IMPL_IS_IC_V(        \
         type, name){};
 
+/// @macro Defines an `integral-constant`-like type with
+/// helper classes and aliases. (The name of the input type is used in the
+/// output type.)
 #define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(x) \
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(x, x)
 
 VRM_CORE_NAMESPACE
 {
+    // Signed integral constants.
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(char)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(short)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(int)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(long)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(llong)
 
+    // Unsigned integral constants.
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(uchar)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(ushort)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(uint)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(ulong)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(ullong)
 
+    // Special integral constants.
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(bool)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(sz_t)
 }
