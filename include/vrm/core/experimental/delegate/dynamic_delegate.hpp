@@ -26,13 +26,24 @@ VRM_CORE_NAMESPACE
             using counter_type = TCounter;
 
         private:
-            class handle_data
+            // TODO:
+            struct handle_data
             {
-            private:
+                // TODO:
+            public:
+                // TODO: could be a pointer?
                 index_type _index;
+
+
                 counter_type _counter;
 
             public:
+                // TODO:
+                VRM_CORE_ALWAYS_INLINE handle_data() noexcept : _index{0},
+                                                                _counter{0}
+                {
+                }
+
                 VRM_CORE_ALWAYS_INLINE handle_data(index_type index,
                     counter_type counter) noexcept : _index{index},
                                                      _counter{counter}
@@ -40,7 +51,7 @@ VRM_CORE_NAMESPACE
                 }
             };
 
-            struct metadata_impl : handle_data
+            struct metadata_impl : public handle_data
             {
                 using handle_data::handle_data;
 
@@ -56,7 +67,7 @@ VRM_CORE_NAMESPACE
                 }
             };
 
-            struct handle_impl : handle_data
+            struct handle_impl : public handle_data
             {
                 using handle_data::handle_data;
 
@@ -98,7 +109,7 @@ VRM_CORE_NAMESPACE
             metadata_from_handle_impl(
                 TSelf&& self, const handle_type& h) noexcept
             {
-                VRM_CORE_ASSERT_OP(self.metadata.size(), >, h.target_idx());
+                VRM_CORE_ASSERT_OP(self._metadata.size(), >, h.target_idx());
                 return self._metadata[h.target_idx()];
             }
 
@@ -122,27 +133,31 @@ VRM_CORE_NAMESPACE
                 return h.counter() == metadata_from_handle(h).counter();
             }
 
-            auto create()
+            auto create(sz_t item_idx)
             {
-                auto idx(_next_idx);
+                auto m_idx(_next_idx);
                 ++_next_idx;
 
                 // Grow if needed.
-                if(idx > _metadata.size())
+                if(m_idx >= _metadata.size())
                 {
                     _metadata.resize(_metadata.size() + 100);
                 }
 
-                // Handle points above. (TODO: generalize)
-                _metadata[idx]._index = idx;
+                VRM_CORE_ASSERT_OP(m_idx, <, _metadata.size());
 
-                handle_type h{idx, _metadata[idx]._counter};
+                // Handle points to item. (TODO: generalize)
+                _metadata[m_idx]._index = item_idx;
+
+                handle_type h{m_idx, _metadata[m_idx]._counter};
                 VRM_CORE_ASSERT(valid_handle(h));
 
                 return h;
             }
 
-            void destroy(const handle_type& h)
+            // TODO:
+            template <typename TF>
+            void destroy(const handle_type& h, TF&& f)
             {
                 VRM_CORE_ASSERT(valid_handle(h));
 
@@ -150,8 +165,11 @@ VRM_CORE_NAMESPACE
                 auto& m(metadata_from_handle(h));
                 ++(m._counter);
 
+                // Get last metadata.
+                auto& last_m(_metadata[_next_idx - 1]);
+                f(m._index);
+
                 // Swap indices and `pop_back` (TODO:)
-                auto& last_m(_metadata[_next_idx]);
                 std::swap(m._index, last_m._index);
                 --_next_idx;
 
@@ -164,87 +182,18 @@ VRM_CORE_NAMESPACE
 
         using test_hh = handle_helper<index_type, counter_type>;
 
-        struct handle_data
-        {
-            index_type _index;
-            counter_type _counter;
-
-            // TODO: meh
-            VRM_CORE_ALWAYS_INLINE handle_data() noexcept : _index{0},
-                                                            _counter{0}
-            {
-            }
-
-            VRM_CORE_ALWAYS_INLINE handle_data(index_type index,
-                counter_type counter) noexcept : _index{index},
-                                                 _counter{counter}
-            {
-            }
-        };
-
-        template <template <typename...> class TFunction, typename TSignature>
-        class VRM_CORE_CLASS_API dynamic_delegate_handle : public handle_data
-        {
-            template <template <typename...> class, typename>
-            friend class dynamic_delegate;
-
-        private:
-            using handle_data::handle_data;
-
-            const auto& target_idx() const noexcept { return _index; }
-            const auto& counter() const noexcept { return _counter; }
-        };
-
-
         template <template <typename...> class TFunction, typename TSignature>
         class VRM_CORE_CLASS_API dynamic_delegate
             : public impl::base_delegate<TFunction, TSignature>
         {
         public:
-            using handle_type = dynamic_delegate_handle<TFunction, TSignature>;
+            using hv_type = handle_vector<test_hh>;
+            using metadata_type = typename hv_type::metadata_type;
+            using handle_type = typename hv_type::handle_type;
 
         private:
             using base_type = impl::base_delegate<TFunction, TSignature>;
-            std::vector<handle_data> _handle_data;
-
-
-            auto& handle_data_from_handle(const handle_type& h) noexcept
-            {
-                VRM_CORE_ASSERT_OP(_handle_data.size(), >, h.target_idx());
-                return _handle_data[h.target_idx()];
-            }
-
-            const auto& handle_data_from_handle(const handle_type& h) const
-                noexcept
-            {
-                VRM_CORE_ASSERT_OP(_handle_data.size(), >, h.target_idx());
-                return _handle_data[h.target_idx()];
-            }
-
-            auto valid_handle(const handle_type& h) noexcept
-            {
-                return h.counter() == handle_data_from_handle(h)._counter;
-            }
-
-            void erase_at(sz_t idx)
-            {
-                // VRM_CORE_ASSERT_OP(this->_functions.size(), >, idx);
-                // this->_functions.erase(std::begin(this->_functions) + idx);
-
-                auto to_erase_idx(idx);
-                auto last_idx(this->_functions.size() - 1);
-
-                auto& to_erase(this->_functions[to_erase_idx]);
-                auto& last(this->_functions[last_idx]);
-
-                auto& to_erase_handle(_handle_data[to_erase_idx]);
-                auto& last_handle(_handle_data[last_idx]);
-
-                std::swap(to_erase, last);
-                std::swap(to_erase_handle._index, last_handle._index);
-
-                this->_functions.pop_back();
-            }
+            hv_type _hv;
 
         public:
             using fn_type = typename base_type::fn_type;
@@ -253,26 +202,19 @@ VRM_CORE_NAMESPACE
             template <typename TF>
             auto operator+=(TF&& f)
             {
-                auto idx(this->_functions.size());
+                // auto idx(this->_functions.size());
                 this->emplace_function(FWD(f));
 
-                // TODO: meh
-                _handle_data.resize(this->_functions.size());
-                _handle_data[idx]._index = idx;
-
-                handle_type h{idx, _handle_data[idx]._counter};
-                VRM_CORE_ASSERT(valid_handle(h));
-
-                return h;
+                return _hv.create(this->_functions.size() - 1);
             }
 
             void operator-=(const handle_type& h)
             {
-                VRM_CORE_ASSERT(valid_handle(h));
-                auto& metadata(handle_data_from_handle(h));
-                ++(metadata._counter);
-                erase_at(metadata._index);
-                VRM_CORE_ASSERT(!valid_handle(h));
+                _hv.destroy(h, [this](auto i)
+                    {
+                        std::swap(this->_functions[i], this->_functions.back());
+                        this->_functions.pop_back();
+                    });
             }
         };
     }
