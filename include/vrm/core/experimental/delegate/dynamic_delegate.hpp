@@ -100,6 +100,7 @@ VRM_CORE_NAMESPACE
             using metadata_type = typename handle_helper_type::metadata_type;
 
         private:
+            // TODO: generalize container semantics, not vector
             std::vector<metadata_type> _metadata;
             sz_t _next_idx{0};
 
