@@ -140,7 +140,7 @@ namespace test_impl
 #define TEST_ASSERT(expr)                                  \
     do                                                     \
     {                                                      \
-        auto&& _t_x(expr);                                 \
+        auto _t_x(expr);                                   \
                                                            \
         test_impl::test_expr(__LINE__, _t_x, expr, #expr); \
     } while(false)
@@ -150,10 +150,10 @@ namespace test_impl
     {                                                                          \
         using ct = std::common_type_t<decltype(lhs), decltype(rhs)>;           \
                                                                                \
-        auto&& _t_xl(lhs);                                                     \
-        auto&& _t_xr(rhs);                                                     \
+        auto _t_xl(lhs);                                                       \
+        auto _t_xr(rhs);                                                       \
                                                                                \
-        auto&& _t_x(ct(_t_xl) op ct(_t_xr));                                   \
+        auto _t_x(ct(_t_xl) op ct(_t_xr));                                     \
                                                                                \
         test_impl::test_op(__LINE__, _t_x, _t_xl, _t_xr, #lhs #op #rhs, #rhs); \
     } while(false)
@@ -161,7 +161,7 @@ namespace test_impl
 #define TEST_ASSERT_NS(expr)                            \
     do                                                  \
     {                                                   \
-        auto&& _t_x(expr);                              \
+        auto _t_x(expr);                                \
                                                         \
         test_impl::test_expr_ns(__LINE__, _t_x, #expr); \
     } while(false)
@@ -169,8 +169,8 @@ namespace test_impl
 #define TEST_ASSERT_NS_OP(lhs, op, rhs)                             \
     do                                                              \
     {                                                               \
-        auto&& _t_xl(lhs);                                          \
-        auto&& _t_x(_t_xl op rhs);                                  \
+        auto _t_xl(lhs);                                            \
+        auto _t_x(_t_xl op rhs);                                    \
                                                                     \
         test_impl::test_op_ns(__LINE__, _t_x, #lhs #op #rhs, #rhs); \
     } while(false)
