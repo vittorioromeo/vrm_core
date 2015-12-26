@@ -10,22 +10,24 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/experimental/delegate/signature_helper.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <typename>
-        class VRM_CORE_CLASS_API base_delegate;
-
-        template <typename TReturn, typename... TArgs>
-        class VRM_CORE_CLASS_API base_delegate<TReturn(TArgs...)>
+        template <template <typename...> class TFunction, typename TSignature>
+        class VRM_CORE_CLASS_API base_delegate
         {
+        protected:
+            using fn_signature = TSignature;
+
         private:
-            using this_type = base_delegate<TReturn(TArgs...)>;
+            using this_type = base_delegate<TFunction, fn_signature>;
 
         public:
-            using fn_type = std::function<TReturn(TArgs...)>;
+            using fn_type = TFunction<fn_signature>;
+            using fn_return_type = signature_return_type<TSignature>;
 
         protected:
             std::vector<fn_type> _functions;
@@ -34,13 +36,6 @@ VRM_CORE_NAMESPACE
             void emplace_function(TF&& f)
             {
                 _functions.emplace_back(FWD(f));
-            }
-
-            template <typename TSelf, typename... Ts>
-            static void call_impl(TSelf&& self, Ts&&... xs) // .
-                noexcept(noexcept(self._functions.back()(xs...)))
-            {
-                for(auto&& f : self._functions) f(xs...);
             }
 
             template <typename TSelf, typename TF, typename... Ts>
@@ -53,78 +48,62 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TSelf, typename... Ts>
+            static void call_impl(TSelf&& self, Ts&&... xs) // .
+                noexcept(noexcept(self._functions.back()(xs...)))
+            {
+                for(auto&& f : self._functions) f(xs...);
+            }
+
+            template <typename TSelf, typename... Ts>
             static auto call_and_return_vector_impl(TSelf&& self, Ts&&... xs)
             {
-                std::vector<TReturn> result;
+                std::vector<fn_return_type> result;
                 result.reserve(self._functions.size());
 
-                FWD(self)
-                    .call_and_use_result(
-                        [&result](auto&& x)
-                        {
-                            result.emplace_back(FWD(x));
-                        },
-                        FWD(xs)...);
+                call_and_use_result_impl(FWD(self),
+                    [&result](auto&& x)
+                    {
+                        result.emplace_back(FWD(x));
+                    },
+                    FWD(xs)...);
 
                 return result;
             }
 
         public:
-            template <typename TF, typename... Ts>
-            void call_and_use_result(TF&& result_handler, Ts&&... xs) // .
-                noexcept(noexcept(call_and_use_result_impl(
-                    this_type{}, FWD(result_handler), FWD(xs)...)))
-            {
-                return call_and_use_result_impl(
-                    *this, FWD(result_handler), FWD(xs)...);
-            }
+#define VRM_CORE_IMPL_DEFINE_DELEGATE_IMPLEMENTATIONS(qualifier)            \
+    template <typename TF, typename... Ts>                                  \
+    auto call_and_use_result(TF&& result_handler, Ts&&... xs)               \
+        qualifier noexcept(noexcept(call_and_use_result_impl(               \
+            this_type{}, result_handler, FWD(xs)...)))                      \
+    {                                                                       \
+        return call_and_use_result_impl(*this, result_handler, FWD(xs)...); \
+    }                                                                       \
+                                                                            \
+    template <typename... Ts>                                               \
+    auto operator()(Ts && ... xs)                                           \
+        qualifier noexcept(noexcept(call_impl(this_type{}, FWD(xs)...)))    \
+    {                                                                       \
+        return call_impl(*this, FWD(xs)...);                                \
+    }                                                                       \
+                                                                            \
+    template <typename... Ts>                                               \
+    auto call_and_return_vector(Ts&&... xs) qualifier noexcept(             \
+        noexcept(call_and_return_vector_impl(this_type{}, FWD(xs)...)))     \
+    {                                                                       \
+        return call_and_return_vector_impl(*this, FWD(xs)...);              \
+    }
 
-            template <typename TF, typename... Ts>
-            void call_and_use_result(TF&& result_handler, Ts&&... xs) const // .
-                noexcept(noexcept(call_and_use_result_impl(
-                    this_type{}, FWD(result_handler), FWD(xs)...)))
-            {
-                return call_and_use_result_impl(
-                    *this, FWD(result_handler), FWD(xs)...);
-            }
+            VRM_CORE_IMPL_DEFINE_DELEGATE_IMPLEMENTATIONS(&)
+            VRM_CORE_IMPL_DEFINE_DELEGATE_IMPLEMENTATIONS(const&)
+            VRM_CORE_IMPL_DEFINE_DELEGATE_IMPLEMENTATIONS(&&)
 
-            template <typename... Ts>
-            void operator()(Ts&&... xs) // .
-                noexcept(noexcept(call_impl(this_type{}, FWD(xs)...)))
-            {
-                return call_impl(*this, FWD(xs)...);
-            }
-
-            template <typename... Ts>
-            void operator()(Ts&&... xs) const // .
-                noexcept(noexcept(call_impl(this_type{}, FWD(xs)...)))
-            {
-                return call_impl(*this, FWD(xs)...);
-            }
-
-            template <typename... Ts>
-            auto call_and_return_vector(Ts&&... xs) // .
-                noexcept(noexcept(
-                    call_and_return_vector_impl(this_type{}, FWD(xs)...)))
-            {
-                return call_and_return_vector_impl(*this, FWD(xs)...);
-            }
-
-            template <typename... Ts>
-            auto call_and_return_vector(Ts&&... xs) const // .
-                noexcept(noexcept(
-                    call_and_return_vector_impl(this_type{}, FWD(xs)...)))
-            {
-                return call_and_return_vector_impl(*this, FWD(xs)...);
-            }
+#undef VRM_CORE_IMPL_DEFINE_DELEGATE_IMPLEMENTATIONS
 
             void reserve(sz_t x) { _functions.reserve(x); }
             void clear() noexcept { _functions.clear(); }
-            const auto& empty() const noexcept { return _functions.empty(); }
+            auto empty() const noexcept { return _functions.empty(); }
         };
     }
 }
 VRM_CORE_NAMESPACE_END
-
-// TODO:
-// * rewrite

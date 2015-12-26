@@ -19,112 +19,113 @@ VRM_CORE_NAMESPACE_END
 
 VRM_CORE_NAMESPACE
 {
-    template <typename>
-    class VRM_CORE_CLASS_API dynamic_delegate;
-
-    template <typename>
-    class VRM_CORE_CLASS_API dynamic_delegate_handle;
-
-    template <typename TReturn, typename... TArgs>
-    class VRM_CORE_CLASS_API dynamic_delegate_handle<TReturn(TArgs...)>
+    namespace impl
     {
-        template <typename>
-        friend class dynamic_delegate;
+        using index_type = sz_t;
+        using counter_type = std::int8_t;
 
-    private:
-        sz_t _index;
-        int8_t _counter;
-
-        dynamic_delegate_handle(sz_t index, int8_t counter) noexcept
-            : _index{index},
-              _counter{counter}
-        {
-        }
-    };
-
-    template <typename TReturn, typename... TArgs>
-    class VRM_CORE_CLASS_API dynamic_delegate<TReturn(TArgs...)>
-        : public impl::base_delegate<TReturn(TArgs...)>
-    {
-    public:
-        using handle_type = dynamic_delegate_handle<TReturn(TArgs...)>;
-
-    private:
         struct handle_data
         {
-            sz_t _target_idx;
-            int8_t _counter;
+            index_type _index;
+            counter_type _counter;
 
-            handle_data(sz_t target_idx, int8_t counter) noexcept
-                : _target_idx{target_idx},
-                  _counter{counter}
+            VRM_CORE_ALWAYS_INLINE handle_data(index_type index,
+                counter_type counter) noexcept : _index{index},
+                                                 _counter{counter}
             {
             }
         };
 
-        using base_type = impl::base_delegate<TReturn(TArgs...)>;
-        std::vector<handle_data> _handle_data;
-
-        auto& handle_data_from_handle(const handle_type& h) noexcept
+        template <template <typename...> class TFunction, typename TSignature>
+        class VRM_CORE_CLASS_API dynamic_delegate_handle : public handle_data
         {
-            VRM_CORE_ASSERT_OP(_handle_data.size(), >, h._index);
-            return _handle_data[h._index];
-        }
+            template <template <typename...> class, typename>
+            friend class dynamic_delegate;
 
-        const auto& handle_data_from_handle(const handle_type& h) const noexcept
+        private:
+            using handle_data::handle_data;
+
+            const auto& target_idx() const noexcept { return _index; }
+            const auto& counter() const noexcept { return _counter; }
+        };
+
+
+        template <template <typename...> class TFunction, typename TSignature>
+        class VRM_CORE_CLASS_API dynamic_delegate
+            : public impl::base_delegate<TFunction, TSignature>
         {
-            VRM_CORE_ASSERT_OP(_handle_data.size(), >, h._index);
-            return _handle_data[h._index];
-        }
+        public:
+            using handle_type = dynamic_delegate_handle<TFunction, TSignature>;
 
-        auto valid_handle(const handle_type& h) noexcept
-        {
-            return h._counter == handle_data_from_handle(h)._counter;
-        }
+        private:
+            using base_type = impl::base_delegate<TFunction, TSignature>;
+            std::vector<handle_data> _handle_data;
 
-        void erase_at(sz_t idx)
-        {
-            VRM_CORE_ASSERT_OP(this->_functions.size(), >, idx);
-            this->_functions.erase(std::begin(this->_functions) + idx);
-
-            for(auto i(idx); i < _handle_data.size(); ++i)
+            auto& handle_data_from_handle(const handle_type& h) noexcept
             {
-                _handle_data[i]._target_idx -= 1;
-            }
-        }
-
-    public:
-        using fn_type = typename base_type::fn_type;
-
-    public:
-        template <typename TF>
-        auto operator+=(TF&& f)
-        {
-            auto idx(this->_functions.size());
-            this->emplace_function(FWD(f));
-
-            if(_handle_data.size() <= idx)
-            {
-                _handle_data.emplace_back(idx, 0);
-            }
-            else
-            {
-                _handle_data[idx]._target_idx = idx;
+                VRM_CORE_ASSERT_OP(_handle_data.size(), >, h.target_idx());
+                return _handle_data[h.target_idx()];
             }
 
-            handle_type h{idx, _handle_data[idx]._counter};
-            VRM_CORE_ASSERT(valid_handle(h));
+            const auto& handle_data_from_handle(const handle_type& h) const
+                noexcept
+            {
+                VRM_CORE_ASSERT_OP(_handle_data.size(), >, h.target_idx());
+                return _handle_data[h.target_idx()];
+            }
 
-            return h;
-        }
+            auto valid_handle(const handle_type& h) noexcept
+            {
+                return h.counter() == handle_data_from_handle(h)._counter;
+            }
 
-        void operator-=(const handle_type& h)
-        {
-            VRM_CORE_ASSERT(valid_handle(h));
-            ++(handle_data_from_handle(h)._counter);
-            erase_at(h._index);
-            VRM_CORE_ASSERT(!valid_handle(h));
-        }
-    };
+            void erase_at(sz_t idx)
+            {
+                VRM_CORE_ASSERT_OP(this->_functions.size(), >, idx);
+                this->_functions.erase(std::begin(this->_functions) + idx);
+
+                for(auto i(idx); i < _handle_data.size(); ++i)
+                {
+                    _handle_data[i]._index -= 1;
+                }
+            }
+
+        public:
+            using fn_type = typename base_type::fn_type;
+
+        public:
+            template <typename TF>
+            auto operator+=(TF&& f)
+            {
+                auto idx(this->_functions.size());
+                this->emplace_function(FWD(f));
+
+                if(_handle_data.size() <= idx)
+                {
+                    _handle_data.emplace_back(idx, 0);
+                }
+                else
+                {
+                    _handle_data[idx]._index = idx;
+                }
+
+                handle_type h{idx, _handle_data[idx]._counter};
+                VRM_CORE_ASSERT(valid_handle(h));
+
+                return h;
+            }
+
+            void operator-=(const handle_type& h)
+            {
+                VRM_CORE_ASSERT(valid_handle(h));
+                ++(handle_data_from_handle(h)._counter);
+                erase_at(h.target_idx());
+                VRM_CORE_ASSERT(!valid_handle(h));
+            }
+        };
+    }
+
+    template <typename TSignature>
+    using dynamic_delegate = impl::dynamic_delegate<std::function, TSignature>;
 }
 VRM_CORE_NAMESPACE_END

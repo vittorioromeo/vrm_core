@@ -19,25 +19,29 @@
 
 VRM_CORE_NAMESPACE
 {
-    template <typename>
-    class VRM_CORE_CLASS_API delegate;
-
-    template <typename TReturn, typename... TArgs>
-    class VRM_CORE_CLASS_API delegate<TReturn(TArgs...)>
-        : public impl::base_delegate<TReturn(TArgs...)>
+    namespace impl
     {
-    private:
-        using base_type = impl::base_delegate<TReturn(TArgs...)>;
-
-    public:
-        using fn_type = typename base_type::fn_type;
-
-    public:
-        template <typename TF>
-        void operator+=(TF&& f)
+        template <template <typename...> class TFunction, typename TSignature>
+        class VRM_CORE_CLASS_API delegate
+            : public impl::base_delegate<TFunction, TSignature>
         {
-            this->emplace_function(FWD(f));
-        }
-    };
+        private:
+            using base_type = impl::base_delegate<TFunction, TSignature>;
+            using fn_signature = typename base_type::fn_signature;
+
+        public:
+            using fn_type = typename base_type::fn_type;
+
+        public:
+            template <typename TF>
+            void operator+=(TF&& f)
+            {
+                this->emplace_function(FWD(f));
+            }
+        };
+    }
+
+    template <typename TSignature>
+    using delegate = impl::delegate<std::function, TSignature>;
 }
 VRM_CORE_NAMESPACE_END
