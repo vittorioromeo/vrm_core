@@ -14,6 +14,9 @@
 // TODO: WIP:
 // * use sparse int set?
 
+// TODO:
+// Strong handle typedefs for index/target
+
 VRM_CORE_NAMESPACE
 {
     namespace impl
