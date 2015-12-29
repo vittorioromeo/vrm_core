@@ -10,6 +10,7 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/experimental/delegate/base_delegate.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/strong_typedef.hpp>
 
 // TODO: WIP:
 // * use sparse int set?
@@ -21,141 +22,217 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <typename TIndex, typename TCounter>
-        class handle_helper
+        template <typename TTarget, typename TCounter>
+        class handle_settings
         {
         public:
-            using index_type = TIndex;
+            // From metadata to target user-specified object.
+            using target_type = TTarget;
+
+            // Counter type.
             using counter_type = TCounter;
 
         private:
-            // TODO:
-            struct handle_data
+            struct metadata_impl
             {
-                // TODO:
-            public:
-                // TODO: could be a pointer?
-                index_type _index;
-
-
+                target_type _target;
                 counter_type _counter;
-
-            public:
-                // TODO:
-                VRM_CORE_ALWAYS_INLINE handle_data() noexcept : _index{0},
-                                                                _counter{0}
-                {
-                }
-
-                VRM_CORE_ALWAYS_INLINE handle_data(index_type index,
-                    counter_type counter) noexcept : _index{index},
-                                                     _counter{counter}
-                {
-                }
             };
 
-            struct metadata_impl : public handle_data
+            template <typename TMetadataRef>
+            struct handle_impl
             {
-                using handle_data::handle_data;
-
-                VRM_CORE_ALWAYS_INLINE const auto& idx() const noexcept
-                {
-                    return this->_index;
-                }
-
-
-                VRM_CORE_ALWAYS_INLINE const auto& counter() const noexcept
-                {
-                    return this->_counter;
-                }
+                TMetadataRef _metadata_ref;
+                counter_type _counter;
             };
 
-            struct handle_impl : public handle_data
-            {
-                using handle_data::handle_data;
-
-                VRM_CORE_ALWAYS_INLINE const auto& target_idx() const noexcept
-                {
-                    return this->_index;
-                }
-
-                VRM_CORE_ALWAYS_INLINE const auto& counter() const noexcept
-                {
-                    return this->_counter;
-                }
-            };
 
         public:
-            using handle_type = handle_impl;
             using metadata_type = metadata_impl;
+
+            template <typename TMetadataRef>
+            using handle_type = handle_impl<TMetadataRef>;
         };
 
-        template <typename THandleHelper>
-        class handle_vector
+        namespace handle_storage
         {
-        private:
-            using handle_helper_type = THandleHelper;
-
-        public:
-            using index_type = typename handle_helper_type::index_type;
-            using counter_type = typename handle_helper_type::counter_type;
-            using handle_type = typename handle_helper_type::handle_type;
-            using metadata_type = typename handle_helper_type::metadata_type;
-
-        private:
-            // TODO: generalize container semantics, not vector
-            std::vector<metadata_type> _metadata;
-            sz_t _next_idx{0};
-
-            // Get metadata from existing handle.
-            template <typename TSelf>
-            VRM_CORE_ALWAYS_INLINE static decltype(auto)
-            metadata_from_handle_impl(
-                TSelf&& self, const handle_type& h) noexcept
+            // Fixed array, uses ptrs as metadata refs
+            template <typename TSettings, sz_t TCount>
+            class hs_array
             {
-                VRM_CORE_ASSERT_OP(self._metadata.size(), >, h.target_idx());
-                return self._metadata[h.target_idx()];
-            }
+            public:
+                using settings_type = TSettings;
+                using target_type = typename settings_type::target_type;
+                using counter_type = typename settings_type::counter_type;
+                using metadata_type = typename settings_type::metadata_type;
+                using metadata_ref_type = metadata_type*;
 
-        public:
-#define VRM_CORE_IMPL_DEFINE_METADATA_FROM_HANDLE(qualifier)    \
-    VRM_CORE_ALWAYS_INLINE decltype(auto) metadata_from_handle( \
-        const handle_type& h) qualifier noexcept                \
-    {                                                           \
-        return metadata_from_handle_impl(*this, h);             \
-    }
+                using handle_type =
+                    typename settings_type::template handle_impl<
+                        metadata_ref_type>;
 
-            VRM_CORE_IMPL_DEFINE_METADATA_FROM_HANDLE(&)
-            VRM_CORE_IMPL_DEFINE_METADATA_FROM_HANDLE(const&)
-            VRM_CORE_IMPL_DEFINE_METADATA_FROM_HANDLE(&&)
+                static constexpr sz_t count{TCount};
 
-#undef VRM_CORE_IMPL_DEFINE_METADATA_FROM_HANDLE
+            private:
+                std::array<metadata_type, count> _metadata;
+                metadata_ref_type _next_ref{_metadata.data()};
 
-            VRM_CORE_ALWAYS_INLINE auto valid_handle(const handle_type& h) const
-                noexcept
-            {
-                return h.counter() == metadata_from_handle(h).counter();
-            }
-
-            auto create(sz_t item_idx)
-            {
-                auto m_idx(_next_idx);
-                ++_next_idx;
-
-                // Grow if needed.
-                if(m_idx >= _metadata.size())
+            public:
+                auto& metadata_from_handle(const handle_type& h) noexcept
                 {
+                    return *(h._metadata_ref);
+                }
+
+                const auto& metadata_from_handle(const handle_type& h) const
+                    noexcept
+                {
+                    return *(h._metadata_ref);
+                }
+
+                auto create(const target_type& target)
+                {
+                    // Out of the array.
+                    VRM_CORE_ASSERT_OP(_next_ref, !=, _metadata.data() + count);
+
+                    // Get ptr and increment next ptr.
+                    auto m_ref(_next_ref);
+                    ++_next_ref;
+
+                    // Set it to desired target.
+                    m_ref->_target = target;
+
+                    // Return handle.
+                    return handle_type{m_ref, m_ref->_counter};
+                }
+
+                // TODO:
+                template <typename TF>
+                void destroy(const handle_type& h, TF&& f)
+                {
+                    // Get corresponding metadata and invalidate it.
+                    auto& m(metadata_from_handle(h));
+                    ++(m._counter);
+
+                    // Get last metadata.
+                    auto last_m_ref(_next_ref - 1);
+
+                    // Call target cleanup function. (TODO: ?)
+                    f(m._target);
+
+                    // Swap indices and `pop_back` (TODO:)
+                    std::swap(m._target, last_m_ref->_target);
+                    --_next_ref;
+                }
+            };
+
+            // Resizable array, uses idxs as metadata refs
+            template <typename TSettings>
+            class hs_vector
+            {
+            public:
+                using settings_type = TSettings;
+                using target_type = typename settings_type::target_type;
+                using counter_type = typename settings_type::counter_type;
+                using metadata_type = typename settings_type::metadata_type;
+                using metadata_ref_type = sz_t;
+
+                using handle_type =
+                    typename settings_type::template handle_impl<
+                        metadata_ref_type>;
+
+            private:
+                std::vector<metadata_type> _metadata;
+                metadata_ref_type _next_ref{0};
+
+                void assert_validity(const handle_type& h) const noexcept
+                {
+                    VRM_CORE_ASSERT_OP(h._metadata_ref, >=, 0);
+                    VRM_CORE_ASSERT_OP(h._metadata_ref, <, _metadata.size());
+                }
+
+                void grow_if_needed()
+                {
+                    if(_next_ref < _metadata.size()) return;
                     _metadata.resize(_metadata.size() + 100);
                 }
 
-                VRM_CORE_ASSERT_OP(m_idx, <, _metadata.size());
+            public:
+                auto& metadata_from_handle(const handle_type& h) noexcept
+                {
+                    assert_validity(h);
+                    return _metadata[h._metadata_ref];
+                }
 
-                // Handle points to item. (TODO: generalize)
-                _metadata[m_idx]._index = item_idx;
+                const auto& metadata_from_handle(const handle_type& h) const
+                    noexcept
+                {
+                    assert_validity(h);
+                    return _metadata[h._metadata_ref];
+                }
 
-                handle_type h{m_idx, _metadata[m_idx]._counter};
+                auto create(const target_type& target)
+                {
+                    grow_if_needed();
+
+                    // Get ptr and increment next ptr.
+                    auto m_ref(_next_ref);
+                    ++_next_ref;
+
+                    // Reference to new metadata.
+                    auto& m(_metadata[m_ref]);
+
+                    // Set it to desired target.
+                    m._target = target;
+
+                    // Return handle.
+                    return handle_type{m_ref, m._counter};
+                }
+
+                template <typename TF>
+                void destroy(const handle_type& h, TF&& f)
+                {
+                    // Get corresponding metadata and invalidate it.
+                    auto& m(metadata_from_handle(h));
+                    ++(m._counter);
+
+                    // Get last metadata.
+                    auto& last_m(_metadata[_next_ref - 1]);
+
+                    // Call target cleanup function. (TODO: ?)
+                    f(m._target);
+
+                    // Swap indices and `pop_back` (TODO:)
+                    std::swap(m._target, last_m._target);
+                    --_next_ref;
+                }
+            };
+        }
+
+        template <typename TStorage>
+        class handle_manager
+        {
+        public:
+            using storage_type = TStorage;
+            using counter_type = typename storage_type::counter_type;
+            using handle_type = typename storage_type::handle_type;
+            using target_type = typename storage_type::target_type;
+            using metadata_type = typename storage_type::metadata_type;
+            using metadata_ref_type = typename storage_type::metadata_ref_type;
+
+        private:
+            storage_type _storage;
+
+        public:
+            VRM_CORE_ALWAYS_INLINE auto valid_handle(const handle_type& h) const
+                noexcept
+            {
+                return h._counter == _storage.metadata_from_handle(h)._counter;
+            }
+
+            auto create(const target_type& target)
+            {
+                auto h(_storage.create(target));
                 VRM_CORE_ASSERT(valid_handle(h));
-
                 return h;
             }
 
@@ -164,58 +241,60 @@ VRM_CORE_NAMESPACE
             void destroy(const handle_type& h, TF&& f)
             {
                 VRM_CORE_ASSERT(valid_handle(h));
-
-                // Get corresponding metadata and invalidate it.
-                auto& m(metadata_from_handle(h));
-                ++(m._counter);
-
-                // Get last metadata.
-                auto& last_m(_metadata[_next_idx - 1]);
-                f(m._index);
-
-                // Swap indices and `pop_back` (TODO:)
-                std::swap(m._index, last_m._index);
-                --_next_idx;
-
+                _storage.destroy(h, FWD(f));
                 VRM_CORE_ASSERT(!valid_handle(h));
             }
         };
 
+
         using index_type = sz_t;
         using counter_type = std::int8_t;
 
-        using test_hh = handle_helper<index_type, counter_type>;
+        using test_hs = handle_settings<index_type, counter_type>;
+
+        // using test_st = handle_storage::hs_array<test_hs, 100>;
+        using test_st = handle_storage::hs_vector<test_hs>;
+
+        using test_hm = handle_manager<test_st>;
 
         template <template <typename...> class TFunction, typename TSignature>
         class VRM_CORE_CLASS_API dynamic_delegate
             : public impl::base_delegate<TFunction, TSignature>
         {
         public:
-            using hv_type = handle_vector<test_hh>;
-            using metadata_type = typename hv_type::metadata_type;
-            using handle_type = typename hv_type::handle_type;
+            using hm_type = test_hm;
+            using metadata_type = typename hm_type::metadata_type;
+            using handle_type = typename hm_type::handle_type;
 
         private:
             using base_type = impl::base_delegate<TFunction, TSignature>;
-            hv_type _hv;
+            hm_type _hm;
 
         public:
             using fn_type = typename base_type::fn_type;
+
+        private:
+            auto next_fn_idx() const noexcept
+            {
+                return this->_functions.size() - 1;
+            }
 
         public:
             template <typename TF>
             auto operator+=(TF&& f)
             {
-                // auto idx(this->_functions.size());
+                // Emplace function at the end of functions vector.
                 this->emplace_function(FWD(f));
 
-                return _hv.create(this->_functions.size() - 1);
+                // Return an handle to it.
+                return _hm.create(next_fn_idx());
             }
 
             void operator-=(const handle_type& h)
             {
-                _hv.destroy(h, [this](auto i)
+                _hm.destroy(h, [this](auto i)
                     {
+                        // Swap dead function with last function in the vector.
                         std::swap(this->_functions[i], this->_functions.back());
                         this->_functions.pop_back();
                     });
