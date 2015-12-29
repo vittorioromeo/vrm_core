@@ -36,14 +36,14 @@ VRM_CORE_NAMESPACE
             struct metadata_impl
             {
                 target_type _target;
-                counter_type _counter;
+                counter_type _counter{0};
             };
 
             template <typename TMetadataRef>
             struct handle_impl
             {
                 TMetadataRef _metadata_ref;
-                counter_type _counter;
+                counter_type _counter{0};
             };
 
 
@@ -68,7 +68,7 @@ VRM_CORE_NAMESPACE
                 using metadata_ref_type = metadata_type*;
 
                 using handle_type =
-                    typename settings_type::template handle_impl<
+                    typename settings_type::template handle_type<
                         metadata_ref_type>;
 
                 static constexpr sz_t count{TCount};
@@ -137,7 +137,7 @@ VRM_CORE_NAMESPACE
                 using metadata_ref_type = sz_t;
 
                 using handle_type =
-                    typename settings_type::template handle_impl<
+                    typename settings_type::template handle_type<
                         metadata_ref_type>;
 
             private:
@@ -252,8 +252,8 @@ VRM_CORE_NAMESPACE
 
         using test_hs = handle_settings<index_type, counter_type>;
 
-        // using test_st = handle_storage::hs_array<test_hs, 100>;
-        using test_st = handle_storage::hs_vector<test_hs>;
+        using test_st = handle_storage::hs_array<test_hs, 100>;
+        // using test_st = handle_storage::hs_vector<test_hs>;
 
         using test_hm = handle_manager<test_st>;
 
