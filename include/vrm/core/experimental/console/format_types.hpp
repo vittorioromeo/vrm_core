@@ -16,8 +16,8 @@ VRM_CORE_NAMESPACE
     {
         namespace impl
         {
-            using style_type = std::int8_t;
-            using color_type = std::int8_t;
+            using style_type = i8;
+            using color_type = i8;
 
             /// @brief Number of styles.
             constexpr sz_t style_count{13};

@@ -53,6 +53,8 @@ VRM_CORE_NAMESPACE
                 _storage.destroy(h, FWD(f));
                 VRM_CORE_ASSERT(!valid_handle(h));
             }
+
+            // TODO: clear/reserve
         };
     }
 }

@@ -12,6 +12,16 @@
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/experimental/delegate/signature_helper.hpp>
 
+// TODO:
+// * unordered_fixed_delegate<TFnSignature, TSize>
+// * unordered_delegate<TFnSignature, TAllocator>
+// * unordered_fixed_unsubscribable_delegate<TFnSignature, TSize>
+// * unordered_unsubscribable_delegate<TFnSignature, TAllocator>
+// * ordered_fixed_delegate<TFnSignature, TSize>
+// * ordered_delegate<TFnSignature, TAllocator>
+// * ordered_fixed_unsubscribable_delegate<TFnSignature, TSize>
+// * ordered_unsubscribable_delegate<TFnSignature, TAllocator>
+
 VRM_CORE_NAMESPACE
 {
     namespace impl

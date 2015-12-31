@@ -29,7 +29,7 @@ VRM_CORE_NAMESPACE
         {
         private:
             using handle_index_type = sz_t;
-            using handle_counter_type = std::int8_t;
+            using handle_counter_type = i8;
 
             using handle_settings_type =
                 handle::settings<handle_index_type, handle_counter_type>;
@@ -66,6 +66,8 @@ VRM_CORE_NAMESPACE
             auto operator+=(TF&& f);
 
             void operator-=(const handle_type& h);
+
+            // TODO: clear/reserve hm
         };
     }
 
