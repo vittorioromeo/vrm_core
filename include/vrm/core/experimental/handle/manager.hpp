@@ -11,8 +11,7 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
-#include <vrm/core/experimental/handle/impl/storage/array.hpp>
-#include <vrm/core/experimental/handle/impl/storage/vector.hpp>
+#include <vrm/core/experimental/handle/impl/storage.hpp>
 
 VRM_CORE_NAMESPACE
 {

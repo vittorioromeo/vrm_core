@@ -10,25 +10,19 @@
 #include <vrm/core/experimental/delegate/base_delegate.hpp>
 #include <vrm/core/experimental/delegate/impl/dynamic_delegate.hpp>
 
-#define VRM_CORE_IMPL_BASE_DELEGATE_TEMPLATE(function, signature, allocator) \
-    template <template <typename...> class function, typename signature,     \
-        typename allocator>
-
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        VRM_CORE_IMPL_BASE_DELEGATE_TEMPLATE(TFunction, TSignature, TAllocator)
-        auto dynamic_delegate<TFunction, TSignature, TAllocator>::next_fn_idx()
-            const noexcept
+        template <typename TSettings>
+        auto dynamic_delegate<TSettings>::next_fn_idx() const noexcept
         {
             return this->_functions.size() - 1;
         }
 
-        VRM_CORE_IMPL_BASE_DELEGATE_TEMPLATE(TFunction, TSignature, TAllocator)
+        template <typename TSettings>
         template <typename TF>
-        auto dynamic_delegate<TFunction, TSignature, TAllocator>::operator+=(
-            TF&& f)
+        auto dynamic_delegate<TSettings>::operator+=(TF&& f)
         {
             // Emplace function at the end of functions vector.
             this->emplace_function(FWD(f));
@@ -37,9 +31,8 @@ VRM_CORE_NAMESPACE
             return _hm.create(next_fn_idx());
         }
 
-        VRM_CORE_IMPL_BASE_DELEGATE_TEMPLATE(TFunction, TSignature, TAllocator)
-        void dynamic_delegate<TFunction, TSignature, TAllocator>::operator-=(
-            const handle_type& h)
+        template <typename TSettings>
+        void dynamic_delegate<TSettings>::operator-=(const handle_type& h)
         {
             _hm.destroy(h, [this](auto i)
                 {
@@ -51,5 +44,3 @@ VRM_CORE_NAMESPACE
     }
 }
 VRM_CORE_NAMESPACE_END
-
-#undef VRM_CORE_IMPL_BASE_DELEGATE_TEMPLATE

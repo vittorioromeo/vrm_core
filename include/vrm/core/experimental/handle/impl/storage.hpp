@@ -5,6 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/handle/impl/settings.hpp>
-#include <vrm/core/experimental/handle/impl/storage.hpp>
-#include <vrm/core/experimental/handle/manager.hpp>
+#include <vrm/core/experimental/handle/impl/storage/array.hpp>
+#include <vrm/core/experimental/handle/impl/storage/vector.hpp>

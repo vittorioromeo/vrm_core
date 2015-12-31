@@ -21,15 +21,12 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <template <typename...> class TFunction, typename TSignature,
-            typename TAllocator>
+        template <typename TSettings>
         class VRM_CORE_CLASS_API delegate
-            : public impl::base_delegate<TFunction, TSignature, TAllocator>
+            : public impl::base_delegate<TSettings>
         {
         private:
-            using base_type =
-                impl::base_delegate<TFunction, TSignature, TAllocator>;
-
+            using base_type = impl::base_delegate<TSettings>;
             using fn_signature = typename base_type::fn_signature;
 
         public:
@@ -51,6 +48,7 @@ VRM_CORE_NAMESPACE
     template <typename TSignature,
         typename TAllocator =
             impl::default_delegate_allocator<std::function, TSignature>>
-    using delegate = impl::delegate<std::function, TSignature, TAllocator>;
+    using delegate = impl::delegate<
+        impl::delegate_settings<std::function, TSignature, TAllocator>>;
 }
 VRM_CORE_NAMESPACE_END

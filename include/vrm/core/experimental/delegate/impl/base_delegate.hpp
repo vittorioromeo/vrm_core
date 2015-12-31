@@ -23,21 +23,33 @@ VRM_CORE_NAMESPACE
         template <template <typename...> class TFunction, typename TSignature,
             typename TAllocator =
                 default_delegate_allocator<TFunction, TSignature>>
-        class VRM_CORE_CLASS_API base_delegate
+        struct delegate_settings
         {
-        protected:
             using fn_signature = TSignature;
-
-        private:
-            using this_type =
-                base_delegate<TFunction, fn_signature, TAllocator>;
-
-        public:
             using fn_type = TFunction<fn_signature>;
             using fn_return_type = signature_return_type<TSignature>;
             using allocator_type = TAllocator;
             using allocator_traits = ::std::allocator_traits<allocator_type>;
-            using fn_vector_type = std::vector<fn_type, allocator_type>;
+            using fn_vector_type = ::std::vector<fn_type, allocator_type>;
+        };
+
+        template <typename TSettings>
+        class VRM_CORE_CLASS_API base_delegate
+        {
+        private:
+            using settings_type = TSettings;
+
+        protected:
+            using fn_signature = typename settings_type::fn_signature;
+
+        private:
+            using this_type = base_delegate<TSettings>;
+
+        public:
+            using allocator_type = typename settings_type::allocator_type;
+            using fn_type = typename settings_type::fn_type;
+            using fn_return_type = typename settings_type::fn_return_type;
+            using fn_vector_type = typename settings_type::fn_vector_type;
 
         protected:
             fn_vector_type _functions;

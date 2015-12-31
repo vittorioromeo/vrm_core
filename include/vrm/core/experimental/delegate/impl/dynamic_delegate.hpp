@@ -23,10 +23,9 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <template <typename...> class TFunction, typename TSignature,
-            typename TAllocator>
+        template <typename TSettings>
         class VRM_CORE_CLASS_API dynamic_delegate
-            : public impl::base_delegate<TFunction, TSignature, TAllocator>
+            : public impl::base_delegate<TSettings>
         {
         private:
             using handle_index_type = sz_t;
@@ -35,16 +34,18 @@ VRM_CORE_NAMESPACE
             using handle_settings_type =
                 handle::settings<handle_index_type, handle_counter_type>;
 
+            using base_type = impl::base_delegate<TSettings>;
+            using allocator_type = typename base_type::allocator_type;
+
             using handle_storage_type =
-                handle::storage::hs_vector<handle_settings_type, TAllocator>;
+                handle::storage::hs_vector<handle_settings_type,
+                    allocator_type>;
 
             using handle_manager_type = handle::manager<handle_storage_type>;
 
             using metadata_type = typename handle_manager_type::metadata_type;
             using handle_type = typename handle_manager_type::handle_type;
 
-            using base_type =
-                impl::base_delegate<TFunction, TSignature, TAllocator>;
 
             handle_manager_type _hm;
 
@@ -71,7 +72,7 @@ VRM_CORE_NAMESPACE
     template <typename TSignature,
         typename TAllocator =
             impl::default_delegate_allocator<std::function, TSignature>>
-    using dynamic_delegate =
-        impl::dynamic_delegate<std::function, TSignature, TAllocator>;
+    using dynamic_delegate = impl::dynamic_delegate<
+        impl::delegate_settings<std::function, TSignature, TAllocator>>;
 }
 VRM_CORE_NAMESPACE_END
