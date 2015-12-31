@@ -66,7 +66,6 @@ void test1()
 {
     auto t = std::make_tuple(0, 'a', 1, 'b', 2, 'c');
     auto t_r = make_ref_tuple(0, 'a', 1, 'b', 2, 'c');
-    auto t_f = std::forward_as_tuple(0, 'a', 1, 'b', 2, 'c');
 
     auto tt = to_transposed_tuple<3>(t);
     auto tt_r = to_transposed_ref_tuple<3>(t);

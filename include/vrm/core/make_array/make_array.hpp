@@ -10,9 +10,7 @@
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/utility_macros.hpp>
 
-VRM_CORE_NAMESPACE
-{
-#define VRM_CORE_IMPL_MAKE_ARRAY_BODY()                                \
+#define VRM_CORE_IMPL_BODY()                                           \
     std::array<std::decay_t<std::common_type_t<Ts...>>, sizeof...(Ts)> \
     {                                                                  \
         {                                                              \
@@ -20,12 +18,12 @@ VRM_CORE_NAMESPACE
         }                                                              \
     }
 
+VRM_CORE_NAMESPACE
+{
     template <typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto make_array(Ts && ... xs) noexcept(
-        noexcept(VRM_CORE_IMPL_MAKE_ARRAY_BODY()))
-    {
-        return VRM_CORE_IMPL_MAKE_ARRAY_BODY();
-    }
-#undef VRM_CORE_IMPL_MAKE_ARRAY_BODY
+    VRM_CORE_ALWAYS_INLINE constexpr auto make_array(Ts && ... xs) // .
+        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY()
 }
 VRM_CORE_NAMESPACE_END
+
+#undef VRM_CORE_IMPL_BODY
