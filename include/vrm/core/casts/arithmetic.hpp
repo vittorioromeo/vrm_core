@@ -5,57 +5,6 @@
 
 #pragma once
 
-#include <cfenv>
-#include <limits>
-#include <type_traits>
-#include <vrm/core/config.hpp>
-#include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/type_traits.hpp>
 #include <vrm/core/casts/impl/overflow_check.hpp>
-
-VRM_CORE_NAMESPACE
-{
-    template <typename TOut, typename TIn>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
-    {
-        VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TOut>{},
-            "`TOut` output type must be an arithmetic type.");
-
-        VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TIn>{},
-            "`TIn` input type must be an arithmetic type.");
-
-        VRM_CORE_CONSTEXPR_ASSERT((!impl::will_overflow<TOut, TIn>(x)));
-
-        return static_cast<TOut>(x);
-    }
-
-    /// @brief Converts a number to `int`.
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_int(const T& x) noexcept
-    {
-        return to_num<int>(x);
-    }
-
-    /// @brief Converts a number to `float`.
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_float(const T& x) noexcept
-    {
-        return to_num<float>(x);
-    }
-
-    /// @brief Converts a number to `double`.
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_double(const T& x) noexcept
-    {
-        return to_num<double>(x);
-    }
-
-    /// @brief Converts a number to `sz_t`.
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto to_sz_t(const T& x) noexcept
-    {
-        return to_num<sz_t>(x);
-    }
-}
-VRM_CORE_NAMESPACE_END
+#include <vrm/core/casts/impl/arithmetic.hpp>
+#include <vrm/core/casts/impl/arithmetic_conversions.hpp>

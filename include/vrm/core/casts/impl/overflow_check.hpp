@@ -11,6 +11,7 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits.hpp>
 #include <vrm/core/type_aliases/integral_constant.hpp>
 
 VRM_CORE_NAMESPACE

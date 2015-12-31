@@ -437,5 +437,32 @@ int main()
     // Will fire assertion:
     // TEST_ASSERT(to_size_t<int>(int(-1)) == -1);
 
+    {
+        using namespace vrm::core;
+
+        (void)to_char(1);
+        (void)to_short(1);
+        (void)to_int(1);
+        (void)to_long(1);
+        (void)to_llong(1);
+        (void)to_uchar(1);
+        (void)to_ushort(1);
+        (void)to_uint(1);
+        (void)to_ulong(1);
+        (void)to_ullong(1);
+        (void)to_i8(1);
+        (void)to_i16(1);
+        (void)to_i32(1);
+        (void)to_i64(1);
+        (void)to_ui8(1);
+        (void)to_ui16(1);
+        (void)to_ui32(1);
+        (void)to_ui64(1);
+        (void)to_sz_t(1);
+        (void)to_float(1);
+        (void)to_double(1);
+        (void)to_ldouble(1);
+    }
+
     return 0;
 }
