@@ -10,6 +10,9 @@
 #include <vrm/core/args_utils/nth_arg.hpp>
 #include <vrm/core/args_utils/args_slice.hpp>
 
+// TODO: docs
+// (mention inclusion/exclusion in ranges)
+
 VRM_CORE_NAMESPACE
 {
     template <sz_t TN, typename... Ts>
@@ -32,6 +35,22 @@ VRM_CORE_NAMESPACE
         Ts && ... xs) noexcept
     {
         return args_slice<TN, sizeof...(xs)>(FWD(xs)...);
+    }
+
+    // TODO: test
+    template <sz_t TN, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_after(
+        Ts && ... xs) noexcept
+    {
+        return all_args_from<TN + 1>(FWD(xs)...);
+    }
+
+    // TODO: test
+    template <sz_t TN, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_before(
+        Ts && ... xs) noexcept
+    {
+        return first_n_args<TN>(FWD(xs)...);
     }
 
     template <typename... Ts>
