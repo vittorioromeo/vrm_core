@@ -10,11 +10,9 @@
 #include <vrm/core/args_utils/nth_arg.hpp>
 #include <vrm/core/args_utils/args_slice.hpp>
 
-// TODO: docs
-// (mention inclusion/exclusion in ranges)
-
 VRM_CORE_NAMESPACE
 {
+    /// @brief Returns the slice `[..., TN)`.
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) first_n_args(
         Ts && ... xs) noexcept
@@ -22,6 +20,7 @@ VRM_CORE_NAMESPACE
         return args_slice<0, TN>(FWD(xs)...);
     }
 
+    /// @brief Returns the slice `(TN, ...]`.
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) last_n_args(
         Ts && ... xs) noexcept
@@ -30,6 +29,8 @@ VRM_CORE_NAMESPACE
         return args_slice<begin_idx, begin_idx + TN>(FWD(xs)...);
     }
 
+    /// @brief Returns the slice `[TN, ...]`.
+    /// /// @details Includes `TN`.
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_from(
         Ts && ... xs) noexcept
@@ -37,7 +38,8 @@ VRM_CORE_NAMESPACE
         return args_slice<TN, sizeof...(xs)>(FWD(xs)...);
     }
 
-    // TODO: test
+    /// @brief Returns the slice `(TN, ...]`.
+    /// @details Excludes `TN`.
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_after(
         Ts && ... xs) noexcept
@@ -45,7 +47,17 @@ VRM_CORE_NAMESPACE
         return all_args_from<TN + 1>(FWD(xs)...);
     }
 
-    // TODO: test
+    /// @brief Returns the slice `[..., TN]`.
+    /// @details Includes `TN`.
+    template <sz_t TN, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_until(
+        Ts && ... xs) noexcept
+    {
+        return first_n_args<TN + 1>(FWD(xs)...);
+    }
+
+    /// @brief Returns the slice `[..., TN)`.
+    /// @details Excludes `TN`.
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) all_args_before(
         Ts && ... xs) noexcept
@@ -53,6 +65,7 @@ VRM_CORE_NAMESPACE
         return first_n_args<TN>(FWD(xs)...);
     }
 
+    /// @brief Returns the first argument of a variadic pack.
     template <typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) first_arg(
         Ts && ... xs) noexcept
@@ -60,6 +73,7 @@ VRM_CORE_NAMESPACE
         return std::get<0>(first_n_args<1>(FWD(xs)...));
     }
 
+    /// @brief Returns the last argument of a variadic pack.
     template <typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) last_arg(
         Ts && ... xs) noexcept

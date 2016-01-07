@@ -3,7 +3,7 @@
 
 using namespace vrm::core;
 
-int main()
+void t0()
 {
     {
         auto s0 = first_n_args<3>(0, 1, 2, 3, 4, 5, 6);
@@ -49,4 +49,75 @@ int main()
         SA_TYPE((x), (int));
         TEST_ASSERT_OP(x, ==, 6);
     }
+}
+
+void empty()
+{
+    {
+        auto s0 = first_n_args<0>();
+        static_assert(std::tuple_size<decltype(s0)>{} == 0, "");
+    }
+
+    {
+        auto s0 = last_n_args<0>();
+        static_assert(std::tuple_size<decltype(s0)>{} == 0, "");
+    }
+
+    {
+        auto s0 = all_args_from<0>();
+        static_assert(std::tuple_size<decltype(s0)>{} == 0, "");
+    }
+
+    {
+        auto s0 = all_args_before<0>();
+        static_assert(std::tuple_size<decltype(s0)>{} == 0, "");
+    }
+}
+
+void t1()
+{
+#define MT ::std::make_tuple
+
+    {
+        auto s = first_n_args<3>(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(MT(0, 1, 2) == s);
+    }
+    {
+        auto s = last_n_args<3>(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(MT(4, 5, 6) == s);
+    }
+    {
+        auto s = all_args_from<3>(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(MT(3, 4, 5, 6) == s);
+    }
+    {
+        auto s = all_args_after<3>(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(MT(4, 5, 6) == s);
+    }
+    {
+        auto s = all_args_until<3>(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(MT(0, 1, 2, 3) == s);
+    }
+    {
+        auto s = all_args_before<3>(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(MT(0, 1, 2) == s);
+    }
+    {
+        auto s = first_arg(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(0 == s);
+    }
+    {
+        auto s = last_arg(0, 1, 2, 3, 4, 5, 6);
+        TEST_ASSERT_NS(6 == s);
+    }
+
+#undef MT
+}
+
+int main()
+{
+    t0();
+    empty();
+    t1();
+    return 0;
 }

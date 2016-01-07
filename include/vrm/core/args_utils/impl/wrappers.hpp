@@ -13,6 +13,23 @@
 #include <vrm/core/args_utils/args_slice.hpp>
 #include <vrm/core/args_utils/args_slice_aliases.hpp>
 
+// TODO: macro, add other aliases.
+
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER(name, fn)           \
+    template <sz_t TN>                                              \
+    struct name                                                     \
+    {                                                               \
+        template <typename... Ts>                                   \
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()( \
+            Ts && ... xs) noexcept                                  \
+        {                                                           \
+            return fn<TN>(FWD(xs)...);                              \
+        }                                                           \
+    };
+
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(fn) \
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER(VRM_PP_CAT(fn, _wrapper), fn)
+
 VRM_CORE_NAMESPACE
 {
     namespace impl
@@ -20,44 +37,22 @@ VRM_CORE_NAMESPACE
         template <typename TFArgGetter, typename TF, typename... Ts>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)        // .
             args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs) // .
-            noexcept(
-                noexcept(apply(f, std::declval<TFArgGetter>()(FWD(xs)...))))
-        {
-            return apply(f, TFArgGetter{}(FWD(xs)...));
-        }
+            VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(         // .
+                apply(f, TFArgGetter{}(FWD(xs)...))            //.
+                )
+    }
 
-        template <sz_t TN>
-        struct first_n_args_wrapper
-        {
-            template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&... xs) noexcept
-            {
-                return first_n_args<TN>(FWD(xs)...);
-            }
-        };
-
-        template <sz_t TN>
-        struct last_n_args_wrapper
-        {
-            template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&... xs) noexcept
-            {
-                return last_n_args<TN>(FWD(xs)...);
-            }
-        };
-
-        template <sz_t TN>
-        struct all_args_from_wrapper
-        {
-            template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&... xs) noexcept
-            {
-                return all_args_from<TN>(FWD(xs)...);
-            }
-        };
+    namespace impl
+    {
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(first_n_args)
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(last_n_args)
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_from)
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_after)
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_until)
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_before)
     }
 }
 VRM_CORE_NAMESPACE_END
+
+#undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN
+#undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER

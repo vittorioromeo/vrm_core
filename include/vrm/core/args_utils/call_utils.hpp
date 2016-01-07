@@ -15,42 +15,37 @@
 #include <vrm/core/args_utils/args_slice_aliases.hpp>
 #include <vrm/core/args_utils/impl/wrappers.hpp>
 
+// TODO: docs and tests
+
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_WRAPPER_FN(fn) \
+    impl::VRM_PP_CAT(fn, _wrapper)
+
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn)                  \
+    impl::args_call_wrapper(                                             \
+        VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_WRAPPER_FN(fn) < TN > {}, \
+        FWD(f), FWD(xs)...)
+
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(name, fn)                     \
+    template <sz_t TN, typename TF, typename... Ts>                          \
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) name(TF&& f, Ts&&... xs) \
+        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(                           \
+            VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn))
+
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(fn) \
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(VRM_PP_CAT(call_with_, fn), fn)
+
 VRM_CORE_NAMESPACE
 {
-#define VRM_CORE_IMPL_BODY() \
-    impl::args_call_wrapper( \
-        impl::first_n_args_wrapper<TN>{}, FWD(f), FWD(xs)...)
-
-    template <sz_t TN, typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)   // .
-        call_with_first_n_args(TF && f, Ts && ... xs) // .
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY()
-
-#undef VRM_CORE_IMPL_BODY
-
-
-
-#define VRM_CORE_IMPL_BODY() \
-    impl::args_call_wrapper(impl::last_n_args_wrapper<TN>{}, FWD(f), FWD(xs)...)
-
-            template <sz_t TN, typename TF, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        call_with_last_n_args(TF && f, Ts && ... xs)        // .
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY()
-
-#undef VRM_CORE_IMPL_BODY
-
-
-
-#define VRM_CORE_IMPL_BODY() \
-    impl::args_call_wrapper( \
-        impl::all_args_from_wrapper<TN>{}, FWD(f), FWD(xs)...)
-
-            template <sz_t TN, typename TF, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        call_with_all_args_from(TF && f, Ts && ... xs)      // .
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY()
-
-#undef VRM_CORE_IMPL_BODY
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(first_n_args)
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(last_n_args)
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_from)
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_after)
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_until)
+    VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_before)
 }
 VRM_CORE_NAMESPACE_END
+
+#undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN
+#undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER
+#undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY
+#undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_WRAPPER_FN
