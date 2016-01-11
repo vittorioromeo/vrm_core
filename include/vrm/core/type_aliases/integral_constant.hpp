@@ -108,6 +108,10 @@ VRM_CORE_NAMESPACE
     // Special integral constants.
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(bool)
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(sz_t)
+
+    // Shortcut alias for `sz_t_v`.
+    template <sz_t TI>
+    constexpr sz_t_<TI> sz_v{};
 }
 VRM_CORE_NAMESPACE_END
 
