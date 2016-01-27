@@ -11,6 +11,15 @@
 
 VRM_CORE_NAMESPACE
 {
+    /// @brief Creates a tuple of values and l-value references.
+    /// @details L-values are taken as l-value references inside the tuple.
+    /// R-values are copies as values inside the tuple.
+    /// @code
+    /// int lv{0};
+    /// auto t(make_ref_tuple(lv, 0));
+    /// // tuple_element_t<0>(t) is int&
+    /// // tuple_element_t<1>(t) is int
+    /// @endcode
     template <typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) make_ref_tuple(
         Ts && ... xs) noexcept
