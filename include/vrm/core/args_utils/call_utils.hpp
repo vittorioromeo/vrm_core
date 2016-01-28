@@ -15,27 +15,38 @@
 #include <vrm/core/args_utils/args_slice_aliases.hpp>
 #include <vrm/core/args_utils/impl/wrappers.hpp>
 
-// TODO: docs and tests
+// TODO: tests
 
+/// @macro Given an arg-slicing function `fn`, computes the name of the
+/// `constexpr`-friendly `fn` wrapper.
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_WRAPPER_FN(fn) \
     impl::VRM_PP_CAT(fn, _wrapper)
 
+/// @macro Body of the call wrapper function. Given an arg-slicing function
+/// `fn`, it instantiates a `constexpr`-friendly `fn` wrapper and calls it with
+/// perfect-forwarding.
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn)                  \
     impl::args_call_wrapper(                                             \
         VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_WRAPPER_FN(fn) < TN > {}, \
         FWD(f), FWD(xs)...)
 
+/// @macro Defines an utility function to call another function with a slice of
+/// variadic arguments.
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(name, fn)                     \
     template <sz_t TN, typename TF, typename... Ts>                          \
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) name(TF&& f, Ts&&... xs) \
         VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(                           \
             VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn))
 
+/// @macro Defines an utility function to call another function with a slice of
+/// variadic arguments. The name of the wrapper is created by concatenating
+/// `call_with_` and `fn`, where `fn` is an arg-slicing function.
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(fn) \
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(VRM_PP_CAT(call_with_, fn), fn)
 
 VRM_CORE_NAMESPACE
 {
+    // Call the macros to define all call utility functions.
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(first_n_args)
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(last_n_args)
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_from)
