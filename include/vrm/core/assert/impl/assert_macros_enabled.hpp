@@ -10,6 +10,7 @@
 #include <vrm/pp/sep_to_str.hpp>
 #include <vrm/core/utility_macros/likely_unlikely.hpp>
 
+/// @macro Implementation of generic assertion.
 #define VRM_CORE_IMPL_ASSERT(lhs, op, rhs, msg)                                \
     do                                                                         \
     {                                                                          \
@@ -31,6 +32,7 @@
                                                                                \
     } while(false)
 
+/// @macro Implementation of `constexpr`-friendly assertion.
 #define VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg) \
     do                                                    \
     {                                                     \

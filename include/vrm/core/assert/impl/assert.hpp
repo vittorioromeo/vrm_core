@@ -18,13 +18,18 @@ VRM_CORE_NAMESPACE
     {
         namespace assert
         {
+            /// @brief Assertion management state.
+            /// @details Controls whether or not future assertion will be
+            /// skipped.
             struct state
             {
                 bool _skip{false};
             };
 
+            /// @brief Returns a reference to the thread-local assertion state.
             state& get_state() noexcept;
 
+            /// @brief Fires an assertion failure.
             template <typename TLhs, typename TRhs>
             void fire(const char* code, const char* line, const char* file,
                 const char* lhs, const char* op, const char* rhs,

@@ -20,6 +20,7 @@
 
 
 
+// `constexpr`-friendly assertions.
 #define VRM_CORE_CONSTEXPR_ASSERT_OP_MSG(lhs, op, rhs, msg) \
     VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg)
 
