@@ -18,7 +18,7 @@
 find_path(
     VRM_CORE_INCLUDE_DIR 
 
-    NAMES vrm/pp.hpp
+    NAMES vrm/core.hpp
     DOC "Include directory for the vrm_core library"
 
     PATH_SUFFIXES include/
