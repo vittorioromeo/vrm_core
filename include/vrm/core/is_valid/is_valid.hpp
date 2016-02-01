@@ -6,7 +6,7 @@
 #pragma once
 
 #include <type_traits>
-#include <vrm/core/config/names.hpp>
+#include <vrm/core/config.hpp>
 
 VRM_CORE_NAMESPACE
 {

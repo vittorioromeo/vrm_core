@@ -30,7 +30,7 @@ constexpr auto fake_to_num(const TIn& x) noexcept
 }
 
 template <typename TOut, typename TIn>
-auto are_same_representation()
+auto VRM_CORE_CONST_FN are_same_representation()
 {
     return sizeof(std::decay_t<TOut>) == sizeof(std::decay_t<TIn>) &&
            vrm::core::same_signedness<std::decay_t<TOut>,

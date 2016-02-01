@@ -7,7 +7,7 @@
 
 #include <type_traits>
 #include <utility>
-#include <vrm/core/config/names.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases.hpp>
 
 VRM_CORE_NAMESPACE
