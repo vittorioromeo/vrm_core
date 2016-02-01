@@ -15,7 +15,7 @@ VRM_CORE_NAMESPACE
     {
         namespace assert
         {
-            state& get_state() noexcept
+            state& VRM_CORE_CONST_FN get_state() noexcept
             {
                 thread_local state result;
                 return result;

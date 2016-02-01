@@ -21,7 +21,8 @@ VRM_CORE_NAMESPACE
     {
         template <typename TOut, typename T>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)
-        assert_correct_polymorphic(T* ptr, std::true_type) noexcept
+        assert_correct_polymorphic(
+            VRM_CORE_UNUSED T* ptr, std::true_type) noexcept
         {
             VRM_CORE_ASSERT_OP(dynamic_cast<TOut>(ptr), ==, ptr);
         }
