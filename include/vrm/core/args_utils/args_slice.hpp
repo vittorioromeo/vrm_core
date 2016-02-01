@@ -20,7 +20,7 @@ VRM_CORE_NAMESPACE
         /// matching indices. The `ref_tuple` avoids copies: lvalues are taken
         /// as reference, rvalues are moved in the resulting tuple.
         template <sz_t TIBegin, sz_t... TIs, typename... Ts>
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) build_args_slice(
+        VRM_CORE_ALWAYS_INLINE constexpr auto build_args_slice(
             std::index_sequence<TIs...>, Ts&&... xs) noexcept
         {
             return make_ref_tuple(nth_arg<TIBegin + TIs>(FWD(xs)...)...);
@@ -30,8 +30,7 @@ VRM_CORE_NAMESPACE
     /// @brief Returns a `[TIBegin, TIEnd)` slice of the variadic arguments.
     /// @details A `ref_tuple` is used to store the arguments.
     template <sz_t TIBegin, sz_t TIEnd, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) args_slice(
-        Ts && ... xs) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto args_slice(Ts && ... xs) noexcept
     {
         // Assert range validity.
         VRM_CORE_STATIC_ASSERT_NM(TIEnd >= TIBegin);
