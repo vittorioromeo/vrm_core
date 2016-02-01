@@ -14,6 +14,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <cassert>
 
 #define TEST_IMPL_DEPARENS(...) __VA_ARGS__
 
