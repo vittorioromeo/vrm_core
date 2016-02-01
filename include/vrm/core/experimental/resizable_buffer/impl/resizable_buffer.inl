@@ -46,7 +46,7 @@ VRM_CORE_NAMESPACE
     template <typename T, typename TAllocator>
     void resizable_buffer<T, TAllocator>::destroy(size_type from, size_type to)
     {
-#if VRM_CORE_DEBUG
+#if defined(VRM_CORE_DEBUG)
         if(to - from > 0)
         {
             VRM_CORE_ASSERT_OP(_data, !=, nullptr);
@@ -64,7 +64,7 @@ VRM_CORE_NAMESPACE
     {
         allocator_traits::deallocate(_allocator, _data, n);
 
-#if VRM_CORE_DEBUG
+#if defined(VRM_CORE_DEBUG)
         _data = nullptr;
 #endif
     }
@@ -106,7 +106,7 @@ VRM_CORE_NAMESPACE
     template <typename T, typename TAllocator>
     resizable_buffer<T, TAllocator>::~resizable_buffer() noexcept
     {
-#if VRM_CORE_DEBUG
+#if defined(VRM_CORE_DEBUG)
         VRM_CORE_ASSERT_OP(_data, ==, nullptr);
 #endif
     }
