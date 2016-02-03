@@ -15,7 +15,7 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TSettings>
-        auto dynamic_delegate<TSettings>::next_fn_idx() const noexcept
+        auto VRM_CORE_PURE_FN dynamic_delegate<TSettings>::next_fn_idx() const noexcept
         {
             return this->_functions.size() - 1;
         }

@@ -58,7 +58,7 @@ struct type_
     using type = T;
 };
 
-int main()
+TEST_MAIN()
 {
     static_assert(has_peel(banana{}), "");
     static_assert(has_eat_banana(banana{}), "");

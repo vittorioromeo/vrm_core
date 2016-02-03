@@ -134,7 +134,7 @@ void move_only_tests()
     TEST_ASSERT_OP(sr1, ==, 6);
 }
 
-int main()
+TEST_MAIN()
 {
     constexpr_tests();
     non_constexpr_tests();

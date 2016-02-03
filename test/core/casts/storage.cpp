@@ -2,7 +2,7 @@
 #include <vrm/core/casts/storage.hpp>
 #include <utility>
 
-int main()
+TEST_MAIN()
 {
     using namespace vrm::core;
     using st = std::aligned_storage_t<sizeof(float), alignof(float)>;

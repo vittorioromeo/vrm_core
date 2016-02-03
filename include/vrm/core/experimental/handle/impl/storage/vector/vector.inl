@@ -25,6 +25,9 @@ VRM_CORE_NAMESPACE
             {
                 VRM_CORE_ASSERT_OP(h._metadata_ref, >=, 0);
                 VRM_CORE_ASSERT_OP(h._metadata_ref, <, _metadata.size());
+
+                // Suppress unused variable warnings in non-debug builds.
+                (void)h;
             }
 
             template <typename TSettings, typename TAllocator>

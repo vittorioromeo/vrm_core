@@ -114,7 +114,7 @@ void t1()
 #undef MT
 }
 
-int main()
+TEST_MAIN()
 {
     t0();
     empty();

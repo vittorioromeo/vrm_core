@@ -39,7 +39,7 @@ auto eat_fruit(T fruit)
                 return 'x';
             })(fruit);
 }
-int main()
+TEST_MAIN()
 {
     auto b = eat_fruit(banana{});
     auto a = eat_fruit(apple{});

@@ -2,7 +2,7 @@
 #include <vrm/core/type_traits/qualifiers.hpp>
 #include <vrm/core/assert.hpp>
 
-int main()
+TEST_MAIN()
 {
     VRM_CORE_STATIC_ASSERT_NM(std::is_same<                // .
         vrm::core::copy_const_qualifier<int, const float>, // .

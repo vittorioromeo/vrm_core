@@ -6,6 +6,7 @@
 #pragma once
 
 #include <ostream>
+#include <vrm/core/config/attributes.hpp>
 #include <vrm/core/ostream_utils/impl/ignore_manipulator.hpp>
 
 VRM_CORE_NAMESPACE
@@ -34,13 +35,13 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename T>
-        auto ignore_manipulator<T>::begin() const noexcept
+        auto VRM_CORE_PURE_FN ignore_manipulator<T>::begin() const noexcept
         {
             return std::begin(_str);
         }
 
         template <typename T>
-        auto ignore_manipulator<T>::end() const noexcept
+        auto VRM_CORE_PURE_FN ignore_manipulator<T>::end() const noexcept
         {
             return std::end(_str);
         }

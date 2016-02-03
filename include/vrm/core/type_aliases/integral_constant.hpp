@@ -123,5 +123,3 @@ VRM_CORE_NAMESPACE_END
 #undef VRM_CORE_IMPL_IC_SHORT_ALIAS_V
 #undef VRM_CORE_IMPL_IC_SHORT_ALIAS
 #undef VRM_CORE_IMPL_IC_ALIAS
-
-// TODO: consider special `sz_v<>` alias?

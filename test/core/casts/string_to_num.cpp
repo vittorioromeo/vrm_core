@@ -3,7 +3,7 @@
 #include <vrm/core/casts/string_to_num.hpp>
 #include <utility>
 
-int main()
+TEST_MAIN()
 {
     using namespace vrm::core;
     using namespace std::literals;

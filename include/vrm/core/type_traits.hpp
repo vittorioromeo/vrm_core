@@ -10,3 +10,6 @@
 #include <vrm/core/type_traits/forward_like.hpp>
 #include <vrm/core/type_traits/tuple.hpp>
 #include <vrm/core/type_traits/qualifiers.hpp>
+#include <vrm/core/type_traits/remove_rvalue_reference.hpp>
+#include <vrm/core/type_traits/copy_if_rvalue.hpp>
+

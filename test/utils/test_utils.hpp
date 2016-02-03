@@ -16,6 +16,8 @@
 #include <iostream>
 #include <cassert>
 
+#define TEST_MAIN(...) int __attribute__((const)) main(__VA_ARGS__)
+
 #define TEST_IMPL_DEPARENS(...) __VA_ARGS__
 
 #define SA_SAME(value, type) \

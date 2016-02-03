@@ -1,7 +1,7 @@
 #include "../../utils/test_utils.hpp"
 #include <vrm/core/strong_typedef.hpp>
 
-int main()
+TEST_MAIN()
 {
     VRM_CORE_STRONG_TYPEDEF(int, my_int);
     VRM_CORE_STRONG_TYPEDEF(float, my_float);

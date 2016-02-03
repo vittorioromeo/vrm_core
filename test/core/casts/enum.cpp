@@ -19,7 +19,7 @@ enum class int_enum : int
     b = -2
 };
 
-int main()
+TEST_MAIN()
 {
     using namespace vrm::core;
 

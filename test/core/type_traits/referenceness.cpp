@@ -42,4 +42,4 @@ SA_SAME((copy_referenceness<const float&&, int>), (const float));
 SA_SAME((copy_referenceness<const float&&, int&>), (const float&));
 SA_SAME((copy_referenceness<const float&&, int&&>), (const float&&));
 
-int main() { return 0; }
+TEST_MAIN() { return 0; }

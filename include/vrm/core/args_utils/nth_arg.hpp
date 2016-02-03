@@ -8,6 +8,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/type_traits/copy_if_rvalue.hpp>
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/casts/self.hpp>
 
@@ -24,17 +25,8 @@ VRM_CORE_NAMESPACE
         // Assert index validity.
         VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) > TN);
 
-        // Type of a `ref_tuple` built with `xs...`.
-        using ref_tuple_type = decltype(make_ref_tuple(FWD(xs)...));
-
-        // Type of the `TN`-th argument of the `ref_tuple`.
-        using nth_arg_type = std::tuple_element_t<TN, ref_tuple_type>;
-
-        // Return the `TN`-th element of, casted to `nth_arg_type`.
-        return self_cast<nth_arg_type>(
-            std::get<TN>(make_ref_tuple(FWD(xs)...)));
+        // Return the `TN`-th element of, copying it if it's an rvalue.
+        return copy_if_rvalue(std::get<TN>(make_ref_tuple(FWD(xs)...)));
     }
 }
 VRM_CORE_NAMESPACE_END
-
-// TODO: check generated assembly

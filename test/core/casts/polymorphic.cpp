@@ -7,7 +7,7 @@ struct base
     virtual int x() const { return 0; }
 };
 
-struct derived : base
+struct derived final : base
 {
     int x() const override { return 1; }
 };
@@ -16,7 +16,7 @@ using namespace vrm::core;
 
 SA_TYPE((to_derived<derived>(base{})), (derived && ));
 
-int main()
+TEST_MAIN()
 {
     derived d0;
 

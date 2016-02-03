@@ -2,7 +2,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 
-int main()
+int VRM_CORE_CONST_FN main()
 {
     auto lv = 10;
     const auto clv = 15;

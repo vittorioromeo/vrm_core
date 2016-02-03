@@ -3,7 +3,7 @@
 
 #include <typeinfo>
 
-int main()
+TEST_MAIN()
 {
     using namespace vrm::core;
 

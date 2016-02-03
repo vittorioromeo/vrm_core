@@ -15,7 +15,7 @@ constexpr int test_cexpr()
     return TI + 1;
 }
 
-int main()
+TEST_MAIN()
 {
     s<test_cexpr<10>()> y{};
     TEST_ASSERT_OP((y.x()), ==, 11);

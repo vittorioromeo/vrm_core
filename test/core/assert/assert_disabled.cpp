@@ -19,7 +19,7 @@ constexpr int test_cexpr()
     return 0;
 }
 
-int main()
+TEST_MAIN()
 {
     VRM_CORE_STATIC_ASSERT(true, "");
     VRM_CORE_STATIC_ASSERT_NM(true);

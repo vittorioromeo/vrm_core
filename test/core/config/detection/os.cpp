@@ -1,8 +1,7 @@
 #include "../../../utils/test_utils.hpp"
 #include <vrm/core/config/detection.hpp>
 
-
-int main()
+TEST_MAIN()
 {
     using namespace vrm::core;
 

@@ -1,11 +1,11 @@
 #include "../../utils/test_utils.hpp"
 #include <vrm/core/casts/self.hpp>
 
-int main()
+TEST_MAIN()
 {
     using namespace vrm::core;
 
-    int i;
+    int i(0);
     (void)self_cast<int>(i);
     (void)self_cast<const int>(i);
 

@@ -1,9 +1,8 @@
 #include <exception>
 #include "../utils/test_utils.hpp"
 
-int main()
+TEST_MAIN()
 {
     TEST_ASSERT(true);
-
     return 0;
 }

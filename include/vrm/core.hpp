@@ -12,9 +12,6 @@
 // Macros that do not strongly depend on other vrm_core modules.
 #include <vrm/core/utility_macros.hpp>
 
-#include <vrm/core/type_aliases.hpp>
-#include <vrm/core/literals.hpp>
-
 // Pretty assertions.
 #include <vrm/core/assert.hpp>
 
@@ -27,8 +24,14 @@
 // ForArgs snippet.
 #include <vrm/core/for_args.hpp>
 
+#include <vrm/core/args_utils.hpp>
+#include <vrm/core/is_valid.hpp>
+#include <vrm/core/literals.hpp>
+#include <vrm/core/make_array.hpp>
 #include <vrm/core/ostream_utils.hpp>
 #include <vrm/core/overload.hpp>
-
-// TODO:
-// add other headers
+#include <vrm/core/static_if.hpp>
+#include <vrm/core/strong_typedef.hpp>
+#include <vrm/core/tuple_utils.hpp>
+#include <vrm/core/type_aliases.hpp>
+#include <vrm/core/variadic_min_max.hpp>

@@ -13,10 +13,13 @@ constexpr int test_cexpr()
     VRM_CORE_CONSTEXPR_ASSERT_MSG(lhs + 8 > rhs, "test message");
     VRM_CORE_CONSTEXPR_ASSERT(lhs + 9 > rhs);
 
+    (void)lhs;
+    (void)rhs;
+
     return 0;
 }
 
-int main()
+TEST_MAIN()
 {
     VRM_CORE_STATIC_ASSERT(true, "");
     VRM_CORE_STATIC_ASSERT_NM(true);

@@ -418,7 +418,7 @@ void mixed_tests()
     test_val<unsigned long>(1.l);
 }
 
-int main()
+TEST_MAIN()
 {
 
     int i = 1;

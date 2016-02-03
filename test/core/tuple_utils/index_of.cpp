@@ -2,7 +2,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/index_of.hpp>
 
-int main()
+TEST_MAIN()
 {
     std::tuple<int, float, char, int> t;
 
