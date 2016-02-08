@@ -106,20 +106,17 @@ VRM_CORE_NAMESPACE_END
 
 VRM_CORE_NAMESPACE
 {
-#define VRM_CORE_IMPL_BODY() \
-    for_tuple_data(impl::for_tuple_caller<TF>{FWD(f)}, FWD(xs)...)
-
     /// @brief Iterates over a tuple's elements passing them to `f` one at a
     /// time.
     /// @details Can iterate over multiple tuples at once, passing the Nth
     /// element of every tuple to `f` simultaneously.
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE                                        // .
-        constexpr decltype(auto) for_tuple(TF && f, Ts && ... xs) // .
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY()
-
-#undef VRM_CORE_IMPL_BODY
+    VRM_CORE_ALWAYS_INLINE                                                 // .
+        constexpr decltype(auto) for_tuple(TF && f, Ts && ... xs)          // .
+        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(                         // .
+            for_tuple_data(impl::for_tuple_caller<TF>{FWD(f)}, FWD(xs)...) // .
+            )
 }
 VRM_CORE_NAMESPACE_END
 

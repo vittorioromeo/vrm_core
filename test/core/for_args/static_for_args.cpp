@@ -1,5 +1,3 @@
-#if 1
-
 #include "../../utils/test_utils.hpp"
 #include <vector>
 #include <vrm/core/for_args/for_args_complete.hpp>
@@ -318,7 +316,7 @@ void TEST_CONST test_unary_for_accumulate2()
         (int_<10 + 20>));
 }
 
-void TEST_CONST  test_unary_for_accumulate_binary()
+void TEST_CONST test_unary_for_accumulate_binary()
 {
     auto static_b_acc = static_for<2>([](auto mx, auto x0, auto x1)
         {
@@ -346,7 +344,7 @@ void TEST_CONST  test_unary_for_accumulate_binary()
     static_assert(decltype(unwrap<1>(r)){} == int_v<10 + 10 + 10 + 10>, "");
 }
 
-int main()
+TEST_MAIN()
 {
     test_empty_for();
     test_unary_for();
@@ -361,8 +359,3 @@ int main()
 
     return 0;
 }
-#else
-int main() {}
-#endif
-
-// TODO: RIP clang/gcc abi

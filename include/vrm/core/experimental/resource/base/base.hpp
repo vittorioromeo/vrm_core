@@ -17,14 +17,14 @@ VRM_CORE_NAMESPACE
             /// @brief Base resource class containing shared logic and state
             /// between
             /// multiple resource types.
-            /// @details Provides $behavior_type$ and $handle_type$ type
+            /// @details Provides `behavior_type` and `handle_type` type
             /// aliases.
-            /// Provides a static $null_handle$ shortcut method.
-            /// Contains a single $handle_type _handle$ instance.
-            /// Defines a default constructor and an $explicit$ constructor that
+            /// Provides a static `null_handle` shortcut method.
+            /// Contains a single `handle_type _handle` instance.
+            /// Defines a default constructor and an `explicit` constructor that
             /// taken an handle.
-            /// Provides shortcut methods to $deinit$, $nullify$, and $release$.
-            /// Provides a $get$ method and $bool$ conversions.
+            /// Provides shortcut methods to `deinit`, `nullify`, and `release`.
+            /// Provides a `get` method and `bool` conversions.
             template <typename TBehavior>
             class base
             {

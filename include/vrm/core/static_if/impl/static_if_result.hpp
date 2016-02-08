@@ -11,18 +11,12 @@
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/utility_macros.hpp>
 #include <vrm/core/casts/polymorphic.hpp>
+#include <vrm/core/type_traits/nothrow.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        // TODO:
-        template <typename T, typename... Ts>
-        struct has_nothrow_call_operator
-            : bool_<noexcept((std::declval<T>())(std::declval<Ts>()...))>
-        {
-        };
-
         template <typename TFunctionToCall>
         struct static_if_result : TFunctionToCall
         {

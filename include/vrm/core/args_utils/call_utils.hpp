@@ -15,8 +15,6 @@
 #include <vrm/core/args_utils/args_slice_aliases.hpp>
 #include <vrm/core/args_utils/impl/wrappers.hpp>
 
-// TODO: tests
-
 /// @macro Given an arg-slicing function `fn`, computes the name of the
 /// `constexpr`-friendly `fn` wrapper.
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_WRAPPER_FN(fn) \
