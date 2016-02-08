@@ -128,6 +128,9 @@ namespace test
 
             assert(w0.lock().get() == old1);
             assert(w1.lock().get() == old0);
+
+            (void)old0;
+            (void)old1;
         }
 
         assert_ck(2, 2);

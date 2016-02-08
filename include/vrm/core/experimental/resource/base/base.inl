@@ -16,7 +16,7 @@ VRM_CORE_NAMESPACE
         namespace impl
         {
             template <typename TBehavior>
-            auto base<TBehavior>::null_handle() noexcept
+            auto VRM_CORE_CONST_FN base<TBehavior>::null_handle() noexcept
             {
                 return behavior_type::null_handle();
             }
@@ -33,7 +33,8 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TBehavior>
-            auto base<TBehavior>::is_null_handle() const noexcept
+            auto VRM_CORE_PURE_FN base<TBehavior>::is_null_handle() const
+                noexcept
             {
                 return _handle == null_handle();
             }
@@ -66,7 +67,7 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TBehavior>
-            auto base<TBehavior>::get() const noexcept
+            auto VRM_CORE_PURE_FN base<TBehavior>::get() const noexcept
             {
                 return _handle;
             }

@@ -36,7 +36,7 @@ auto binary_append_snd = [](auto, auto, auto a, auto b)
 };
 
 
-void noncopy_test()
+void TEST_CONST  noncopy_test()
 {
     {
         auto t0 = std::make_tuple(noncopy{0}, 'a');

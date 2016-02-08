@@ -14,7 +14,7 @@ struct mv_only
     mv_only& operator=(mv_only&&) = default;
 };
 
-void constexpr_tests()
+void TEST_CONST constexpr_tests()
 {
     constexpr auto a0 = nth_arg<0>(1, 2, 3);
     constexpr auto a1 = nth_arg<1>(1, 2, 3);
@@ -33,7 +33,7 @@ void constexpr_tests()
 }
 
 
-void non_constexpr_tests()
+void TEST_CONST non_constexpr_tests()
 {
     auto&& a0 = nth_arg<0>(1, 2, 3);
     auto&& a1 = nth_arg<1>(1, 2, 3);
@@ -60,7 +60,7 @@ void non_constexpr_tests()
 }
 
 
-void non_constexpr_lv_tests()
+void TEST_CONST non_constexpr_lv_tests()
 {
     auto i0 = 1;
     auto i1 = 2;
@@ -106,7 +106,7 @@ void non_constexpr_lv_tests()
     // sr1 = 22;
 }
 
-void move_only_tests()
+void TEST_CONST move_only_tests()
 {
     auto&& a0 = nth_arg<0>(mv_only{}, 2, 3);
     auto&& a1 = nth_arg<1>(mv_only{}, 2, 3);

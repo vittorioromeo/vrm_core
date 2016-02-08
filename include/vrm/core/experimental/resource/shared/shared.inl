@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/assert.hpp>
 #include <vrm/core/experimental/resource/fwd.hpp>
 #include <vrm/core/experimental/resource/shared/metadata.hpp>
 #include <vrm/core/experimental/resource/shared/ref_counter.hpp>
@@ -47,8 +48,8 @@ VRM_CORE_NAMESPACE
 
                 // If the current handle is set to null, the shared resource
                 // should not point to any metadata.
-                assert(base_type::is_null_handle());
-                assert(access_ref_counter().is_null());
+                VRM_CORE_ASSERT(base_type::is_null_handle());
+                VRM_CORE_ASSERT(access_ref_counter().is_null());
             }
 
             template <typename TBehavior, typename TLockPolicy>
@@ -96,7 +97,7 @@ VRM_CORE_NAMESPACE
             auto& shared<TBehavior, TLockPolicy>::operator=(const shared& rhs)
             {
                 // Prevent self-assignment.
-                assert(this != &rhs);
+                VRM_CORE_ASSERT(this != &rhs);
 
                 // Update handle and ref counter.
                 base_type::_handle = rhs._handle;
@@ -139,7 +140,7 @@ VRM_CORE_NAMESPACE
             auto& shared<TBehavior, TLockPolicy>::operator=(
                 shared&& rhs) noexcept
             {
-                assert(this != &rhs);
+                VRM_CORE_ASSERT(this != &rhs);
 
                 if(!base_type::is_null_handle())
                 {
@@ -182,7 +183,7 @@ VRM_CORE_NAMESPACE
                 {
                     // If no metadata instance has been allocated, we simply
                     // make sure that we're not the owner of any handle.
-                    assert(base_type::is_null_handle());
+                    VRM_CORE_ASSERT(base_type::is_null_handle());
                 }
                 else
                 {

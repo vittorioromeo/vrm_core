@@ -3,7 +3,7 @@
 
 using namespace vrm::core;
 
-void t0()
+void TEST_CONST t0()
 {
     {
         auto s0 = first_n_args<3>(0, 1, 2, 3, 4, 5, 6);
@@ -51,7 +51,7 @@ void t0()
     }
 }
 
-void empty()
+void TEST_CONST empty()
 {
     {
         auto s0 = first_n_args<0>();
@@ -74,7 +74,7 @@ void empty()
     }
 }
 
-void t1()
+void TEST_CONST t1()
 {
 #define MT ::std::make_tuple
 

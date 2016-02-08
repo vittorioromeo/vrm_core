@@ -96,7 +96,7 @@ void test1()
         tt, tt_r, tt_f);
 }
 
-void test2()
+void TEST_CONST test2()
 {
     auto t = std::make_tuple(0, 'a', 1, 'b');
     auto t_r = make_ref_tuple(0, 'a', 1, 'b');
@@ -154,7 +154,7 @@ void test2()
     SA_TYPE((std::get<0>(std::move(ttn_f))), (int&&));
 }
 
-void test3()
+void  TEST_CONST test3()
 {
     int i = 1;
     int i2 = 3;
@@ -192,7 +192,7 @@ void test3()
     SA_TYPE((std::get<3>(std::move(tt_f))), (int*&));
 }
 
-void test4()
+void TEST_CONST test4()
 {
     auto t0(std::make_tuple(0, 1, 2));
     auto t1(std::make_tuple(3, 4, 5));

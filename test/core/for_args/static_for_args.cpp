@@ -290,7 +290,7 @@ void test_unary_for_accumulate()
     }
 }
 
-void test_unary_for_accumulate2()
+void TEST_CONST test_unary_for_accumulate2()
 {
     auto static_accumulator = static_for([](auto mx, auto x)
         {
@@ -318,7 +318,7 @@ void test_unary_for_accumulate2()
         (int_<10 + 20>));
 }
 
-void test_unary_for_accumulate_binary()
+void TEST_CONST  test_unary_for_accumulate_binary()
 {
     auto static_b_acc = static_for<2>([](auto mx, auto x0, auto x1)
         {
