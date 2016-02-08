@@ -9,3 +9,4 @@
 #include <vrm/core/experimental/multi_vector.hpp>
 #include <vrm/core/experimental/delegate.hpp>
 #include <vrm/core/experimental/console.hpp>
+#include <vrm/core/experimental/resource.hpp>
