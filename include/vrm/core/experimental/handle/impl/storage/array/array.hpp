@@ -46,6 +46,9 @@ VRM_CORE_NAMESPACE
 
                 template <typename TF>
                 void destroy(const handle_type& h, TF&& f);
+
+                void clear() noexcept;
+                void reserve(sz_t n);
             };
         }
     }

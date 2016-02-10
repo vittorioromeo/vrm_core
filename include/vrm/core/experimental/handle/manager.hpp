@@ -9,6 +9,7 @@
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
@@ -54,7 +55,15 @@ VRM_CORE_NAMESPACE
                 VRM_CORE_ASSERT(!valid_handle(h));
             }
 
-            // TODO: clear/reserve
+            void clear() noexcept(noexcept(_storage.clear()))
+            {
+                _storage.clear();
+            }
+
+            void reserve(sz_t n) noexcept(noexcept(_storage.reserve(sz_t{})))
+            {
+                _storage.reserve(n);
+            }
         };
     }
 }

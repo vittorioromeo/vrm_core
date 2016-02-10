@@ -68,6 +68,23 @@ VRM_CORE_NAMESPACE
                 std::swap(m._target, last_m_ref->_target);
                 --_next_ref;
             }
+
+            template <typename TSettings, sz_t TCount>
+            void hs_array<TSettings, TCount>::clear() noexcept
+            {
+                // Invalidate all existing handles.
+                for(auto& m : _metadata)
+                {
+                    ++(m._counter);
+                }
+
+                _next_ref = _metadata.data();
+            }
+
+            template <typename TSettings, sz_t TCount>
+            void hs_array<TSettings, TCount>::reserve(sz_t)
+            {
+            }
         }
     }
 }

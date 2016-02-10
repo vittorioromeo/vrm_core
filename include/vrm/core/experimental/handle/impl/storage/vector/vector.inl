@@ -89,6 +89,24 @@ VRM_CORE_NAMESPACE
                 std::swap(m._target, last_m._target);
                 --_next_ref;
             }
+
+            template <typename TSettings, typename TAllocator>
+            void hs_vector<TSettings, TAllocator>::clear() noexcept
+            {
+                // Invalidate all existing handles.
+                for(auto& m : _metadata)
+                {
+                    ++(m._counter);
+                }
+
+                _next_ref = 0;
+            }
+
+            template <typename TSettings, typename TAllocator>
+            void hs_vector<TSettings, TAllocator>::reserve(sz_t n)
+            {
+                _metadata.reserve(n);
+            }
         }
     }
 }
