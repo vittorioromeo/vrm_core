@@ -137,6 +137,8 @@ namespace test
     }
 }
 
+// TODO: make tests where weak count is decremented
+
 TEST_MAIN()
 {
     using namespace test;
