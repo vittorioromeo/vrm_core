@@ -20,7 +20,8 @@ VRM_CORE_NAMESPACE
         namespace impl
         {
             template <typename TBehavior, typename TLockPolicy>
-                auto& shared<TBehavior, TLockPolicy>::access_ref_counter() &
+                VRM_CORE_ALWAYS_INLINE auto& VRM_CORE_CONST_FN
+                shared<TBehavior, TLockPolicy>::access_ref_counter() &
                 noexcept
             {
                 // TODO: use lock policy
@@ -28,21 +29,23 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TBehavior, typename TLockPolicy>
-            const auto&
+            VRM_CORE_ALWAYS_INLINE const auto& VRM_CORE_CONST_FN
             shared<TBehavior, TLockPolicy>::access_ref_counter() const& noexcept
             {
                 return _ref_counter;
             }
 
             template <typename TBehavior, typename TLockPolicy>
-                auto shared<TBehavior, TLockPolicy>::access_ref_counter() &&
+                VRM_CORE_ALWAYS_INLINE auto shared<TBehavior,
+                    TLockPolicy>::access_ref_counter() &&
                 noexcept
             {
                 return std::move(_ref_counter);
             }
 
             template <typename TBehavior, typename TLockPolicy>
-            void shared<TBehavior, TLockPolicy>::nullify_and_assert() noexcept
+            VRM_CORE_ALWAYS_INLINE void
+            shared<TBehavior, TLockPolicy>::nullify_and_assert() noexcept
             {
                 base_type::nullify();
 
@@ -73,7 +76,7 @@ VRM_CORE_NAMESPACE
             template <typename TBehavior, typename TLockPolicy>
             shared<TBehavior, TLockPolicy>::~shared() noexcept
             {
-                // Lose ownership upon destruction, if $_ref_counter$ is not
+                // Lose ownership upon destruction, if `_ref_counter` is not
                 // null.
                 reset();
             }
@@ -103,7 +106,7 @@ VRM_CORE_NAMESPACE
                 base_type::_handle = rhs._handle;
                 _ref_counter = rhs.access_ref_counter();
 
-                // If $rhs$'s handle was null, do nothing - otherwise increment
+                // If `rhs`'s handle was null, do nothing - otherwise increment
                 // the metadata ownership counter.
                 acquire_existing_if_required();
 
@@ -114,7 +117,7 @@ VRM_CORE_NAMESPACE
             shared<TBehavior, TLockPolicy>::shared(
                 const handle_type& handle) noexcept : base_type{handle}
             {
-                // If $handle$ is not null, we need to allocate metadata.
+                // If `handle` is not null, we need to allocate metadata.
                 acquire_from_null_if_required();
             }
 
@@ -123,7 +126,7 @@ VRM_CORE_NAMESPACE
                 const weak_type& rhs) noexcept : base_type{rhs._handle},
                                                  _ref_counter{rhs._ref_counter}
             {
-                // If $handle$ is not null, we need to increment the shared
+                // If `handle` is not null, we need to increment the shared
                 // ownership counter.
                 acquire_existing_if_required();
             }
@@ -137,8 +140,8 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TBehavior, typename TLockPolicy>
-            auto& shared<TBehavior, TLockPolicy>::operator=(
-                shared&& rhs) noexcept
+            auto& shared<TBehavior, TLockPolicy>::operator=(shared&& rhs) // .
+                noexcept(is_nothrow_deinit{})
             {
                 VRM_CORE_ASSERT(this != &rhs);
 
@@ -155,28 +158,30 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TBehavior, typename TLockPolicy>
-            void shared<TBehavior, TLockPolicy>::lose_ownership() noexcept
+            void shared<TBehavior, TLockPolicy>::lose_ownership() // .
+                noexcept(is_nothrow_deinit{})
             {
                 // Assumes and asserts there is a valid metadata allocated.
 
                 // Decrement the ownership count from the metadata.
                 // If the count reaches zero, the resource will be
                 // deinitialized.
-                // The $ref_counter$ internal metadata pointer is set to
-                // $nullptr$.
+                // The `ref_counter` internal metadata pointer is set to
+                // `nullptr`.
                 access_ref_counter().lose_ownership([this]
                     {
                         base_type::deinit();
                     });
 
                 // Sets the current handle to null, and asserts that
-                // $ref_counter$
+                // `ref_counter`
                 // is null as well, since we're not owning anything.
                 nullify_and_assert();
             }
 
             template <typename TBehavior, typename TLockPolicy>
-            void shared<TBehavior, TLockPolicy>::reset() noexcept
+            void shared<TBehavior, TLockPolicy>::reset() // .
+                noexcept(is_nothrow_deinit{})
             {
                 // Check if a valid metadata instance exists.
                 if(access_ref_counter().is_null())
@@ -194,16 +199,17 @@ VRM_CORE_NAMESPACE
 
             template <typename TBehavior, typename TLockPolicy>
             void shared<TBehavior, TLockPolicy>::reset(
-                const handle_type& handle) noexcept
+                const handle_type& handle) // .
+                noexcept(is_nothrow_deinit{})
             {
                 // Checks if we're owning any non-null handle.
                 if(base_type::is_null_handle())
                 {
-                    // If we don't own anything ($null_handle$), then
-                    // we set the current handle to $handle$...
+                    // If we don't own anything (`null_handle`), then
+                    // we set the current handle to `handle`...
                     base_type::_handle = handle;
 
-                    // ...and we call $acquire_from_null$, which allocates
+                    // ...and we call `acquire_from_null`, which allocates
                     // a new metadata instance on the heap, setting its
                     // ownership counter to one.
                     access_ref_counter().acquire_from_null();
@@ -214,7 +220,7 @@ VRM_CORE_NAMESPACE
                     // must lose ownership before owning another handle.
                     lose_ownership();
 
-                    // Set the current handle to $handle$.
+                    // Set the current handle to `handle`.
                     base_type::_handle = handle;
 
                     // If the new handle is not null, we need to allocate

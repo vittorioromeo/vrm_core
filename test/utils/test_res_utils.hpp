@@ -31,7 +31,7 @@ namespace test
             if(h != null_handle()) ++killed;
         }
     };
-    static_assert(is_valid_behavior<test_behavior>{}, "");
+    static_assert(resource::is_valid_behavior<test_behavior>{}, "");
 
     using unique_test = resource::unique<test_behavior>;
     using shared_test = resource::shared<test_behavior>;

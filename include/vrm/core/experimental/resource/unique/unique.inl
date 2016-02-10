@@ -17,89 +17,97 @@ VRM_CORE_NAMESPACE
         namespace impl
         {
             template <typename TBehavior>
-            unique<TBehavior>::~unique() noexcept
+            VRM_CORE_ALWAYS_INLINE void unique<TBehavior>::reset() // .
+                noexcept(is_nothrow_deinit{})
+            {
+                // Call the behavior's `deinit` static method.
+                // The behavior must handle `null_handle` deinitialization.
+                base_type::deinit();
+
+                // Sets the stored handle to `null_handle`.
+                base_type::nullify();
+            }
+
+            template <typename TBehavior>
+            VRM_CORE_ALWAYS_INLINE void unique<TBehavior>::reset(
+                const handle_type& handle) // .
+                noexcept(is_nothrow_deinit{})
+            {
+                // Call the behavior's `deinit` static method.
+                // The behavior must handle `null_handle` deinitialization.
+                base_type::deinit();
+
+                // Sets the stored handle to `handle`.
+                base_type::_handle = handle;
+            }
+
+            template <typename TBehavior>
+            VRM_CORE_ALWAYS_INLINE unique<TBehavior>::~unique() // .
+                noexcept(is_nothrow_deinit{})
             {
                 // Release ownership of the stored handle, deinitializing it.
-                // The behavior must handle $null_handle$ deinitialization.
+                // The behavior must handle `null_handle` deinitialization.
                 reset();
             }
 
             template <typename TBehavior>
-            unique<TBehavior>::unique(const handle_type& handle) noexcept
-                : base_type{handle}
+            VRM_CORE_ALWAYS_INLINE unique<TBehavior>::unique(
+                const handle_type& handle) noexcept : base_type{handle}
             {
             }
 
             template <typename TBehavior>
-            unique<TBehavior>::unique(unique&& rhs) noexcept
-                : base_type{rhs.release()}
+            VRM_CORE_ALWAYS_INLINE unique<TBehavior>::unique(
+                unique&& rhs) noexcept : base_type{rhs.release()}
             {
             }
 
             template <typename TBehavior>
-            auto& unique<TBehavior>::operator=(unique&& rhs) noexcept
+            VRM_CORE_ALWAYS_INLINE auto& unique<TBehavior>::operator=(
+                unique&& rhs) // .
+                noexcept(is_nothrow_deinit{})
             {
                 // Avoid self-assignment.
                 VRM_CORE_ASSERT(this != &rhs);
 
-                // $rhs$ releases his handle, becoming a $null_handle$ holder.
+                // `rhs` releases his handle, becoming a `null_handle` holder.
                 // We take ownership of his previous handle.
                 reset(rhs.release());
                 return *this;
             }
 
             template <typename TBehavior>
-            auto unique<TBehavior>::release() noexcept
+            VRM_CORE_ALWAYS_INLINE auto unique<TBehavior>::release() noexcept
             {
                 // Release ownership of the current handle, returning it.
-                // Sets the current handle to $null_handle$.
+                // Sets the current handle to `null_handle`.
                 return base_type::release_and_nullify();
             }
 
             template <typename TBehavior>
-            void unique<TBehavior>::reset() noexcept
-            {
-                // Call the behavior's $deinit$ static method.
-                // The behavior must handle $null_handle$ deinitialization.
-                base_type::deinit();
-
-                // Sets the stored handle to $null_handle$.
-                base_type::nullify();
-            }
-
-            template <typename TBehavior>
-            void unique<TBehavior>::reset(const handle_type& handle) noexcept
-            {
-                // Call the behavior's $deinit$ static method.
-                // The behavior must handle $null_handle$ deinitialization.
-                base_type::deinit();
-
-                // Sets the stored handle to $handle$.
-                base_type::_handle = handle;
-            }
-
-            template <typename TBehavior>
-            void unique<TBehavior>::swap(unique& rhs) noexcept
+            VRM_CORE_ALWAYS_INLINE void unique<TBehavior>::swap(
+                unique& rhs) noexcept
             {
                 base_type::swap(rhs);
             }
 
             template <typename TBehavior>
-            bool operator==(const unique<TBehavior>& lhs,
+            VRM_CORE_ALWAYS_INLINE bool operator==(const unique<TBehavior>& lhs,
                 const unique<TBehavior>& rhs) noexcept
             {
                 return lhs._handle == rhs._handle;
             }
 
             template <typename TBehavior>
-            bool operator!=(const unique<TBehavior>& lhs,
+            VRM_CORE_ALWAYS_INLINE bool operator!=(const unique<TBehavior>& lhs,
                 const unique<TBehavior>& rhs) noexcept
             {
                 return !(lhs == rhs);
             }
 
             template <typename TBehavior>
-            void swap(unique<TBehavior>& lhs, unique<TBehavior>& rhs) noexcept
+            VRM_CORE_ALWAYS_INLINE void swap(
+                unique<TBehavior>& lhs, unique<TBehavior>& rhs) noexcept
             {
                 lhs.swap(rhs);
             }

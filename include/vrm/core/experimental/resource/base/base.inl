@@ -16,31 +16,34 @@ VRM_CORE_NAMESPACE
         namespace impl
         {
             template <typename TBehavior>
-            auto VRM_CORE_CONST_FN base<TBehavior>::null_handle() noexcept
+            VRM_CORE_ALWAYS_INLINE auto VRM_CORE_CONST_FN
+            base<TBehavior>::null_handle() noexcept
             {
                 return behavior_type::null_handle();
             }
 
             template <typename TBehavior>
-            base<TBehavior>::base() noexcept : _handle{null_handle()}
+            VRM_CORE_ALWAYS_INLINE base<TBehavior>::base() noexcept
+                : _handle{null_handle()}
             {
             }
 
             template <typename TBehavior>
-            base<TBehavior>::base(const handle_type& handle) noexcept
-                : _handle{handle}
+            VRM_CORE_ALWAYS_INLINE base<TBehavior>::base(
+                const handle_type& handle) noexcept : _handle{handle}
             {
             }
 
             template <typename TBehavior>
-            auto VRM_CORE_PURE_FN base<TBehavior>::is_null_handle() const
-                noexcept
+            VRM_CORE_ALWAYS_INLINE auto VRM_CORE_PURE_FN
+            base<TBehavior>::is_null_handle() const noexcept
             {
                 return _handle == null_handle();
             }
 
             template <typename TBehavior>
-            void base<TBehavior>::deinit()
+            VRM_CORE_ALWAYS_INLINE void base<TBehavior>::deinit() // .
+                noexcept(is_nothrow_deinit<TBehavior>{})
             {
                 behavior_type::deinit(_handle);
             }

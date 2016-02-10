@@ -7,6 +7,7 @@
 
 #include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resource/fwd.hpp>
+#include <vrm/core/experimental/resource/behavior.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -46,7 +47,7 @@ VRM_CORE_NAMESPACE
 
                 auto is_null_handle() const noexcept;
 
-                void deinit();
+                void deinit() noexcept(is_nothrow_deinit<TBehavior>{});
                 void nullify() noexcept;
                 auto release_and_nullify() noexcept;
 

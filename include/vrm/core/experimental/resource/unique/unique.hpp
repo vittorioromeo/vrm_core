@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/type_aliases/integral_constant.hpp>
 #include <vrm/core/experimental/resource/base.hpp>
 
 VRM_CORE_NAMESPACE
@@ -18,26 +19,32 @@ VRM_CORE_NAMESPACE
             class unique : public impl::base<TBehavior>
             {
             public:
+                using this_type = unique<TBehavior>;
                 using base_type = impl::base<TBehavior>;
                 using behavior_type = typename base_type::behavior_type;
                 using handle_type = typename base_type::handle_type;
 
-            public:
-                unique() noexcept = default;
-                ~unique() noexcept;
+            private:
+                using is_nothrow_deinit =
+                    bool_<noexcept(std::declval<this_type>().deinit())>;
 
+            public:
+                void reset() noexcept(is_nothrow_deinit{});
+                void reset(const handle_type& handle) noexcept(
+                    is_nothrow_deinit{});
+
+                ~unique() noexcept(is_nothrow_deinit{});
+
+                unique() noexcept = default;
                 explicit unique(const handle_type& handle) noexcept;
 
                 unique(const unique&) = delete;
                 unique& operator=(const unique&) = delete;
 
                 unique(unique&& rhs) noexcept;
-                auto& operator=(unique&&) noexcept;
+                auto& operator=(unique&&) noexcept(is_nothrow_deinit{});
 
                 auto release() noexcept;
-
-                void reset() noexcept;
-                void reset(const handle_type& handle) noexcept;
 
                 void swap(unique& rhs) noexcept;
 
