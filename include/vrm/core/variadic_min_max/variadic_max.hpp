@@ -10,21 +10,22 @@
 VRM_CORE_NAMESPACE
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr T variadic_max(T a) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_max(T a) noexcept
     {
         return a;
     }
 
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr T variadic_max(T a, T b) noexcept
+    template <typename T0, typename T1>
+    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_max(T0 a, T1 b) noexcept
     {
         return a < b ? b : a;
     }
 
-    template <typename T, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr T variadic_max(T a, T b, Ts... xs) noexcept
+    template <typename T0, typename T1, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_max(
+        T0 a, T1 b, Ts... xs) noexcept
     {
-        return variadic_max<T>(a, variadic_max<T>(b, xs...));
+        return variadic_max(a, variadic_max(b, xs...));
     }
 }
 VRM_CORE_NAMESPACE_END

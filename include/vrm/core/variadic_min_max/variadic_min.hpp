@@ -10,21 +10,22 @@
 VRM_CORE_NAMESPACE
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr T variadic_min(T a) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(T a) noexcept
     {
         return a;
     }
 
-    template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr T variadic_min(T a, T b) noexcept
+    template <typename T0, typename T1>
+    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(T0 a, T1 b) noexcept
     {
         return a < b ? a : b;
     }
 
-    template <typename T, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr T variadic_min(T a, T b, Ts... xs) noexcept
+    template <typename T0, typename T1, typename... Ts>
+    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(
+        T0 a, T1 b, Ts... xs) noexcept
     {
-        return variadic_min<T>(a, variadic_min<T>(b, xs...));
+        return variadic_min(a, variadic_min(b, xs...));
     }
 }
 VRM_CORE_NAMESPACE_END

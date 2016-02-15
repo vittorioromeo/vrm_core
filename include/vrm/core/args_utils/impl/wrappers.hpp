@@ -44,7 +44,7 @@ VRM_CORE_NAMESPACE
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)        // .
             args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs) // .
             VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(         // .
-                apply(f, TFArgGetter{}(FWD(xs)...))            //.
+                apply(f, TFArgGetter{}(FWD(xs)...))            // .
                 )
     }
 
