@@ -6,8 +6,7 @@ TEST_MAIN()
     using namespace vrm::core;
 
     auto current_debug(detection::debug());
-
-    TEST_ASSERT(current_debug == true || current_debug == false);
+    (void) current_debug;
 
     return 0;
 }

@@ -30,7 +30,7 @@ VRM_CORE_NAMESPACE
 
             VRM_CORE_ALWAYS_INLINE constexpr auto parse(char c) noexcept
             {
-                VRM_CORE_CONSTEXPR_ASSERT(c >= '0' || c <= '9');
+                VRM_CORE_CONSTEXPR_ASSERT(c >= '0' && c <= '9');
                 return c - '0';
             }
         }
