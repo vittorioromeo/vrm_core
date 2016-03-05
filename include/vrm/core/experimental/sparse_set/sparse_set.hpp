@@ -25,5 +25,13 @@ VRM_CORE_NAMESPACE
             impl::sparse_set_storage::fixed_vector<T, TCapacity> // .
             >                                                    // .
         >;
+
+    template <typename T>
+    using dynamic_vector_sparse_set = impl::base_sparse_set< // .
+        impl::sparse_set_settings<                           // .
+            T,                                               // .
+            impl::sparse_set_storage::dynamic_vector<T>      // .
+            >                                                // .
+        >;
 }
 VRM_CORE_NAMESPACE_END
