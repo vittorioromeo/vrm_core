@@ -15,7 +15,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 # vrm_cmake_add_compiler_flag(HAS_SANITIZE_INTEGER -fsanitize=integer)
 
 # Generate all the header unit tests.
-vrm_cmake_generate_public_header_tests_glob("*.hpp" "${VRM_CORE_SOURCE_DIR}/include")
+# vrm_cmake_generate_public_header_tests_glob("*.hpp" "${VRM_CORE_SOURCE_DIR}/include")
 
 # Generate all the unit tests.
 vrm_cmake_generate_unit_tests_glob("*.cpp")

@@ -38,8 +38,9 @@ VRM_CORE_NAMESPACE
                 using weak_type = weak<TBehavior, TLockPolicy>;
 
             private:
-                using is_nothrow_deinit =
-                    bool_<noexcept(std::declval<this_type>().deinit())>;
+                using is_nothrow_deinit = bool_<true>;
+                // TODO: clang++ does not compile
+                // bool_<noexcept(std::declval<this_type>().deinit())>;
 
             private:
                 // In addition to an handle, we store a `ref_counter`.

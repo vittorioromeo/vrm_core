@@ -81,10 +81,24 @@ VRM_CORE_NAMESPACE
 
     public:
         template <sz_t TN>
-        VRM_CORE_ALWAYS_INLINE auto& nth_buffer()
+            VRM_CORE_ALWAYS_INLINE auto& nth_buffer() & noexcept
         {
             VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
             return std::get<TN>(_buffers);
+        }
+
+        template <sz_t TN>
+        VRM_CORE_ALWAYS_INLINE const auto& nth_buffer() const& noexcept
+        {
+            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            return std::get<TN>(_buffers);
+        }
+
+        template <sz_t TN>
+            VRM_CORE_ALWAYS_INLINE auto nth_buffer() && noexcept
+        {
+            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            return std::move(std::get<TN>(_buffers));
         }
 
         template <typename T>
@@ -209,9 +223,15 @@ VRM_CORE_NAMESPACE
         }
 
     public:
-        auto data() noexcept { return data_builder(buffer_indices{}); }
+        auto data() noexcept
+        {
+            return data_builder(buffer_indices{});
+        }
 
-        auto data() const noexcept { return data_builder(buffer_indices{}); }
+        auto data() const noexcept
+        {
+            return data_builder(buffer_indices{});
+        }
 
         auto operator[](size_type pos) noexcept
         {

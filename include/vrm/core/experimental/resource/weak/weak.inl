@@ -38,6 +38,7 @@ VRM_CORE_NAMESPACE
             template <typename TBehavior, typename TLockPolicy>
             weak<TBehavior, TLockPolicy>::weak(weak&& rhs) noexcept
             {
+                (void)rhs;
                 // TODO:
             }
 
@@ -68,6 +69,7 @@ VRM_CORE_NAMESPACE
             template <typename TBehavior, typename TLockPolicy>
             auto& weak<TBehavior, TLockPolicy>::operator=(weak&& rhs) noexcept
             {
+                (void)rhs;
                 // TODO:
                 return *this;
             }

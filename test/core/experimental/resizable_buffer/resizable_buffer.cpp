@@ -61,11 +61,20 @@ public:
         }
     }
 
-    void reset() noexcept { ptr_ = buf_; }
+    void reset() noexcept
+    {
+        ptr_ = buf_;
+    }
 
-    static constexpr ::sz_t size() noexcept { return N; }
+    static constexpr ::sz_t size() noexcept
+    {
+        return N;
+    }
 
-    ::sz_t used() const { return ::sz_t(ptr_ - buf_); }
+    ::sz_t used() const
+    {
+        return ::sz_t(ptr_ - buf_);
+    }
 
 private:
     static constexpr ::sz_t align(::sz_t const n) noexcept
@@ -112,7 +121,9 @@ public:
 
     stack_allocator() = default;
 
-    stack_allocator(stack_store<N>& s) noexcept : store_(&s) {}
+    stack_allocator(stack_store<N>& s) noexcept : store_(&s)
+    {
+    }
 
     template <class U>
     stack_allocator(stack_allocator<U, N> const& other) noexcept
@@ -184,9 +195,15 @@ volatile int copies = 0;
 struct item
 {
     int l;
-    item() { ++cc; }
+    item()
+    {
+        ++cc;
+    }
 
-    item(const item&) { ++copies; }
+    item(const item&)
+    {
+        ++copies;
+    }
     item(item&&) = delete;
 
     item& operator=(const item&)
@@ -195,7 +212,10 @@ struct item
         return *this;
     }
 
-    ~item() { ++dd; }
+    ~item()
+    {
+        ++dd;
+    }
 };
 
 template <typename TAllocator = ::std::allocator<item>>
