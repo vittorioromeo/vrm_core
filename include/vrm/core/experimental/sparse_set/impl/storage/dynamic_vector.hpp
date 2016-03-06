@@ -39,7 +39,7 @@ VRM_CORE_NAMESPACE
                     resizable_buffer<sparse_type, sparse_allocator_type> // .
                     > _buffers;
 
-                sparse_type _end;
+                sparse_type _size;
                 sz_t _capacity{0};
 
                 void grow_by(sz_t amount)
@@ -77,19 +77,19 @@ VRM_CORE_NAMESPACE
 
                 auto last_element_index() noexcept
                 {
-                    return _end - 1;
+                    return _size - 1;
                 }
 
                 auto last_element_index() const noexcept
                 {
-                    return _end - 1;
+                    return _size - 1;
                 }
 
             public:
                 dynamic_vector()
                 {
-                    grow_by(120);
-                    _end = 0;
+                    grow_by(64);
+                    _size = 0;
                 }
 
                 ~dynamic_vector()
@@ -102,14 +102,14 @@ VRM_CORE_NAMESPACE
                 }
 
                 dynamic_vector(const dynamic_vector& rhs)
-                    : _buffers{rhs._buffers.copy(rhs._end)}, _end{rhs._end}
+                    : _buffers{rhs._buffers.copy(rhs._size)}, _size{rhs._size}
                 {
                 }
 
                 dynamic_vector& operator=(const dynamic_vector& rhs)
                 {
-                    _buffers = rhs._buffers.copy(rhs._end);
-                    _end = rhs._end;
+                    _buffers = rhs._buffers.copy(rhs._size);
+                    _size = rhs._size;
 
                     return *this;
                 }
@@ -124,26 +124,35 @@ VRM_CORE_NAMESPACE
                         sparse()[i] = null_idx;
                     }
 
-                    _end = 0;
+                    _size = 0;
                 }
 
                 bool has(const T& x) const noexcept
                 {
-                    VRM_CORE_ASSERT_OP(x, <, _capacity);
+                    if(x >= _capacity)
+                    {
+                        return false;
+                    }
+
                     return sparse()[x] != null_idx;
                 }
 
-                bool add(const T& x) noexcept
+                void grow_if_required()
+                {
+                    if(size() < _capacity) return;
+                    grow_by(_capacity);
+                }
+
+                bool add(const T& x)
                 {
                     if(has(x)) return false;
-
-                    // TODO: grow if required
+                    grow_if_required();
 
                     VRM_CORE_ASSERT_OP(size(), <, _capacity);
-                    dense()[_end] = x;
+                    dense()[_size] = x;
 
-                    sparse()[x] = _end;
-                    ++_end;
+                    sparse()[x] = _size;
+                    ++_size;
 
                     return true;
                 }
@@ -170,7 +179,7 @@ VRM_CORE_NAMESPACE
                     sparse()[x] = null_idx;
 
                     VRM_CORE_ASSERT_OP(size(), >, 0);
-                    --_end;
+                    --_size;
 
                     return true;
                 }
@@ -178,7 +187,7 @@ VRM_CORE_NAMESPACE
 
                 bool empty() const noexcept
                 {
-                    return _end == 0;
+                    return _size == 0;
                 }
 
                 // TODO: bool
@@ -201,7 +210,7 @@ VRM_CORE_NAMESPACE
                 {
                     VRM_CORE_ASSERT_OP(size(), <=, _capacity);
 
-                    for(sz_t i(0); i < _end; ++i)
+                    for(sz_t i(0); i < _size; ++i)
                     {
                         VRM_CORE_ASSERT(has(dense()[i]));
                         f(dense()[i]);
@@ -210,7 +219,7 @@ VRM_CORE_NAMESPACE
 
                 auto size() const noexcept
                 {
-                    return _end;
+                    return _size;
                 }
 
                 auto begin() noexcept
@@ -225,12 +234,12 @@ VRM_CORE_NAMESPACE
 
                 auto end() noexcept
                 {
-                    return dense().data() + _end;
+                    return dense().data() + _size;
                 }
 
                 auto end() const noexcept
                 {
-                    return static_cast<const T*>(dense().data() + _end);
+                    return static_cast<const T*>(dense().data() + _size);
                 }
             };
         }

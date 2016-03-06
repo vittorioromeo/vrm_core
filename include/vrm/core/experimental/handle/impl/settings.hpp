@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vrm/core/config/names.hpp>
+#include <vrm/core/assert/static_assert_macros.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -14,6 +15,10 @@ VRM_CORE_NAMESPACE
         template <typename TTarget, typename TCounter>
         struct settings
         {
+            VRM_CORE_STATIC_ASSERT_NM(
+                std::is_arithmetic<TTarget>{} && std::is_unsigned<TTarget>{});
+            VRM_CORE_STATIC_ASSERT_NM(std::is_arithmetic<TCounter>{});
+
             // From metadata to target user-specified object.
             using target_type = TTarget;
 
