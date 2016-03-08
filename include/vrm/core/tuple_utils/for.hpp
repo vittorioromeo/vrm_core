@@ -54,6 +54,17 @@ VRM_CORE_NAMESPACE
 
 #undef VRM_CORE_IMPL_TPLFORHELPER_BODY
         };
+
+        template <typename... Ts>
+        struct for_tuple_data_helper<0, Ts...>
+        {
+            template <typename... TIgnore>
+            VRM_CORE_ALWAYS_INLINE static constexpr // .
+                void
+                exec(TIgnore&&...) noexcept // .
+            {
+            }
+        };
     }
 
 #define VRM_CORE_IMPL_BODY()                                                 \

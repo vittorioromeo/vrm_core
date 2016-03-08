@@ -65,5 +65,14 @@ int main()
         std::make_tuple(100, 100, 100), std::make_tuple(1, 10, 50));
     TEST_ASSERT_OP(acc2, ==, (100 / 1 + 100 / 10 + 100 / 50));
 
+    int acc3 = 0;
+    vrm::core::for_tuple(
+        [&](auto x)
+        {
+            acc += x;
+        },
+        std::make_tuple());
+    TEST_ASSERT_OP(acc3, ==, 0);
+
     return 0;
 }
