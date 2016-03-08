@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/strong_typedef.hpp>
 #include <vrm/core/casts/impl/overflow_check.hpp>
 
 VRM_CORE_NAMESPACE
@@ -15,10 +16,12 @@ VRM_CORE_NAMESPACE
     template <typename TOut, typename TIn>
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
     {
-        VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TOut>{},
+        VRM_CORE_STATIC_ASSERT( // .
+            std::is_arithmetic<TOut>{} || is_strong_typedef_v<TOut>,
             "`TOut` output type must be an arithmetic type.");
 
-        VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TIn>{},
+        VRM_CORE_STATIC_ASSERT( // .
+            std::is_arithmetic<TIn>{} || is_strong_typedef_v<TIn>,
             "`TIn` input type must be an arithmetic type.");
 
         VRM_CORE_CONSTEXPR_ASSERT((!impl::will_overflow<TOut, TIn>(x)));

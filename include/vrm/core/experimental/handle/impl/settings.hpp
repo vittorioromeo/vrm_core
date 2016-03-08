@@ -7,6 +7,7 @@
 
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/assert/static_assert_macros.hpp>
+#include <vrm/core/strong_typedef.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -15,6 +16,14 @@ VRM_CORE_NAMESPACE
         template <typename TTarget, typename TCounter>
         struct settings
         {
+            VRM_CORE_STATIC_ASSERT_NM(
+                is_strong_typedef_v<TTarget> ||
+                (std::is_arithmetic<TTarget>{} && std::is_unsigned<TTarget>{}));
+
+            VRM_CORE_STATIC_ASSERT_NM( // .
+                is_strong_typedef_v<TCounter> ||
+                std::is_arithmetic<TCounter>{});
+
             // From metadata to target user-specified object.
             using target_type = TTarget;
 

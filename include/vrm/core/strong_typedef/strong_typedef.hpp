@@ -85,3 +85,4 @@
                                                                               \
     VRM_CORE_STATIC_ASSERT_NM(std::is_literal_type<name>{});                  \
     VRM_CORE_STATIC_ASSERT_NM(std::is_literal_type<underlying>{})
+

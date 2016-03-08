@@ -5,4 +5,6 @@
 
 #pragma once
 
+#include <vrm/core/strong_typedef/is_strong_typedef.hpp>
 #include <vrm/core/strong_typedef/strong_typedef.hpp>
+#include <vrm/core/strong_typedef/mark_strong_typedef_trait.hpp>
