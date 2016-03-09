@@ -39,6 +39,14 @@ auto VRM_CORE_CONST_FN are_same_representation()
 }
 
 template <typename TOut, typename TIn>
+auto VRM_CORE_CONST_FN same_bytes_different_sign()
+{
+    return sizeof(std::decay_t<TOut>) == sizeof(std::decay_t<TIn>) &&
+           !vrm::core::same_signedness<std::decay_t<TOut>, std::decay_t<TIn>>{};
+}
+
+
+template <typename TOut, typename TIn>
 void test_val(const TIn& x, bool should_fire = false)
 {
     assert_fired = false;
@@ -47,9 +55,13 @@ void test_val(const TIn& x, bool should_fire = false)
     (void)fake_to_num<TOut>(x);
 
     if(should_fire)
+    {
         ensure_assert();
+    }
     else
+    {
         assert(!assert_fired);
+    }
 }
 
 template <typename TOut, typename TIn>
@@ -57,6 +69,7 @@ void test_type(bool should_fire = false)
 {
     assert_fired = false;
     if(are_same_representation<TOut, TIn>()) return;
+    if(same_bytes_different_sign<TOut, TIn>()) return;
 
     (void)fake_to_num<TOut>(std::numeric_limits<TIn>::lowest());
     (void)fake_to_num<TOut>(std::numeric_limits<TIn>::max());
@@ -65,9 +78,13 @@ void test_type(bool should_fire = false)
     (void)fake_to_num<TOut>(static_cast<TIn>(2));
 
     if(should_fire)
+    {
         ensure_assert();
+    }
     else
+    {
         assert(!assert_fired);
+    }
 }
 
 void integral_tests()
