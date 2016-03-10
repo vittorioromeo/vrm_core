@@ -23,9 +23,13 @@ VRM_CORE_NAMESPACE
 
         namespace storage
         {
-            // Resizable array, uses idxs as metadata refs
-            template <typename TSettings,
-                typename TAllocator = impl::default_allocator<TSettings>>
+            /// @brief Dynamic (auto-resizing) storage class.
+            /// @details Uses indices to point to metadata instances, as the
+            /// underlying storage can be reallocated during use.
+            template < // .
+                typename TSettings,
+                typename TAllocator = impl::default_allocator<TSettings> // .
+                >
             class hs_vector
             {
             public:

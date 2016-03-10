@@ -34,7 +34,8 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TSettings, sz_t TCount>
-            auto hs_array<TSettings, TCount>::create(const target_type& target)
+            auto hs_array<TSettings, TCount>::create(
+                const target_type& target) noexcept
             {
                 // Out of the array.
                 VRM_CORE_ASSERT_OP(_next_ref, !=, _metadata.data() + count);
@@ -82,7 +83,7 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TSettings, sz_t TCount>
-            void hs_array<TSettings, TCount>::reserve(sz_t)
+            void hs_array<TSettings, TCount>::reserve(sz_t) noexcept
             {
             }
         }

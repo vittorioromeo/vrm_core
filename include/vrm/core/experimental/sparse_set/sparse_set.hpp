@@ -5,11 +5,13 @@
 
 #pragma once
 
-#include <vrm/core/experimental/sparse_set/base_sparse_set.hpp>
 #include <vrm/core/config.hpp>
+#include <vrm/core/experimental/sparse_set/base_sparse_set.hpp>
 
 VRM_CORE_NAMESPACE
 {
+    /// @brief Sparse integer set, with fixed array storage.
+    /// @details The storage is allocated inside the sparse set.
     template <typename T, sz_t TCapacity>
     using fixed_array_sparse_set = impl::base_sparse_set<       // .
         impl::sparse_set_settings<                              // .
@@ -18,6 +20,8 @@ VRM_CORE_NAMESPACE
             >                                                   // .
         >;
 
+    /// @brief Sparse integer set, with fixed vector storage.
+    /// @details The storage is allocated using an allocator.
     template <typename T, sz_t TCapacity>
     using fixed_vector_sparse_set = impl::base_sparse_set<       // .
         impl::sparse_set_settings<                               // .
@@ -26,6 +30,8 @@ VRM_CORE_NAMESPACE
             >                                                    // .
         >;
 
+    /// @brief Sparse integer set, with dynamic (auto-resizing) vector storage.
+    /// @details The storage is allocated using an allocator.
     template <typename T>
     using dynamic_vector_sparse_set = impl::base_sparse_set< // .
         impl::sparse_set_settings<                           // .

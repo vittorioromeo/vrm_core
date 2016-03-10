@@ -12,26 +12,16 @@
 #include <vrm/core/type_aliases.hpp>
 #include <vrm/core/casts.hpp>
 #include <vrm/core/experimental/sparse_set/impl/storage.hpp>
+#include <vrm/core/experimental/sparse_set/impl/settings.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
-        template <typename T, typename TStorage>
-        struct sparse_set_settings
-        {
-            VRM_CORE_STATIC_ASSERT_NM(
-                std::is_arithmetic<T>{} && std::is_unsigned<T>{});
-
-            using size_type = sz_t;
-            using value_type = T;
-            using storage_type = TStorage;
-        };
-
+        /// @brief Base implementation sparse set interface class.
         template <typename TSettings>
         class base_sparse_set
         {
-
         public:
             using size_type = typename TSettings::size_type;
             using value_type = typename TSettings::value_type;

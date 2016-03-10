@@ -39,7 +39,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TSettings>
-        bool base_sparse_set<TSettings>::empty() const noexcept
+        bool VRM_CORE_PURE_FN base_sparse_set<TSettings>::empty() const noexcept
         {
             return _impl.empty();
         }
@@ -51,7 +51,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TSettings>
-        auto base_sparse_set<TSettings>::back() const noexcept
+        auto VRM_CORE_PURE_FN base_sparse_set<TSettings>::back() const noexcept
         {
             return _impl.back();
         }
@@ -64,31 +64,32 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TSettings>
-        auto base_sparse_set<TSettings>::size() const noexcept
+        auto VRM_CORE_PURE_FN base_sparse_set<TSettings>::size() const noexcept
         {
             return _impl.size();
         }
 
         template <typename TSettings>
-        auto base_sparse_set<TSettings>::begin() noexcept
+        auto VRM_CORE_CONST_FN base_sparse_set<TSettings>::begin() noexcept
         {
             return _impl.begin();
         }
 
         template <typename TSettings>
-        auto base_sparse_set<TSettings>::begin() const noexcept
+        auto VRM_CORE_CONST_FN base_sparse_set<TSettings>::begin() const
+            noexcept
         {
             return _impl.begin();
         }
 
         template <typename TSettings>
-        auto base_sparse_set<TSettings>::end() noexcept
+        auto VRM_CORE_PURE_FN base_sparse_set<TSettings>::end() noexcept
         {
             return _impl.end();
         }
 
         template <typename TSettings>
-        auto base_sparse_set<TSettings>::end() const noexcept
+        auto VRM_CORE_PURE_FN base_sparse_set<TSettings>::end() const noexcept
         {
             return _impl.end();
         }

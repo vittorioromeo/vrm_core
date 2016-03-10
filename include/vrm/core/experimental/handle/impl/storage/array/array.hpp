@@ -17,7 +17,9 @@ VRM_CORE_NAMESPACE
     {
         namespace storage
         {
-            // Fixed array, uses ptrs as metadata refs
+            /// @brief Fixed storage class.
+            /// @details Uses pointers to point to metadata instances.
+            /// Moving/copying the storage can invalidate existing pointers.
             template <typename TSettings, sz_t TCount>
             class hs_array
             {
@@ -42,13 +44,13 @@ VRM_CORE_NAMESPACE
                 const auto& metadata_from_handle(const handle_type& h) const
                     noexcept;
 
-                auto create(const target_type& target);
+                auto create(const target_type& target) noexcept;
 
                 template <typename TF>
                 void destroy(const handle_type& h, TF&& f);
 
                 void clear() noexcept;
-                void reserve(sz_t n);
+                void reserve(sz_t n) noexcept;
             };
         }
     }
