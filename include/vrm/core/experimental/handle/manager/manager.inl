@@ -59,6 +59,21 @@ VRM_CORE_NAMESPACE
         {
             _storage.reserve(n);
         }
+
+        template <typename TStorage>
+        auto& manager<TStorage>::access(const handle_type& h) noexcept
+        {
+            VRM_CORE_ASSERT(valid_handle(h));
+            return _storage.metadata_from_handle(h)._target;
+        }
+
+        template <typename TStorage>
+        const auto& manager<TStorage>::access(const handle_type& h) const
+            noexcept
+        {
+            VRM_CORE_ASSERT(valid_handle(h));
+            return _storage.metadata_from_handle(h)._target;
+        }
     }
 }
 VRM_CORE_NAMESPACE_END

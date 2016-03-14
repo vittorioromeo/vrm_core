@@ -55,6 +55,12 @@ VRM_CORE_NAMESPACE
             /// @details Has no effect on fixed storage types.
             void reserve(sz_t n) // .
                 noexcept(noexcept(_storage.reserve(sz_t{})));
+
+            /// @brief Retrieves the target from an handle.
+            auto& access(const handle_type& h) noexcept;
+
+            /// @brief Retrieves the target from an handle. (const version)
+            const auto& access(const handle_type& h) const noexcept;
         };
     }
 }
