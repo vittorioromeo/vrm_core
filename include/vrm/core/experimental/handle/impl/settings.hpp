@@ -13,6 +13,36 @@ VRM_CORE_NAMESPACE
 {
     namespace handle
     {
+        // TODO:
+        /// @brief Compile-time settings for handle manager.
+        template <typename TTarget, typename TCounter>
+        struct settings2
+        {
+            // TODO: traits
+            VRM_CORE_STATIC_ASSERT_NM(
+                is_strong_typedef_v<TTarget> ||
+                (std::is_arithmetic<TTarget>{} && std::is_unsigned<TTarget>{}));
+
+            VRM_CORE_STATIC_ASSERT_NM( // .
+                is_strong_typedef_v<TCounter> ||
+                std::is_arithmetic<TCounter>{});
+
+            /// @brief Points from metadata to target user-specified object.
+            using target_type = TTarget;
+
+            /// @brief Counter type (checks handle validity).
+            using counter_type = TCounter;
+
+            /// @brief Lightweight handle that points to strategy-defined
+            /// metadata and stores a counter.
+            template <typename TMetadataRef>
+            struct handle_type
+            {
+                TMetadataRef _metadata_ref;
+                counter_type _counter{0};
+            };
+        };
+
         /// @brief Compile-time settings for handle storage.
         template <typename TTarget, typename TCounter>
         struct settings
@@ -36,6 +66,7 @@ VRM_CORE_NAMESPACE
             /// @brief Handle metadata. Stored in the storage.
             /// @details Every handle points to a metadata instance. Every
             /// metadata instance points to a target.
+            // TODO: nope
             struct metadata_type
             {
                 target_type _target;

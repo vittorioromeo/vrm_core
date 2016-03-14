@@ -6,6 +6,7 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
@@ -14,6 +15,131 @@ VRM_CORE_NAMESPACE
 {
     namespace handle
     {
+        // TODO:
+        namespace strategy
+        {
+            template <                     // .
+                typename TMetadataRefType, // .
+                typename TTargetGetter,    // .
+                typename TCounterGetter    // .
+                >
+            class custom_getters
+            {
+            public:
+                using metadata_ref_type = TMetadataRefType;
+                using target_getter_type = TTargetGetter;
+                using counter_getter_type = TCounterGetter;
+
+            private:
+                // TODO:
+                // :: metadata_ref_type -> target_type
+                target_getter_type _target_getter;
+
+                // TODO:
+                // :: metadata_ref_type -> counter_type
+                counter_getter_type _counter_getter;
+
+            public:
+                template <typename TFwdTG, typename TFwdCG>
+                custom_getters(TFwdTG&& tg, TFwdCG&& cg)
+                    : _target_getter{FWD(tg)}, _counter_getter{FWD(cg)}
+                {
+                }
+
+                auto& target(const metadata_ref_type& mr)
+                {
+                    return _target_getter(mr);
+                }
+                const auto& target(const metadata_ref_type& mr) const
+                {
+                    return _target_getter(mr);
+                }
+
+                auto& counter(const metadata_ref_type& mr)
+                {
+                    return _counter_getter(mr);
+                }
+                const auto& counter(const metadata_ref_type& mr) const
+                {
+                    return _counter_getter(mr);
+                }
+            };
+
+            template <                     // .
+                typename TSettings,        // .
+                typename TMetadataRefType, // .
+                typename TCustomGetters    // .
+                >
+            class custom
+            {
+            public:
+                using settings_type = TSettings;
+                using metadata_ref_type = TMetadataRefType;
+                using custom_getters_type = TCustomGetters;
+                using target_type = typename settings_type::target_type;
+                using counter_type = typename settings_type::counter_type;
+
+                using handle_type =
+                    typename settings_type::template handle_type<
+                        metadata_ref_type>;
+
+            private:
+                custom_getters_type _custom_getters;
+
+            public:
+                auto create(const target_type& target);
+
+                template <typename TF>
+                void destroy(const handle_type& h, TF&& f);
+
+                void clear();
+
+                void reserve(sz_t n);
+
+                auto& access(const handle_type& h);
+                const auto& access(const handle_type& h) const;
+            };
+
+            template <typename TSettings, typename TStorage>
+            class storage
+            {
+            public:
+                using settings_type = TSettings;
+                using storage_type = TStorage;
+                using target_type = typename settings_type::target_type;
+                using counter_type = typename settings_type::counter_type;
+
+                struct metadata_type
+                {
+                    target_type _target;
+                    counter_type _counter{0};
+                };
+
+                using metadata_ref_type =
+                    typename storage_type::metadata_ref_type;
+
+                using handle_type =
+                    typename settings_type::template handle_type<
+                        metadata_ref_type>;
+
+            private:
+                storage_type _storage;
+
+            public:
+                auto create(const target_type& target);
+
+                template <typename TF>
+                void destroy(const handle_type& h, TF&& f);
+
+                void clear();
+
+                void reserve(sz_t n);
+
+                auto& access(const handle_type& h);
+                const auto& access(const handle_type& h) const;
+            };
+        }
+
         /// @brief Context that allows the management of handles.
         template <typename TStorage>
         class manager
@@ -65,3 +191,6 @@ VRM_CORE_NAMESPACE
     }
 }
 VRM_CORE_NAMESPACE_END
+
+// TODO: generalize: make storage optional, use function object to retrieve
+// counters and targets

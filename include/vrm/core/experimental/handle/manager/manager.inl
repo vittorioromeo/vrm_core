@@ -35,7 +35,7 @@ VRM_CORE_NAMESPACE
             return h;
         }
 
-        // TODO:
+        // TODO: `f`?
         template <typename TStorage>
         template <typename TF>
         void manager<TStorage>::destroy(const handle_type& h, TF&& f) // .
