@@ -10,6 +10,7 @@
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/strategy/storage.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -27,7 +28,10 @@ VRM_CORE_NAMESPACE
                 using settings_type = TSettings;
                 using target_type = impl::target_type<settings_type>;
                 using counter_type = impl::counter_type<settings_type>;
-                using metadata_type = impl::metadata_type<settings_type>;
+
+                using metadata_type =
+                    strategy::storage_metadata_type<settings_type>;
+
                 using metadata_ref_type = metadata_type*;
 
                 using handle_type =

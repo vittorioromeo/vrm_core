@@ -43,7 +43,6 @@ VRM_CORE_NAMESPACE
 
             using handle_manager_type = handle::manager<handle_storage_type>;
 
-            using metadata_type = typename handle_manager_type::metadata_type;
             using handle_type = typename handle_manager_type::handle_type;
 
 

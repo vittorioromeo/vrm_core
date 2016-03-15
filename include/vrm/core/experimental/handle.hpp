@@ -7,4 +7,6 @@
 
 #include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
+#include <vrm/core/experimental/handle/strategy.hpp>
 #include <vrm/core/experimental/handle/manager.hpp>
+#include <vrm/core/experimental/handle/types.hpp>
