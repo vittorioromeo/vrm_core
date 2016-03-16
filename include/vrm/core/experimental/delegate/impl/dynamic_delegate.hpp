@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/experimental/handle.hpp>
 #include <vrm/core/experimental/delegate/base_delegate.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/experimental/handle.hpp>
 #include <vrm/core/strong_typedef.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 // TODO: WIP:
 // * use sparse int set?
@@ -41,7 +41,9 @@ VRM_CORE_NAMESPACE
                 handle::storage::hs_vector<handle_settings_type,
                     allocator_type>;
 
-            using handle_manager_type = handle::manager<handle_storage_type>;
+            using handle_manager_type =
+                handle::manager<handle::strategy::storage<handle_settings_type,
+                    handle_storage_type>>;
 
             using handle_type = typename handle_manager_type::handle_type;
 
