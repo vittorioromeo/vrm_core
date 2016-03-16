@@ -54,6 +54,14 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TSettings, typename TAllocator>
+            void hs_vector<TSettings, TAllocator>::invalidate(
+                const handle_type& h) noexcept
+            {
+                auto& m(metadata_from_handle(h));
+                ++(m._counter);
+            }
+
+            template <typename TSettings, typename TAllocator>
             auto hs_vector<TSettings, TAllocator>::create(
                 const target_type& target)
             {
@@ -77,7 +85,7 @@ VRM_CORE_NAMESPACE
             {
                 // Get corresponding metadata and invalidate it.
                 auto& m(metadata_from_handle(h));
-                ++(m._counter);
+                invalidate(h);
 
                 // Get last metadata.
                 auto& last_m(_metadata[_next_ref - 1]);

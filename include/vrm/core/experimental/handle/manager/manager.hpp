@@ -42,6 +42,8 @@ VRM_CORE_NAMESPACE
             VRM_CORE_ALWAYS_INLINE auto valid_handle(const handle_type& h) const
                 noexcept;
 
+            void invalidate(const handle_type& h);
+
             /// @brief Creates and returns an handle pointing to `target`.
             auto create(const target_type& target) // .
                 noexcept(noexcept(_strategy.create(target)));

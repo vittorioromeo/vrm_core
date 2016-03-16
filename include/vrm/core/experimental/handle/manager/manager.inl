@@ -26,6 +26,13 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TStorage>
+        void manager<TStorage>::invalidate(const handle_type& h)
+        {
+            _strategy.invalidate(h);
+            VRM_CORE_ASSERT(!valid_handle(h));
+        }
+
+        template <typename TStorage>
         auto manager<TStorage>::create(const target_type& target) // .
             noexcept(noexcept(_strategy.create(target)))
         {

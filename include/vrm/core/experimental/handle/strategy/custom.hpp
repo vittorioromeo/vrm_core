@@ -96,6 +96,12 @@ VRM_CORE_NAMESPACE
                            _custom_getters.counter(h._metadata_ref);
                 }
 
+                auto invalidate(const handle_type& h) noexcept
+                {
+                    auto& c(_custom_getters.counter(h._metadata_ref));
+                    ++c;
+                }
+
                 auto create(const target_type& target)
                 {
                     // Get index and increment next index.

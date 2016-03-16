@@ -58,6 +58,11 @@ VRM_CORE_NAMESPACE
                            _storage.metadata_from_handle(h)._counter;
                 }
 
+                auto invalidate(const handle_type& h) noexcept
+                {
+                    _storage.invalidate(h);
+                }
+
                 auto create(const target_type& target)
                 {
                     return _storage.create(target);

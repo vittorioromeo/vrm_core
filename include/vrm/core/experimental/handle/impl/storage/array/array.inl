@@ -51,13 +51,21 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename TSettings, sz_t TCount>
+            void hs_array<TSettings, TCount>::invalidate(
+                const handle_type& h) noexcept
+            {
+                auto& m(metadata_from_handle(h));
+                ++(m._counter);
+            }
+
+            template <typename TSettings, sz_t TCount>
             template <typename TF>
             void hs_array<TSettings, TCount>::destroy(
                 const handle_type& h, TF&& f)
             {
                 // Get corresponding metadata and invalidate it.
                 auto& m(metadata_from_handle(h));
-                ++(m._counter);
+                invalidate(h);
 
                 // Get last metadata.
                 auto last_m_ref(_next_ref - 1);

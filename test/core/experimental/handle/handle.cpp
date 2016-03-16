@@ -35,6 +35,37 @@ void t()
         TEST_ASSERT(!m.valid_handle(h0));
         TEST_ASSERT(!m.valid_handle(h1));
     }
+
+    {
+        auto h0 = m.create(0);
+        auto h1 = m.create(1);
+        auto h2 = m.create(2);
+        auto h3 = m.create(3);
+
+        TEST_ASSERT(m.valid_handle(h0));
+        TEST_ASSERT(m.valid_handle(h1));
+        TEST_ASSERT(m.valid_handle(h2));
+        TEST_ASSERT(m.valid_handle(h3));
+
+        TEST_ASSERT_OP(m.access(h0), ==, 0);
+        TEST_ASSERT_OP(m.access(h1), ==, 1);
+        TEST_ASSERT_OP(m.access(h2), ==, 2);
+        TEST_ASSERT_OP(m.access(h3), ==, 3);
+
+        m.destroy(h2, [](auto)
+            {
+            });
+
+        TEST_ASSERT(m.valid_handle(h0));
+        TEST_ASSERT(m.valid_handle(h1));
+        TEST_ASSERT(!m.valid_handle(h2));
+        TEST_ASSERT(m.valid_handle(h3));
+
+        TEST_ASSERT_OP(m.access(h0), ==, 0);
+        TEST_ASSERT_OP(m.access(h1), ==, 1);
+        //
+        // TEST_ASSERT_OP(m.access(h3), ==, 3);
+    }
 }
 
 void t2()

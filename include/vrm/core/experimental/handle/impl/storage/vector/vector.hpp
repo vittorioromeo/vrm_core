@@ -65,6 +65,7 @@ VRM_CORE_NAMESPACE
                     noexcept;
 
                 auto create(const target_type& target);
+                void invalidate(const handle_type& h) noexcept;
 
                 template <typename TF>
                 void destroy(const handle_type& h, TF&& f);
