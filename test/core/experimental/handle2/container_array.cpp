@@ -197,7 +197,7 @@ TEST_MAIN()
 {
     using setts = handle2::settings<sz_t, unsigned int, int>;
     {
-        handle2::container::array<setts, 40> m0;
+        handle2::container::owning_packed_array<setts, 40> m0;
         auto m1 = t0(std::move(m0));
         auto m2 = t0(std::move(m1));
         auto m3 = t0(std::move(m2));
@@ -208,7 +208,7 @@ TEST_MAIN()
     }
 
     {
-        handle2::container::array<setts, 40> m0;
+        handle2::container::owning_packed_array<setts, 40> m0;
         auto m1 = t0(m0);
         auto m2 = t0(m1);
         auto m3 = t0(m2);

@@ -10,6 +10,7 @@
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/experimental/handle2/settings.hpp>
 #include <vrm/core/experimental/handle2/context.hpp>
+#include <vrm/core/experimental/handle2/manager.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -17,8 +18,12 @@ VRM_CORE_NAMESPACE
     {
         namespace container
         {
+            /// @brief Handle container with fixed size that packs its contents.
+            /// @details Wraps two `std::array` instances. The targets are
+            /// contiguous in memory.
             template <typename TSettings, sz_t TCapacity>
-            class array : public context<TSettings, array<TSettings, TCapacity>>
+            class owning_packed_array
+                : public manager::packed_array<TSettings, TCapacity>
             {
             public:
                 using target_type = aliases::target_type<TSettings>;
@@ -28,56 +33,38 @@ VRM_CORE_NAMESPACE
                 static constexpr sz_t capacity{TCapacity};
 
             private:
-                struct metadata_type
-                {
-                    sz_t _target_idx;
-                    counter_type _counter{0};
-                };
-
+                // Target storage.
                 using targets_array = std::array<target_type, capacity>;
-                using metadata_array = std::array<metadata_type, capacity>;
-
                 targets_array _targets;
-                metadata_array _metadata;
-                handle_data_type _next_ref{0};
-
-                auto valid_hd(const handle_data_type& hd) const noexcept
-                {
-                    return hd >= 0 && hd < capacity;
-                }
 
             public:
-                array();
+                owning_packed_array() = default;
 
-                array(const array&) = default;
-                array& operator=(const array&) = default;
+                owning_packed_array(const owning_packed_array&) = default;
+                owning_packed_array& operator=(
+                    const owning_packed_array&) = default;
 
-                array(array&& rhs) = default;
-                array& operator=(array&& rhs) = default;
+                owning_packed_array(owning_packed_array&& rhs) = default;
+                owning_packed_array& operator=(
+                    owning_packed_array&& rhs) = default;
 
+            private:
                 auto& target(sz_t x)
                 {
-                    return _targets[_metadata[x]._target_idx];
+                    auto target_idx(this->metadata_at(x)._target_idx);
+                    return _targets[target_idx];
                 }
                 const auto& target(sz_t x) const
                 {
-                    return _targets[_metadata[x]._target_idx];
+                    auto target_idx(this->metadata_at(x)._target_idx);
+                    return _targets[target_idx];
                 }
 
-                auto& counter(sz_t x)
-                {
-                    return _metadata[x]._counter;
-                }
-                const auto& counter(sz_t x) const
-                {
-                    return _metadata[x]._counter;
-                }
-
+            public:
                 template <typename TTargetFwd>
                 auto create(TTargetFwd&& t) noexcept;
 
                 void destroy(const handle_type& h);
-
                 void clear() noexcept;
 
                 auto& targets() noexcept
@@ -89,14 +76,15 @@ VRM_CORE_NAMESPACE
                     return _targets;
                 }
 
-                void print()
+                auto& access(const handle_type& h)
                 {
-                    std::cout << "\n\n";
-                    for(auto t : _targets) std::cout << t << "\t";
-                    std::cout << "\n";
-                    for(auto m : _metadata) std::cout << m._target_idx << "\t";
-                    std::cout << "\n";
-                    for(auto m : _metadata) std::cout << m._counter << "\t";
+                    VRM_CORE_ASSERT(this->valid(h));
+                    return target(this->data(h));
+                }
+                const auto& access(const handle_type& h) const
+                {
+                    VRM_CORE_ASSERT(this->valid(h));
+                    return target(this->data(h));
                 }
             };
         }

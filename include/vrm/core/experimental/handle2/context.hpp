@@ -34,16 +34,7 @@ VRM_CORE_NAMESPACE
                 return static_cast<const TDerived&>(*this);
             }
 
-        public:
-            auto& target(const handle_data_type& hd)
-            {
-                return derived().target(hd);
-            }
-            const auto& target(const handle_data_type& hd) const
-            {
-                return derived().target(hd);
-            }
-
+        protected:
             auto& counter(const handle_data_type& hd)
             {
                 return derived().counter(hd);
@@ -62,29 +53,20 @@ VRM_CORE_NAMESPACE
                 return h._counter;
             }
 
+        public:
             auto valid(const handle_type& h) const
             {
                 return counter(data(h)) == local_counter(h);
             }
 
-            auto& access(const handle_type& h)
-            {
-                VRM_CORE_ASSERT(valid(h));
-                return target(data(h));
-            }
-            const auto& access(const handle_type& h) const
-            {
-                VRM_CORE_ASSERT(valid(h));
-                return target(data(h));
-            }
-
-            auto create(const handle_data_type& hd)
+            auto create_handle_from_data(const handle_data_type& hd)
             {
                 handle_type result{hd, counter(hd)};
                 VRM_CORE_ASSERT(valid(result));
                 return result;
             }
 
+        protected:
             void invalidate(const handle_data_type& hd)
             {
                 ++(counter(hd));

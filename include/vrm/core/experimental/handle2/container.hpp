@@ -5,6 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/handle2/container/array.hpp>
-#include <vrm/core/experimental/handle2/container/array.inl>
+#include <vrm/core/experimental/handle2/container/owning_packed_array.hpp>
 #include <vrm/core/experimental/handle2/container/vector.hpp>

@@ -39,6 +39,22 @@ struct example : handle2::context<ex_set, example>
     {
         return counters[x];
     }
+
+    void invalidate_x(sz_t x)
+    {
+        this->invalidate(x);
+    }
+
+    auto& access(const handle_type& h)
+    {
+        VRM_CORE_ASSERT(valid(h));
+        return target(data(h));
+    }
+    const auto& access(const handle_type& h) const
+    {
+        VRM_CORE_ASSERT(valid(h));
+        return target(data(h));
+    }
 };
 
 TEST_MAIN()
@@ -47,11 +63,11 @@ TEST_MAIN()
 
     for(auto i = 0; i < 5; ++i)
     {
-        auto h0 = context.create(0);
+        auto h0 = context.create_handle_from_data(0);
         TEST_ASSERT(context.valid(h0));
         TEST_ASSERT_OP(context.access(h0), ==, 5);
 
-        context.invalidate(0);
+        context.invalidate_x(0);
         TEST_ASSERT(!context.valid(h0));
     }
 }

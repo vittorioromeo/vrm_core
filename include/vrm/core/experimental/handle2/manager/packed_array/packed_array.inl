@@ -10,63 +10,64 @@
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/experimental/handle2/settings.hpp>
 #include <vrm/core/experimental/handle2/context.hpp>
+#include <vrm/core/experimental/handle2/manager/packed_array/packed_array.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace handle2
     {
-        namespace container
+        namespace manager
         {
             template <typename TSettings, sz_t TCapacity>
-            array<TSettings, TCapacity>::array()
+            packed_array<TSettings, TCapacity>::packed_array()
             {
                 for(sz_t i(0); i < capacity; ++i)
                 {
-                    _targets[i] = 99;
                     _metadata[i]._target_idx = i;
                     _metadata[i]._counter = 0;
                 }
             }
 
             template <typename TSettings, sz_t TCapacity>
-            template <typename TTargetFwd>
-            auto array<TSettings, TCapacity>::create(TTargetFwd&& t) noexcept
+            auto packed_array<TSettings, TCapacity>::create_handle() noexcept
             {
-                // Out of the array.
+                // Check if we have reached maximum capacity.
                 VRM_CORE_ASSERT_OP(_next_ref, <, capacity);
 
-                // Get ptr and increment next ptr.
+                // Get next valid metadata index and post-increment it.
                 VRM_CORE_ASSERT(valid_hd(_next_ref));
                 auto m_ref(_next_ref++);
 
-                // Set it to desired target.
-                target(m_ref) = FWD(t);
-
-                // Return handle.
-                return handle_type{m_ref, counter(m_ref)};
+                // Return a new handle.
+                return this->create_handle_from_data(m_ref);
             }
 
             template <typename TSettings, sz_t TCapacity>
-            void array<TSettings, TCapacity>::destroy(const handle_type& h)
+            template <typename TF>
+            void packed_array<TSettings, TCapacity>::destroy_handle(
+                const handle_type& h, TF&& f)
             {
                 // Get corresponding metadata and invalidate it.
                 auto& m(_metadata[h._data]);
                 ++(m._counter);
 
-                // Get last metadata.
+                // Get last valid metadata.
                 auto last_m_ref(_next_ref - 1);
 
-                // Swap indices and `pop_back`.
+                // Alias the indices of the current and last valid metadata.
                 auto& i0(m._target_idx);
                 auto& i1(_metadata[last_m_ref]._target_idx);
 
-                std::swap(_targets[i0], _targets[i1]);
+                // Swap both target indices and target data.
+                f(i0, i1);
                 std::swap(i0, i1);
+
+                // Decrement next valid metadata index.
                 --_next_ref;
             }
 
             template <typename TSettings, sz_t TCapacity>
-            void array<TSettings, TCapacity>::clear() noexcept
+            void packed_array<TSettings, TCapacity>::clear_metadata() noexcept
             {
                 // Invalidate all existing handles.
                 for(sz_t i(0); i < capacity; ++i)
@@ -75,6 +76,7 @@ VRM_CORE_NAMESPACE
                     ++(_metadata[i]._counter);
                 }
 
+                // Reset next valid metadata index.
                 _next_ref = 0;
             }
         }

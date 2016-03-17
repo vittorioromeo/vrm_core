@@ -5,7 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/handle2/settings.hpp>
-#include <vrm/core/experimental/handle2/context.hpp>
-#include <vrm/core/experimental/handle2/manager.hpp>
-#include <vrm/core/experimental/handle2/container.hpp>
+#include <vrm/core/experimental/handle2/manager/packed_array/packed_array.hpp>
+#include <vrm/core/experimental/handle2/manager/packed_array/packed_array.inl>
