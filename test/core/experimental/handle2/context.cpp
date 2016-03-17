@@ -1,0 +1,57 @@
+#include "../../../utils/test_res_utils.hpp"
+#include <vector>
+#include <vrm/core/experimental/handle2/context.hpp>
+
+using namespace vrm::core;
+
+using ex_set = handle2::settings<sz_t, float, int>;
+struct example : handle2::context<ex_set, example>
+{
+    std::vector<float> items;
+    std::vector<int> counters;
+
+    example()
+    {
+        items.resize(5);
+        counters.resize(5);
+
+        items[0] = 5;
+        items[1] = 10;
+        items[2] = 15;
+        items[3] = 20;
+        items[4] = 25;
+    }
+
+    auto& target(sz_t x)
+    {
+        return items[x];
+    }
+    const auto& target(sz_t x) const
+    {
+        return items[x];
+    }
+
+    auto& counter(sz_t x)
+    {
+        return counters[x];
+    }
+    const auto& counter(sz_t x) const
+    {
+        return counters[x];
+    }
+};
+
+TEST_MAIN()
+{
+    auto context = example{};
+
+    for(auto i = 0; i < 5; ++i)
+    {
+        auto h0 = context.create(0);
+        TEST_ASSERT(context.valid(h0));
+        TEST_ASSERT_OP(context.access(h0), ==, 5);
+
+        context.invalidate(0);
+        TEST_ASSERT(!context.valid(h0));
+    }
+}
