@@ -59,7 +59,7 @@ VRM_CORE_NAMESPACE
                 packed_array(packed_array&& rhs) = default;
                 packed_array& operator=(packed_array&& rhs) = default;
 
-            protected:
+            public:
                 auto& metadata_at(sz_t x) noexcept
                 {
                     return _metadata[x];

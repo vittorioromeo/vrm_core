@@ -5,4 +5,4 @@
 
 #pragma once
 
-#include <vrm/core/experimental/handle2/manager/array.hpp>
+#include <vrm/core/experimental/handle2/manager/packed_array.hpp>
