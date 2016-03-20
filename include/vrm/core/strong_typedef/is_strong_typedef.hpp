@@ -7,15 +7,21 @@
 
 #include <type_traits>
 #include <vrm/core/config/names.hpp>
+#include <vrm/core/is_valid.hpp>
 
 VRM_CORE_NAMESPACE
 {
-    template <typename>
-    struct is_strong_typedef : std::false_type
+    namespace impl
     {
-    };
+        auto VRM_CORE_CONST_FN is_strong_typedef_impl()
+        {
+            return is_valid([](auto x) ->
+                typename decltype(x)::strong_typedef_tag{});
+        }
+    }
 
     template <typename T>
-    constexpr bool is_strong_typedef_v = is_strong_typedef<T>::value;
+    constexpr auto is_strong_typedef_v = // .
+        decltype(impl::is_strong_typedef_impl()(T{})){};
 }
 VRM_CORE_NAMESPACE_END

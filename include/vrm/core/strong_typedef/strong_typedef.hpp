@@ -8,9 +8,23 @@
 #include <vrm/core/config/names.hpp>
 #include <vrm/core/assert/static_assert_macros.hpp>
 
+VRM_CORE_NAMESPACE
+{
+    namespace impl
+    {
+        struct strong_typedef_marker
+        {
+        };
+    }
+}
+VRM_CORE_NAMESPACE_END
+
 #define VRM_CORE_STRONG_TYPEDEF(underlying, name)                             \
     class name final                                                          \
     {                                                                         \
+    public:                                                                   \
+        using strong_typedef_tag = ::vrm::core::impl::strong_typedef_marker;  \
+                                                                              \
     private:                                                                  \
         underlying _value;                                                    \
                                                                               \
@@ -85,4 +99,3 @@
                                                                               \
     VRM_CORE_STATIC_ASSERT_NM(std::is_literal_type<name>{});                  \
     VRM_CORE_STATIC_ASSERT_NM(std::is_literal_type<underlying>{})
-
