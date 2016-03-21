@@ -93,6 +93,19 @@ VRM_CORE_NAMESPACE
         {
             return _impl.end();
         }
+
+        template <typename TSettings>
+        auto& base_sparse_set<TSettings>::operator[](sz_t i) noexcept
+        {
+            return _impl[i];
+        }
+
+        template <typename TSettings>
+        const auto& base_sparse_set<TSettings>::operator[](sz_t i) const
+            noexcept
+        {
+            return _impl[i];
+        }
     }
 }
 VRM_CORE_NAMESPACE_END

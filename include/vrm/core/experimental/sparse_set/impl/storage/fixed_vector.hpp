@@ -204,6 +204,18 @@ VRM_CORE_NAMESPACE
                 {
                     return static_cast<const T*>(_end);
                 }
+
+                auto& operator[](sz_t i) noexcept
+                {
+                    VRM_CORE_ASSERT_OP(i, <, size());
+                    return dense()[i];
+                }
+
+                const auto& operator[](sz_t i) const noexcept
+                {
+                    VRM_CORE_ASSERT_OP(i, <, size());
+                    return dense()[i];
+                }
             };
         }
     }

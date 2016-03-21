@@ -59,6 +59,9 @@ VRM_CORE_NAMESPACE
 
             auto end() noexcept;
             auto end() const noexcept;
+
+            auto& operator[](sz_t i) noexcept;
+            const auto& operator[](sz_t i) const noexcept;
         };
     }
 }
