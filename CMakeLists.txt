@@ -13,6 +13,7 @@ vrm_cmake_find_extlib(vrm_pp)
 
 # Alias the include directory.
 set(VRM_CORE_INC_DIR "${VRM_CORE_SOURCE_DIR}/include/")
+include_directories("${VRM_CORE_INC_DIR}")
 
 # Other compiler flags.
 vrm_cmake_add_common_compiler_flags()
