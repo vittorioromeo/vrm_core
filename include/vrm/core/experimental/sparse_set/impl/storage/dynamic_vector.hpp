@@ -102,7 +102,8 @@ VRM_CORE_NAMESPACE
                 }
 
                 dynamic_vector(const dynamic_vector& rhs)
-                    : _buffers{rhs._buffers.copy(rhs._size)}, _size{rhs._size}
+                    : _buffers{rhs._buffers.copy(rhs._size)}, _size{rhs._size},
+                      _capacity{rhs._capacity}
                 {
                 }
 
@@ -110,6 +111,7 @@ VRM_CORE_NAMESPACE
                 {
                     _buffers = rhs._buffers.copy(rhs._size);
                     _size = rhs._size;
+                    _capacity = rhs._capacity;
 
                     return *this;
                 }
@@ -137,16 +139,25 @@ VRM_CORE_NAMESPACE
                     return sparse()[x] != null_idx;
                 }
 
-                void grow_if_required()
+                void grow_if_required(const T& x)
                 {
-                    if(size() < _capacity) return;
-                    grow_by(_capacity);
+                    // Since we need to access `sparse[x]`, growing only for
+                    // size is not sufficient. We also have to check `x`.
+                    if(size() < _capacity && x < _capacity) return;
+
+                    // TODO: review growth policy
+                    auto target(std::max(
+                        to_sz_t(x - _capacity + 1), to_sz_t(_capacity)));
+
+                    grow_by(target + 10);
+
+                    VRM_CORE_ASSERT_OP(_capacity, >, x);
                 }
 
                 bool add(const T& x)
                 {
                     if(has(x)) return false;
-                    grow_if_required();
+                    grow_if_required(x);
 
                     VRM_CORE_ASSERT_OP(size(), <, _capacity);
                     dense()[_size] = x;
@@ -183,7 +194,6 @@ VRM_CORE_NAMESPACE
 
                     return true;
                 }
-
 
                 bool empty() const noexcept
                 {

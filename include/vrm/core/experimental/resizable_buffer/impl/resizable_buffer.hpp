@@ -40,11 +40,11 @@ VRM_CORE_NAMESPACE
     public:
         resizable_buffer(const TAllocator& allocator = TAllocator{});
 
-        resizable_buffer(resizable_buffer&& rhs) noexcept;
-        resizable_buffer& operator=(resizable_buffer&& rhs) noexcept;
-
         resizable_buffer(const resizable_buffer&) = delete;
         resizable_buffer& operator=(const resizable_buffer&) = delete;
+
+        resizable_buffer(resizable_buffer&& rhs) noexcept;
+        resizable_buffer& operator=(resizable_buffer&& rhs) noexcept;
 
         ~resizable_buffer() noexcept;
 

@@ -89,8 +89,24 @@ VRM_CORE_NAMESPACE
                 fixed_vector(const fixed_vector&) = delete;
                 fixed_vector& operator=(const fixed_vector&) = delete;
 
-                fixed_vector(fixed_vector&&) = default;
-                fixed_vector& operator=(fixed_vector&&) = default;
+                fixed_vector(fixed_vector&& rhs)
+                {
+                    auto temp_size = rhs.size();
+                    std::cout << "ts: " << temp_size << std::endl;
+
+                    _buffers = std::move(rhs._buffers);
+                    _end = dense().data() + temp_size;
+                }
+                fixed_vector& operator=(fixed_vector&& rhs)
+                {
+                    auto temp_size = rhs.size();
+                    std::cout << "ts: " << temp_size << std::endl;
+
+                    _buffers = std::move(rhs._buffers);
+                    _end = dense().data() + temp_size;
+
+                    return *this;
+                }
 
                 void clear() noexcept
                 {
@@ -182,6 +198,8 @@ VRM_CORE_NAMESPACE
 
                 auto size() const noexcept
                 {
+                    std::cout << "start: " << (void*)begin() << std::endl;
+                    std::cout << "end: " << (void*)end() << std::endl;
                     return to_sz_t(end() - begin());
                 }
 
