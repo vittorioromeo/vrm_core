@@ -88,6 +88,7 @@
             public:
                 dynamic_vector()
                 {
+                    // TODO: reserve(x)
                     grow_by(64);
                     _size = 0;
                 }

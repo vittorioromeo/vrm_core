@@ -167,7 +167,7 @@ VRM_CORE_NAMESPACE
                     return static_cast<const T*>(_end);
                 }
 
-                // TODO: remove, probably misleading
+                // TODO: rename, probably misleading
                 auto& operator[](sz_t i) noexcept
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
