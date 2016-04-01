@@ -11,7 +11,7 @@
 #include <vrm/core/casts.hpp>
 #include <vrm/core/experimental/resizable_buffer.hpp>
 
-VRM_CORE_NAMESPACE
+    VRM_CORE_NAMESPACE
 {
     namespace impl
     {
@@ -252,6 +252,7 @@ VRM_CORE_NAMESPACE
                     return static_cast<const T*>(dense().data() + _size);
                 }
 
+                // TODO: remove, probably misleading
                 auto& operator[](sz_t i) noexcept
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
