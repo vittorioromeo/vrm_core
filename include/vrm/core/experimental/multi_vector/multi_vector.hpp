@@ -26,7 +26,10 @@ VRM_CORE_NAMESPACE
 
             static constexpr sz_t buffer_count{multi_buffer_type::buffer_count};
 
-            static constexpr auto initial_capacity() { return sz_t(0); }
+            static constexpr auto initial_capacity()
+            {
+                return sz_t(0);
+            }
 
             using value_tuple = typename multi_buffer_type::value_tuple;
 
@@ -43,7 +46,7 @@ VRM_CORE_NAMESPACE
 
             void grow_if_necessary(size_type desired_size)
             {
-                if(desired_size > _capacity)
+                if(VRM_CORE_UNLIKELY(desired_size > _capacity))
                 {
                     reserve((_capacity + 10) * 2);
                 }
@@ -73,9 +76,18 @@ VRM_CORE_NAMESPACE
             multi_vector(multi_vector&&) = default;
             multi_vector& operator=(multi_vector&&) = default;
 
-            const auto& size() const noexcept { return _size; }
-            const auto& capacity() const noexcept { return _capacity; }
-            auto empty() const noexcept { return _size == 0; }
+            const auto& size() const noexcept
+            {
+                return _size;
+            }
+            const auto& capacity() const noexcept
+            {
+                return _capacity;
+            }
+            auto empty() const noexcept
+            {
+                return _size == 0;
+            }
 
             void reserve(size_type new_capacity)
             {
@@ -178,9 +190,15 @@ VRM_CORE_NAMESPACE
                 return _multi_buffer[pos];
             }
 
-            auto back() noexcept { return (*this)[_size - 1]; }
+            auto back() noexcept
+            {
+                return (*this)[_size - 1];
+            }
 
-            auto back() const noexcept { return (*this)[_size - 1]; }
+            auto back() const noexcept
+            {
+                return (*this)[_size - 1];
+            }
 
             // template <typename T>
             // auto& get(size_type pos) noexcept

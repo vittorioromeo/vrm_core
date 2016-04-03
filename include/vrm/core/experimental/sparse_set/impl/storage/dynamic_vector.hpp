@@ -11,7 +11,7 @@
 #include <vrm/core/casts.hpp>
 #include <vrm/core/experimental/resizable_buffer.hpp>
 
-    VRM_CORE_NAMESPACE
+VRM_CORE_NAMESPACE
 {
     namespace impl
     {
@@ -144,7 +144,10 @@
                 {
                     // Since we need to access `sparse[x]`, growing only for
                     // size is not sufficient. We also have to check `x`.
-                    if(size() < _capacity && x < _capacity) return;
+                    if(VRM_CORE_LIKELY(size() < _capacity && x < _capacity))
+                    {
+                        return;
+                    }
 
                     // TODO: review growth policy
                     auto target(std::max(

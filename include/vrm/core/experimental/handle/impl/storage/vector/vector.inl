@@ -33,8 +33,10 @@ VRM_CORE_NAMESPACE
             template <typename TSettings, typename TAllocator>
             void hs_vector<TSettings, TAllocator>::grow_if_needed()
             {
-                if(_next_ref < _metadata.size()) return;
-                _metadata.resize(_metadata.size() + 100);
+                if(VRM_CORE_UNLIKELY(_next_ref >= _metadata.size()))
+                {
+                    _metadata.resize(_metadata.size() + 100);
+                }
             }
 
             template <typename TSettings, typename TAllocator>
