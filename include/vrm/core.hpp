@@ -35,3 +35,4 @@
 #include <vrm/core/tuple_utils.hpp>
 #include <vrm/core/type_aliases.hpp>
 #include <vrm/core/variadic_min_max.hpp>
+#include <vrm/core/y_combinator.hpp>
