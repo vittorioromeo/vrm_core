@@ -22,4 +22,7 @@ SA_SAME(
 SA_SAME(
     (remove_rvalue_reference_t<const volatile int&&>), (const volatile int));
 
-TEST_MAIN() { return 0; }
+TEST_MAIN()
+{
+    return 0;
+}

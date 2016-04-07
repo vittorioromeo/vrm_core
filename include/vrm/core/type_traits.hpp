@@ -13,4 +13,3 @@
 #include <vrm/core/type_traits/remove_rvalue_reference.hpp>
 #include <vrm/core/type_traits/copy_if_rvalue.hpp>
 #include <vrm/core/type_traits/nothrow.hpp>
-

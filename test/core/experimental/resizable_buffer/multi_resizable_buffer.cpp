@@ -15,9 +15,15 @@ volatile int copies = 0;
 struct item
 {
     int l;
-    item() { ++cc; }
+    item()
+    {
+        ++cc;
+    }
 
-    item(const item&) { ++copies; }
+    item(const item&)
+    {
+        ++copies;
+    }
     item(item&&) = delete;
 
     item& operator=(const item&)
@@ -26,7 +32,10 @@ struct item
         return *this;
     }
 
-    ~item() { ++dd; }
+    ~item()
+    {
+        ++dd;
+    }
 };
 
 

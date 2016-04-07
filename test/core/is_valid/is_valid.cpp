@@ -10,21 +10,31 @@ using namespace vrm::core;
 struct banana
 {
     int x;
-    void peel() {}
-    void eat_banana() {}
+    void peel()
+    {
+    }
+    void eat_banana()
+    {
+    }
 };
 
 struct apple
 {
     int y;
-    void peel() {}
-    void eat_apple() {}
+    void peel()
+    {
+    }
+    void eat_apple()
+    {
+    }
 };
 
 struct chestnut
 {
     int z;
-    void peel() {}
+    void peel()
+    {
+    }
 };
 
 auto has_peel(is_valid([](auto&& x) -> decltype(x.peel())

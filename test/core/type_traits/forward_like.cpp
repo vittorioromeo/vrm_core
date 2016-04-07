@@ -46,4 +46,7 @@ SA_TYPE((std::forward<int&&>(test_int)), (int&&));
 SA_TYPE((forward_like<int>(test_float)), (float&&));
 SA_TYPE((forward_like<int&&>(test_float)), (float&&));
 
-TEST_MAIN() { return 0; }
+TEST_MAIN()
+{
+    return 0;
+}

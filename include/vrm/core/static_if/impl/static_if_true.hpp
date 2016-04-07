@@ -20,7 +20,9 @@ VRM_CORE_NAMESPACE
         template <>
         struct static_if_<true>
         {
-            VRM_CORE_ALWAYS_INLINE constexpr static_if_() {}
+            VRM_CORE_ALWAYS_INLINE constexpr static_if_()
+            {
+            }
 
             template <typename TF>
             VRM_CORE_ALWAYS_INLINE constexpr auto& else_(TF&&) noexcept

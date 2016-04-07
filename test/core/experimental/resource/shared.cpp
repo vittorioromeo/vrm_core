@@ -285,8 +285,8 @@ namespace test
             assert(u0.get() == old1);
             assert(u1.get() == old0);
 
-            (void) old0;
-            (void) old1;
+            (void)old0;
+            (void)old1;
         }
 
         assert_ck(2, 2);

@@ -13,10 +13,19 @@ struct ctorer
 struct item
 {
     int l;
-    item() { ++cc; }
-    item(ctorer) { ++cc; }
+    item()
+    {
+        ++cc;
+    }
+    item(ctorer)
+    {
+        ++cc;
+    }
 
-    item(const item&) { ++copies; }
+    item(const item&)
+    {
+        ++copies;
+    }
     item(item&&) = delete;
 
     item& operator=(const item&)
@@ -25,7 +34,10 @@ struct item
         return *this;
     }
 
-    ~item() { ++dd; }
+    ~item()
+    {
+        ++dd;
+    }
 };
 
 

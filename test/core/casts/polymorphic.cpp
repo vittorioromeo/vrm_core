@@ -3,13 +3,21 @@
 
 struct base
 {
-    virtual ~base() {}
-    virtual int x() const { return 0; }
+    virtual ~base()
+    {
+    }
+    virtual int x() const
+    {
+        return 0;
+    }
 };
 
 struct derived final : base
 {
-    int x() const override { return 1; }
+    int x() const override
+    {
+        return 1;
+    }
 };
 
 using namespace vrm::core;

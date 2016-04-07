@@ -19,7 +19,10 @@ int main()
     auto count = [](auto&&... xs)
     {
         // TODO: GCC: BUG: gcc complains about xs... not being used.
-        [](auto&&... ys){ (void)std::forward_as_tuple(FWD(ys)...); }(FWD(xs)...);
+        [](auto&&... ys)
+        {
+            (void)std::forward_as_tuple(FWD(ys)...);
+        }(FWD(xs)...);
         return sizeof...(xs);
     };
 

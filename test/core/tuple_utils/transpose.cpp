@@ -154,7 +154,7 @@ void TEST_CONST test2()
     SA_TYPE((std::get<0>(std::move(ttn_f))), (int&&));
 }
 
-void  TEST_CONST test3()
+void TEST_CONST test3()
 {
     int i = 1;
     int i2 = 3;

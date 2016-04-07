@@ -7,10 +7,22 @@ struct Trad
 {
     int val = 0;
 
-    auto operator()(int) { return 1; }
-    auto operator()(float) { return 2; }
-    auto operator()(double) { return 3; }
-    auto operator()(std::nullptr_t) { return val++; }
+    auto operator()(int)
+    {
+        return 1;
+    }
+    auto operator()(float)
+    {
+        return 2;
+    }
+    auto operator()(double)
+    {
+        return 3;
+    }
+    auto operator()(std::nullptr_t)
+    {
+        return val++;
+    }
 };
 
 int main()

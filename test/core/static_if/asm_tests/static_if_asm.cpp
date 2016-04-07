@@ -7,19 +7,31 @@ volatile bool apple_eaten = false;
 
 struct banana
 {
-    void peel() {}
-    void eat_banana() { banana_eaten = true; }
+    void peel()
+    {
+    }
+    void eat_banana()
+    {
+        banana_eaten = true;
+    }
 };
 
 struct apple
 {
-    void peel() {}
-    void eat_apple() { apple_eaten = true; }
+    void peel()
+    {
+    }
+    void eat_apple()
+    {
+        apple_eaten = true;
+    }
 };
 
 struct chestnut
 {
-    void peel() {}
+    void peel()
+    {
+    }
 };
 
 template <typename T>

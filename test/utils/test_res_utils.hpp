@@ -16,7 +16,10 @@ namespace test
 
         test_behavior() = delete;
 
-        static handle_type null_handle() { return -1; }
+        static handle_type null_handle()
+        {
+            return -1;
+        }
 
         static handle_type init()
         {

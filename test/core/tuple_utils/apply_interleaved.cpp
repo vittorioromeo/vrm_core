@@ -5,7 +5,9 @@
 struct noncopy
 {
     int x = 0;
-    noncopy(int xxx) : x{xxx} {}
+    noncopy(int xxx) : x{xxx}
+    {
+    }
 
     noncopy(const noncopy&) = delete;
     noncopy& operator=(const noncopy&) = delete;
@@ -13,17 +15,29 @@ struct noncopy
     noncopy(noncopy&&) = default;
     noncopy& operator=(noncopy&&) = default;
 
-    bool operator==(const noncopy& y) const { return x == y.x; }
+    bool operator==(const noncopy& y) const
+    {
+        return x == y.x;
+    }
 };
 
 using namespace vrm::core;
 
-auto first = [](auto&& x, auto&&...) -> const auto & { return x; };
-auto second = [](auto&&, auto&& x, auto&&...) -> const auto & { return x; };
+auto first = [](auto&& x, auto&&...) -> const auto &
+{
+    return x;
+};
+auto second = [](auto&&, auto&& x, auto&&...) -> const auto &
+{
+    return x;
+};
 auto count = [](auto&&... xs)
 {
     // TODO: GCC: BUG: gcc complains about xs... not being used.
-    [](auto&&... ys){ (void)std::forward_as_tuple(FWD(ys)...); }(FWD(xs)...);
+    [](auto&&... ys)
+    {
+        (void)std::forward_as_tuple(FWD(ys)...);
+    }(FWD(xs)...);
     return sizeof...(xs);
 };
 auto binary_append_fst = [](auto a, auto b, auto&&...)
@@ -36,7 +50,7 @@ auto binary_append_snd = [](auto, auto, auto a, auto b)
 };
 
 
-void TEST_CONST  noncopy_test()
+void TEST_CONST noncopy_test()
 {
     {
         auto t0 = std::make_tuple(noncopy{0}, 'a');
@@ -44,8 +58,8 @@ void TEST_CONST  noncopy_test()
 
         TEST_ASSERT_OP(apply(first, t0).x, ==, 0);
         TEST_ASSERT_OP(apply(first, t1).x, ==, 1);
-      //  TEST_ASSERT_OP(apply(second, t0), ==, 'a');
-      //  TEST_ASSERT_OP(apply(second, t1), ==, 'b');
+        //  TEST_ASSERT_OP(apply(second, t0), ==, 'a');
+        //  TEST_ASSERT_OP(apply(second, t1), ==, 'b');
     }
 
     {
