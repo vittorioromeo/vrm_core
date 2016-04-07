@@ -74,7 +74,13 @@ VRM_CORE_NAMESPACE
                 fixed_vector()
                 {
                     _buffers.grow(0, capacity);
-                    clear();
+
+                    for(sz_t i(0); i < capacity; ++i)
+                    {
+                        sparse()[i] = nullptr;
+                    }
+
+                    _end = dense().data();
                 }
 
                 ~fixed_vector()
@@ -107,10 +113,10 @@ VRM_CORE_NAMESPACE
 
                 void clear() noexcept
                 {
-                    for(sz_t i(0); i < capacity; ++i)
-                    {
-                        sparse()[i] = nullptr;
-                    }
+                    for_each([this](auto x)
+                        {
+                            sparse()[x] = nullptr;
+                        });
 
                     _end = dense().data();
                 }

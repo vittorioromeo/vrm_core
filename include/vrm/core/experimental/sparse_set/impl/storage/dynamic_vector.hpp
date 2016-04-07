@@ -122,10 +122,10 @@ VRM_CORE_NAMESPACE
 
                 void clear() noexcept
                 {
-                    for(sz_t i(0); i < _capacity; ++i)
-                    {
-                        sparse()[i] = null_idx;
-                    }
+                    for_each([this](auto x)
+                        {
+                            sparse()[x] = null_idx;
+                        });
 
                     _size = 0;
                 }

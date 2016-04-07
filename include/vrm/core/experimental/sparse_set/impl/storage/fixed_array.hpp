@@ -45,7 +45,12 @@ VRM_CORE_NAMESPACE
             public:
                 fixed_array()
                 {
-                    clear();
+                    for(auto& p : _sparse)
+                    {
+                        p = nullptr;
+                    }
+
+                    _end = _dense.data();
                 }
 
                 fixed_array(const fixed_array&) = delete;
@@ -56,10 +61,10 @@ VRM_CORE_NAMESPACE
 
                 void clear() noexcept
                 {
-                    for(auto& p : _sparse)
-                    {
-                        p = nullptr;
-                    }
+                    for_each([this](auto x)
+                        {
+                            _sparse[x] = nullptr;
+                        });
 
                     _end = _dense.data();
                 }
