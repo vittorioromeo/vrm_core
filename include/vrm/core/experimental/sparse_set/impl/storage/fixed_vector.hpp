@@ -144,7 +144,10 @@ VRM_CORE_NAMESPACE
                 bool erase(const T& x) noexcept
                 {
                     VRM_CORE_ASSERT_OP(x, <, capacity);
-                    if(!has(x)) return false;
+                    if(VRM_CORE_UNLIKELY(!has(x)))
+                    {
+                        return false;
+                    }
 
                     auto& ptr(sparse()[x]);
                     VRM_CORE_ASSERT_OP(size(), >, 0);

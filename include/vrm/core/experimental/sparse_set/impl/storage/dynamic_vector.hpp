@@ -142,18 +142,20 @@ VRM_CORE_NAMESPACE
 
                 void grow_if_required(const T& x)
                 {
+                    // TODO: remove, verify
+                    // if(VRM_CORE_LIKELY(size() < _capacity && x < size()))
+
                     // Since we need to access `sparse[x]`, growing only for
                     // size is not sufficient. We also have to check `x`.
-                    if(VRM_CORE_LIKELY(size() < _capacity && x < _capacity))
+                    VRM_CORE_ASSERT_OP(size(), <=, _capacity);
+                    if(VRM_CORE_LIKELY(x < _capacity))
                     {
                         return;
                     }
 
                     // TODO: review growth policy
-                    auto target(std::max(
-                        to_sz_t(x - _capacity + 1), to_sz_t(_capacity)));
-
-                    grow_by(target + 10);
+                    auto target(std::max(to_sz_t(x), to_sz_t(_capacity)));
+                    grow_by(target + 32);
 
                     VRM_CORE_ASSERT_OP(_capacity, >, x);
                 }
@@ -174,7 +176,10 @@ VRM_CORE_NAMESPACE
 
                 bool erase(const T& x) noexcept
                 {
-                    if(!has(x)) return false;
+                    if(VRM_CORE_UNLIKELY(!has(x)))
+                    {
+                        return false;
+                    }
 
                     auto idx(sparse()[x]);
                     VRM_CORE_ASSERT_OP(size(), >, 0);
