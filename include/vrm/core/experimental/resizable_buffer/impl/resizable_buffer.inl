@@ -120,7 +120,7 @@ VRM_CORE_NAMESPACE
         auto new_data(allocator_traits::allocate(_allocator, new_capacity));
 
         // Move existing items to new data.
-        for(auto i(0u); i < old_capacity; ++i)
+        for(size_type i(0); i < old_capacity; ++i)
         {
             static_if(std::is_move_constructible<T>{})
                 .then([&](auto& old_data)
