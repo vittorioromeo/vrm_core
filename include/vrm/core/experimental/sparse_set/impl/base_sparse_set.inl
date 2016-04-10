@@ -15,19 +15,19 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TSettings>
-        bool base_sparse_set<TSettings>::has(const value_type& x) const noexcept
+        bool base_sparse_set<TSettings>::has(value_type x) const noexcept
         {
             return _impl.has(x);
         }
 
         template <typename TSettings>
-        bool base_sparse_set<TSettings>::add(const value_type& x) noexcept
+        bool base_sparse_set<TSettings>::add(value_type x) noexcept
         {
             return _impl.add(x);
         }
 
         template <typename TSettings>
-        bool base_sparse_set<TSettings>::erase(const value_type& x) noexcept
+        bool base_sparse_set<TSettings>::erase(value_type x) noexcept
         {
             return _impl.erase(x);
         }

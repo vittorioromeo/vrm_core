@@ -6,6 +6,7 @@
 #pragma once
 
 #include <array>
+#include <type_traits>
 #include <vrm/core/experimental/resizable_buffer.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
@@ -27,6 +28,9 @@ VRM_CORE_NAMESPACE
             using value_type = typename TSettings::value_type;
             using storage_type = typename TSettings::storage_type;
 
+            // The stored value has to be an unsigned arithmetic type.
+            VRM_CORE_STATIC_ASSERT_NM(std::is_unsigned<value_type>{});
+
         private:
             storage_type _impl;
 
@@ -39,9 +43,9 @@ VRM_CORE_NAMESPACE
             base_sparse_set(base_sparse_set&&) = default;
             base_sparse_set& operator=(base_sparse_set&&) = default;
 
-            bool has(const value_type& x) const noexcept;
-            bool add(const value_type& x) noexcept;
-            bool erase(const value_type& x) noexcept;
+            bool has(value_type x) const noexcept;
+            bool add(value_type x) noexcept;
+            bool erase(value_type x) noexcept;
 
             void clear() noexcept;
             bool empty() const noexcept;

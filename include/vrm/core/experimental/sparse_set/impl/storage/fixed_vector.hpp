@@ -121,13 +121,13 @@ VRM_CORE_NAMESPACE
                     _end = dense().data();
                 }
 
-                bool has(const T& x) const noexcept
+                bool has(T x) const noexcept
                 {
                     VRM_CORE_ASSERT_OP(x, <, capacity);
                     return sparse()[x] != nullptr;
                 }
 
-                bool add(const T& x) noexcept
+                bool add(T x) noexcept
                 {
                     VRM_CORE_ASSERT_OP(x, <, capacity);
                     if(has(x)) return false;
@@ -141,7 +141,7 @@ VRM_CORE_NAMESPACE
                     return true;
                 }
 
-                bool erase(const T& x) noexcept
+                bool erase(T x) noexcept
                 {
                     VRM_CORE_ASSERT_OP(x, <, capacity);
                     if(VRM_CORE_UNLIKELY(!has(x)))

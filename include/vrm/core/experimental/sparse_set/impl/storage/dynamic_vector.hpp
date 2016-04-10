@@ -130,7 +130,7 @@ VRM_CORE_NAMESPACE
                     _size = 0;
                 }
 
-                bool has(const T& x) const noexcept
+                bool has(T x) const noexcept
                 {
                     if(x >= _capacity)
                     {
@@ -140,7 +140,7 @@ VRM_CORE_NAMESPACE
                     return sparse()[x] != null_idx;
                 }
 
-                void grow_if_required(const T& x)
+                void grow_if_required(T x)
                 {
                     // TODO: remove, verify
                     // if(VRM_CORE_LIKELY(size() < _capacity && x < size()))
@@ -160,7 +160,7 @@ VRM_CORE_NAMESPACE
                     VRM_CORE_ASSERT_OP(_capacity, >, x);
                 }
 
-                bool add(const T& x)
+                bool add(T x)
                 {
                     if(has(x)) return false;
                     grow_if_required(x);
@@ -174,7 +174,7 @@ VRM_CORE_NAMESPACE
                     return true;
                 }
 
-                bool erase(const T& x) noexcept
+                bool erase(T x) noexcept
                 {
                     if(VRM_CORE_UNLIKELY(!has(x)))
                     {
