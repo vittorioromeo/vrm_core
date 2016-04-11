@@ -20,12 +20,8 @@ VRM_CORE_NAMESPACE
         template <>
         struct static_if_<false>
         {
-            VRM_CORE_ALWAYS_INLINE constexpr static_if_()
-            {
-            }
-
             template <typename TF>
-            VRM_CORE_ALWAYS_INLINE constexpr auto& then(TF&&)
+            VRM_CORE_ALWAYS_INLINE constexpr auto& then(TF&&) noexcept
             {
                 // Ignore `then`, as the predicate is false.
                 return *this;
@@ -49,8 +45,7 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&...) noexcept
+            VRM_CORE_ALWAYS_INLINE constexpr auto operator()(Ts&&...) noexcept
             {
                 // If there are no `else` branches, we must ignore a call to a
                 // failed static if matching.
