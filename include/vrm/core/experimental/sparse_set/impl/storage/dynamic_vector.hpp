@@ -142,9 +142,6 @@ VRM_CORE_NAMESPACE
 
                 void grow_if_required(T x)
                 {
-                    // TODO: remove, verify
-                    // if(VRM_CORE_LIKELY(size() < _capacity && x < size()))
-
                     // Since we need to access `sparse[x]`, growing only for
                     // size is not sufficient. We also have to check `x`.
                     VRM_CORE_ASSERT_OP(size(), <=, _capacity);
@@ -209,7 +206,7 @@ VRM_CORE_NAMESPACE
                     return _size == 0;
                 }
 
-                // TODO: bool
+
                 void pop_back() noexcept
                 {
                     VRM_CORE_ASSERT_OP(size(), >, 0);

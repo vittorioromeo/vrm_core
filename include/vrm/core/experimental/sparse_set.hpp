@@ -5,7 +5,5 @@
 
 #pragma once
 
-// TODO: review, split into hpp/inl, cleanup, add index-based sets
-
 #include <vrm/core/experimental/sparse_set/base_sparse_set.hpp>
 #include <vrm/core/experimental/sparse_set/sparse_set.hpp>
