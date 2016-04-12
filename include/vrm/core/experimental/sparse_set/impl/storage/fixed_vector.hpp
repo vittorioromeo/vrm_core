@@ -40,32 +40,32 @@ VRM_CORE_NAMESPACE
 
                 T* _end;
 
-                auto& dense() noexcept
+                VRM_CORE_ALWAYS_INLINE auto& dense() noexcept
                 {
                     return _buffers.template nth_buffer<0>();
                 }
 
-                auto& sparse() noexcept
+                VRM_CORE_ALWAYS_INLINE auto& sparse() noexcept
                 {
                     return _buffers.template nth_buffer<1>();
                 }
 
-                const auto& dense() const noexcept
+                VRM_CORE_ALWAYS_INLINE const auto& dense() const noexcept
                 {
                     return _buffers.template nth_buffer<0>();
                 }
 
-                const auto& sparse() const noexcept
+                VRM_CORE_ALWAYS_INLINE const auto& sparse() const noexcept
                 {
                     return _buffers.template nth_buffer<1>();
                 }
 
-                auto last_element_ptr() noexcept
+                VRM_CORE_ALWAYS_INLINE auto last_element_ptr() noexcept
                 {
                     return _end - 1;
                 }
 
-                auto last_element_ptr() const noexcept
+                VRM_CORE_ALWAYS_INLINE auto last_element_ptr() const noexcept
                 {
                     return _end - 1;
                 }

@@ -55,32 +55,32 @@ VRM_CORE_NAMESPACE
                     _capacity = new_capacity;
                 }
 
-                auto& dense() noexcept
+                VRM_CORE_ALWAYS_INLINE auto& dense() noexcept
                 {
                     return _buffers.template nth_buffer<0>();
                 }
 
-                auto& sparse() noexcept
+                VRM_CORE_ALWAYS_INLINE auto& sparse() noexcept
                 {
                     return _buffers.template nth_buffer<1>();
                 }
 
-                const auto& dense() const noexcept
+                VRM_CORE_ALWAYS_INLINE const auto& dense() const noexcept
                 {
                     return _buffers.template nth_buffer<0>();
                 }
 
-                const auto& sparse() const noexcept
+                VRM_CORE_ALWAYS_INLINE const auto& sparse() const noexcept
                 {
                     return _buffers.template nth_buffer<1>();
                 }
 
-                auto last_element_index() noexcept
+                VRM_CORE_ALWAYS_INLINE auto last_element_index() noexcept
                 {
                     return _size - 1;
                 }
 
-                auto last_element_index() const noexcept
+                VRM_CORE_ALWAYS_INLINE auto last_element_index() const noexcept
                 {
                     return _size - 1;
                 }
@@ -159,7 +159,11 @@ VRM_CORE_NAMESPACE
 
                 bool add(T x)
                 {
-                    if(has(x)) return false;
+                    if(has(x))
+                    {
+                        return false;
+                    }
+
                     grow_if_required(x);
 
                     VRM_CORE_ASSERT_OP(size(), <, _capacity);
