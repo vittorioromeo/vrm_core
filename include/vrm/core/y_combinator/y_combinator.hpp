@@ -23,12 +23,13 @@ VRM_CORE_NAMESPACE
 
         public:
             template <typename T>
-            inline explicit y_combinator_result(T&& f) noexcept : _f(FWD(f))
+            inline constexpr explicit y_combinator_result(T&& f) noexcept
+                : _f(FWD(f))
             {
             }
 
             template <typename... Ts>
-            inline decltype(auto) operator()(Ts&&... xs)
+            inline constexpr decltype(auto) operator()(Ts&&... xs)
             {
                 return _f(std::ref(*this), FWD(xs)...);
             }
@@ -36,7 +37,7 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename TF>
-    decltype(auto) y_combinator(TF && fun) noexcept
+    constexpr decltype(auto) y_combinator(TF && fun) noexcept
     {
         return impl::y_combinator_result<std::decay_t<TF>>(FWD(fun));
     }
