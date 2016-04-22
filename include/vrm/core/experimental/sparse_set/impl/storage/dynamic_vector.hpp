@@ -230,7 +230,7 @@ VRM_CORE_NAMESPACE
                 {
                     VRM_CORE_ASSERT_OP(size(), <=, _capacity);
 
-                    for(sz_t i(0); i < _size; ++i)
+                    for(decltype(_size) i(0); i < _size; ++i)
                     {
                         VRM_CORE_ASSERT(has(dense()[i]));
                         f(dense()[i]);
