@@ -8,8 +8,9 @@
 #include <functional>
 #include <type_traits>
 #include <utility>
-#include <vrm/core/utility_macros/fwd.hpp>
 #include <vrm/core/config.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
+#include <vrm/core/utility_macros/impl/noexcept.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -23,23 +24,26 @@ VRM_CORE_NAMESPACE
 
         public:
             template <typename T>
-            inline constexpr explicit y_combinator_result(T&& f) noexcept
+            VRM_CORE_ALWAYS_INLINE // .
+                constexpr explicit y_combinator_result(T&& f) noexcept
                 : _f(FWD(f))
             {
             }
 
             template <typename... Ts>
-            inline constexpr decltype(auto) operator()(Ts&&... xs)
-            {
-                return _f(std::ref(*this), FWD(xs)...);
-            }
+            VRM_CORE_ALWAYS_INLINE // .
+                constexpr decltype(auto)
+                operator()(Ts&&... xs)                     // .
+                VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA( // .
+                    _f(std::ref(*this), FWD(xs)...)        // .
+                    )
         };
     }
 
     template <typename TF>
-    constexpr decltype(auto) y_combinator(TF && fun) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto y_combinator(TF && f) noexcept
     {
-        return impl::y_combinator_result<std::decay_t<TF>>(FWD(fun));
+        return impl::y_combinator_result<std::decay_t<TF>>(FWD(f));
     }
 }
 VRM_CORE_NAMESPACE_END
