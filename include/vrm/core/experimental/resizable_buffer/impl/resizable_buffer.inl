@@ -197,5 +197,12 @@ VRM_CORE_NAMESPACE
         VRM_CORE_ASSERT(_data != nullptr);
         return _data[idx];
     }
+
+    template <typename T, typename TAllocator>
+    VRM_CORE_ALWAYS_INLINE auto resizable_buffer<T, TAllocator>::null()
+        const noexcept
+    {
+        return data() == nullptr;
+    }
 }
 VRM_CORE_NAMESPACE_END

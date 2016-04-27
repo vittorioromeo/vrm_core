@@ -10,7 +10,6 @@
 #include <utility>
 #include <vrm/core/config.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/utility_macros/impl/noexcept.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -20,6 +19,7 @@ VRM_CORE_NAMESPACE
         class y_combinator_result
         {
         private:
+            using this_type = y_combinator_result<TF>;
             TF _f;
 
         public:
@@ -31,12 +31,14 @@ VRM_CORE_NAMESPACE
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE // .
-                constexpr decltype(auto)
-                operator()(Ts&&... xs)                     // .
-                VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA( // .
-                    _f(std::ref(*this), FWD(xs)...)        // .
-                    )
+            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
+                Ts&&... xs) noexcept(noexcept(                        // .
+                _f(std::declval<std::reference_wrapper<this_type>>(), // .
+                    FWD(xs)...)                                       // .
+                ))
+            {
+                return _f(std::ref(*this), FWD(xs)...);
+            }
         };
     }
 

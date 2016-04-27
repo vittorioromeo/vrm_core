@@ -244,6 +244,15 @@ VRM_CORE_NAMESPACE
             return const_value_reference_tuple{
                 std::get<TBufferTypes>(_buffers)[pos]...};
         }
+
+        /// @brief Returns `true` if the internal storage points to `nullptr'.
+        /// @details Occurs if the buffer was not initialized or was moved.
+        /// Checks only one of the buffers, assuming all of them are always
+        /// initialized/moved at once.
+        auto null() const noexcept
+        {
+            return nth_buffer<0>().null();
+        }
     };
 
     template <typename... Ts>

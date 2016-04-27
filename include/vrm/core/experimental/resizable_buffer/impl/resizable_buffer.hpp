@@ -71,6 +71,10 @@ VRM_CORE_NAMESPACE
 
         auto& operator[](size_type idx) noexcept;
         const auto& operator[](size_type idx) const noexcept;
+
+        /// @brief Returns `true` if the internal storage points to `nullptr'.
+        /// @details Occurs if the buffer was not initialized or was moved.
+        auto null() const noexcept;
     };
 }
 VRM_CORE_NAMESPACE_END

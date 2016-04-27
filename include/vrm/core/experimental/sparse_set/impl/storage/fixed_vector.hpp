@@ -85,8 +85,7 @@ VRM_CORE_NAMESPACE
 
                 ~fixed_vector()
                 {
-                    // TODO: _buffers.moved() ?
-                    if(dense().data() != nullptr)
+                    if(!_buffers.null())
                     {
                         _buffers.destroy_and_deallocate(capacity);
                     }
