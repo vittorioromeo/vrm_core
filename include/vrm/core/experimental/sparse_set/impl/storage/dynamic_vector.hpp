@@ -10,6 +10,7 @@
 #include <vrm/core/type_aliases.hpp>
 #include <vrm/core/casts.hpp>
 #include <vrm/core/experimental/resizable_buffer.hpp>
+#include "./shared.hpp"
 
 VRM_CORE_NAMESPACE
 {
@@ -24,6 +25,8 @@ VRM_CORE_NAMESPACE
                 >
             class dynamic_vector
             {
+                friend struct sparse_set_storage::utils;
+
             public:
                 using value_type = T;
                 using sparse_type = sz_t;
@@ -55,6 +58,12 @@ VRM_CORE_NAMESPACE
                     _capacity = new_capacity;
                 }
 
+                void grow_to(sz_t new_capacity)
+                {
+                    VRM_CORE_ASSERT_OP(new_capacity, >=, _capacity);
+                    grow_by(new_capacity - _capacity);
+                }
+
                 VRM_CORE_ALWAYS_INLINE auto& dense() noexcept
                 {
                     return _buffers.template nth_buffer<0>();
@@ -75,20 +84,58 @@ VRM_CORE_NAMESPACE
                     return _buffers.template nth_buffer<1>();
                 }
 
-                VRM_CORE_ALWAYS_INLINE auto last_element_index() noexcept
-                {
-                    return _size - 1;
-                }
-
                 VRM_CORE_ALWAYS_INLINE auto last_element_index() const noexcept
                 {
                     return _size - 1;
                 }
 
+                void grow_if_required(T x)
+                {
+                    // Since we need to access `sparse[x]`, growing only for
+                    // size is not sufficient. We also have to check `x`.
+                    VRM_CORE_ASSERT_OP(size(), <=, _capacity);
+                    if(VRM_CORE_LIKELY(x < _capacity))
+                    {
+                        return;
+                    }
+
+                    // TODO: review growth policy
+                    auto target(std::max(to_sz_t(x), to_sz_t(_capacity)));
+                    grow_by(target + 32);
+
+                    VRM_CORE_ASSERT_OP(_capacity, >, x);
+                }
+
+                void set_last_element(T x) noexcept
+                {
+                    dense()[_size] = x;
+                    sparse()[x] = _size;
+                    ++_size;
+                }
+
+                bool is_null(sparse_type x) noexcept
+                {
+                    return x == null_idx;
+                }
+
+                void nullify(T x) noexcept
+                {
+                    sparse()[x] = null_idx;
+                }
+
+                void decrement_size() noexcept
+                {
+                    --_size;
+                }
+
+                auto& value_from_sparse(sparse_type x) noexcept
+                {
+                    return dense()[x];
+                }
+
             public:
                 dynamic_vector()
                 {
-                    // TODO: reserve(x)
                     grow_by(64);
                     _size = 0;
                 }
@@ -119,6 +166,17 @@ VRM_CORE_NAMESPACE
                 dynamic_vector(dynamic_vector&&) = default;
                 dynamic_vector& operator=(dynamic_vector&&) = default;
 
+                void reserve(sz_t n)
+                {
+                    // Exit early if there is no need to reserve.
+                    if(VRM_CORE_UNLIKELY(_capacity >= n))
+                    {
+                        return;
+                    }
+
+                    grow_to(n);
+                }
+
                 void clear() noexcept
                 {
                     for_each([this](auto x)
@@ -131,6 +189,7 @@ VRM_CORE_NAMESPACE
 
                 bool has(T x) const noexcept
                 {
+                    // If `x` cannot be stored, then it's not in the set.
                     if(x >= _capacity)
                     {
                         return false;
@@ -139,69 +198,19 @@ VRM_CORE_NAMESPACE
                     return sparse()[x] != null_idx;
                 }
 
-                void grow_if_required(T x)
+                auto capacity() const noexcept
                 {
-                    // Since we need to access `sparse[x]`, growing only for
-                    // size is not sufficient. We also have to check `x`.
-                    VRM_CORE_ASSERT_OP(size(), <=, _capacity);
-                    if(VRM_CORE_LIKELY(x < _capacity))
-                    {
-                        return;
-                    }
-
-                    // TODO: review growth policy
-                    auto target(std::max(to_sz_t(x), to_sz_t(_capacity)));
-                    grow_by(target + 32);
-
-                    VRM_CORE_ASSERT_OP(_capacity, >, x);
+                    return _capacity;
                 }
 
                 bool add(T x)
                 {
-                    if(has(x))
-                    {
-                        return false;
-                    }
-
-                    grow_if_required(x);
-
-                    VRM_CORE_ASSERT_OP(size(), <, _capacity);
-                    dense()[_size] = x;
-
-                    sparse()[x] = _size;
-                    ++_size;
-
-                    return true;
+                    return utils{}.add_impl(*this, x);
                 }
 
                 bool erase(T x) noexcept
                 {
-                    if(VRM_CORE_UNLIKELY(!has(x)))
-                    {
-                        return false;
-                    }
-
-                    auto idx(sparse()[x]);
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
-
-                    auto last(back());
-                    VRM_CORE_ASSERT_OP(idx, !=, null_idx);
-
-                    auto& val(dense()[idx]);
-
-                    if(val != last)
-                    {
-                        val = last;
-                        sparse()[last] = idx;
-                    }
-
-                    VRM_CORE_ASSERT(has(x));
-                    sparse()[x] = null_idx;
-
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
-                    --_size;
-
-                    return true;
+                    return utils{}.erase_impl(*this, x);
                 }
 
                 bool empty() const noexcept
@@ -209,11 +218,9 @@ VRM_CORE_NAMESPACE
                     return _size == 0;
                 }
 
-
                 void pop_back() noexcept
                 {
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
-                    erase(back());
+                    utils{}.pop_back_impl(*this);
                 }
 
                 auto back() const noexcept

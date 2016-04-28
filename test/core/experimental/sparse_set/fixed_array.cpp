@@ -123,9 +123,55 @@ void t2()
     TEST_ASSERT(ss.has(2));
 }
 
+void t3()
+{
+    ss_type ss;
+
+    TEST_ASSERT(ss.empty());
+    TEST_ASSERT_OP(ss.size(), ==, 0);
+
+    TEST_ASSERT(ss.add(0) == true);
+    TEST_ASSERT(ss.add(0) == false);
+    TEST_ASSERT(ss.add(0) == false);
+
+    ss.add(3);
+    ss.add(1);
+    ss.add(2);
+
+    TEST_ASSERT(ss.has(0));
+    TEST_ASSERT(ss.has(1));
+    TEST_ASSERT(ss.has(2));
+    TEST_ASSERT(ss.has(3));
+
+    ss.pop_back();
+    TEST_ASSERT(ss.has(0));
+    TEST_ASSERT(ss.has(1));
+    TEST_ASSERT(!ss.has(2));
+    TEST_ASSERT(ss.has(3));
+
+    ss.pop_back();
+    TEST_ASSERT(ss.has(0));
+    TEST_ASSERT(!ss.has(1));
+    TEST_ASSERT(!ss.has(2));
+    TEST_ASSERT(ss.has(3));
+
+
+    ss.pop_back();
+    TEST_ASSERT(ss.has(0));
+    TEST_ASSERT(!ss.has(1));
+    TEST_ASSERT(!ss.has(2));
+    TEST_ASSERT(!ss.has(3));
+
+    ss.pop_back();
+    TEST_ASSERT(!ss.has(0));
+    TEST_ASSERT(!ss.has(1));
+    TEST_ASSERT(!ss.has(2));
+    TEST_ASSERT(!ss.has(3));
+}
 
 TEST_MAIN()
 {
     t0();
     t2();
+    t3();
 }

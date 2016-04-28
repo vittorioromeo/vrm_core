@@ -70,6 +70,13 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TSettings>
+        auto VRM_CORE_PURE_FN base_sparse_set<TSettings>::capacity() const
+            noexcept
+        {
+            return _impl.capacity();
+        }
+
+        template <typename TSettings>
         auto VRM_CORE_CONST_FN base_sparse_set<TSettings>::begin() noexcept
         {
             return _impl.begin();
@@ -106,6 +113,12 @@ VRM_CORE_NAMESPACE
             sz_t i) const noexcept
         {
             return _impl[i];
+        }
+
+        template <typename TSettings>
+        void base_sparse_set<TSettings>::reserve(sz_t n)
+        {
+            return _impl.reserve(n);
         }
     }
 }

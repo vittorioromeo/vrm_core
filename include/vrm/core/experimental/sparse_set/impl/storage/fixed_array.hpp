@@ -10,6 +10,7 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases.hpp>
 #include <vrm/core/casts.hpp>
+#include "./shared.hpp"
 
 VRM_CORE_NAMESPACE
 {
@@ -23,18 +24,35 @@ VRM_CORE_NAMESPACE
                 >
             class fixed_array
             {
+                friend struct sparse_set_storage::utils;
+
             public:
                 using value_type = T;
-                static constexpr auto capacity = TCapacity;
+                using sparse_type = T*;
 
             private:
-                std::array<T, capacity> _dense;
-                std::array<T*, capacity> _sparse;
-                T* _end;
+                std::array<value_type, TCapacity> _dense;
+                std::array<sparse_type, TCapacity> _sparse;
+                sparse_type _end;
 
-                auto last_element_ptr() noexcept
+                auto& dense() noexcept
                 {
-                    return _end - 1;
+                    return _dense;
+                }
+
+                const auto& dense() const noexcept
+                {
+                    return _dense;
+                }
+
+                auto& sparse() noexcept
+                {
+                    return _sparse;
+                }
+
+                const auto& sparse() const noexcept
+                {
+                    return _sparse;
                 }
 
                 auto last_element_ptr() const noexcept
@@ -42,8 +60,40 @@ VRM_CORE_NAMESPACE
                     return _end - 1;
                 }
 
+                void grow_if_required(T) noexcept
+                {
+                    // Intentionally empty.
+                }
+
+                void set_last_element(T x) noexcept
+                {
+                    *_end = x;
+                    _sparse[x] = _end;
+                    ++_end;
+                }
+
+                bool is_null(sparse_type x) noexcept
+                {
+                    return x == nullptr;
+                }
+
+                void nullify(T x) noexcept
+                {
+                    sparse()[x] = nullptr;
+                }
+
+                void decrement_size() noexcept
+                {
+                    --_end;
+                }
+
+                auto& value_from_sparse(sparse_type x) noexcept
+                {
+                    return *x;
+                }
+
             public:
-                fixed_array()
+                fixed_array() noexcept
                 {
                     for(auto& p : _sparse)
                     {
@@ -59,6 +109,11 @@ VRM_CORE_NAMESPACE
                 fixed_array(fixed_array&&) = delete;
                 fixed_array& operator=(fixed_array&&) = delete;
 
+                void reserve(sz_t) noexcept
+                {
+                    // Intentionally empty.
+                }
+
                 void clear() noexcept
                 {
                     for_each([this](auto x)
@@ -71,50 +126,26 @@ VRM_CORE_NAMESPACE
 
                 bool has(T x) const noexcept
                 {
-                    VRM_CORE_ASSERT_OP(x, <, capacity);
+                    VRM_CORE_ASSERT_OP(x, <, TCapacity);
                     return _sparse[x] != nullptr;
+                }
+
+                auto capacity() const noexcept
+                {
+                    return TCapacity;
                 }
 
                 bool add(T x) noexcept
                 {
-                    VRM_CORE_ASSERT_OP(x, <, capacity);
-                    if(has(x)) return false;
-
-                    VRM_CORE_ASSERT_OP(size(), <, capacity);
-                    *_end = x;
-
-                    _sparse[x] = _end;
-                    ++_end;
-
-                    return true;
+                    VRM_CORE_ASSERT_OP(x, <, TCapacity);
+                    return utils{}.add_impl(*this, x);
                 }
 
                 bool erase(T x) noexcept
                 {
-                    VRM_CORE_ASSERT_OP(x, <, capacity);
-                    if(!has(x)) return false;
-
-                    auto& ptr(_sparse[x]);
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
-
-                    auto last(back());
-                    VRM_CORE_ASSERT_OP(ptr, !=, nullptr);
-
-                    if(*ptr != last)
-                    {
-                        *ptr = last;
-                        _sparse[last] = ptr;
-                    }
-
-                    VRM_CORE_ASSERT(has(x));
-                    ptr = nullptr;
-
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
-                    --_end;
-
-                    return true;
+                    VRM_CORE_ASSERT_OP(x, <, TCapacity);
+                    return utils{}.erase_impl(*this, x);
                 }
-
 
                 bool empty() const noexcept
                 {
@@ -123,8 +154,7 @@ VRM_CORE_NAMESPACE
 
                 void pop_back() noexcept
                 {
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
-                    erase(back());
+                    utils{}.pop_back_impl(*this);
                 }
 
                 auto back() const noexcept
@@ -138,7 +168,7 @@ VRM_CORE_NAMESPACE
                 template <typename TF>
                 void for_each(TF&& f) const noexcept
                 {
-                    VRM_CORE_ASSERT_OP(size(), <=, capacity);
+                    VRM_CORE_ASSERT_OP(size(), <=, TCapacity);
 
                     for(auto p(_dense.data()); p != _end; ++p)
                     {
