@@ -4,6 +4,13 @@
 
 using namespace vrm::core;
 
+// More information:
+// http://stackoverflow.com/questions/36892827
+
+struct X
+{
+};
+
 SA_TYPE((copy_if_rvalue(1)), (int));
 SA_TYPE((copy_if_rvalue(1.f)), (float));
 SA_TYPE((copy_if_rvalue(1.0)), (double));
@@ -30,46 +37,39 @@ decltype(auto) id(T&& x)
 
 void y()
 {
-    int v = 1;
-    const int cv = 1;
-    volatile int vv = 1;
-    const volatile int cvv = 1;
+    X v;
+    const X cv;
+    volatile X vv;
+    const volatile X cvv;
 
-    SA_TYPE((std::move(v)), (int&&));
-    SA_SAME((decltype(v)), (int));
-    SA_TYPE((id(std::move(v))), (int&&));
-    SA_SAME((std::remove_reference_t<decltype(FWD(v))>), (int));
-    SA_TYPE((copy_if_rvalue(std::move(v))), (int));
+    SA_TYPE((std::move(v)), (X && ));
+    SA_SAME((decltype(v)), (X));
+    SA_TYPE((id(std::move(v))), (X && ));
+    SA_SAME((std::remove_reference_t<decltype(FWD(v))>), (X));
+    SA_TYPE((copy_if_rvalue(std::move(v))), (X));
 
-    SA_TYPE((std::move(cv)), (const int&&));
-    SA_SAME((decltype(cv)), (const int));
-    SA_TYPE((id(std::move(cv))), (const int&&));
-    SA_SAME((std::remove_reference_t<decltype(FWD(cv))>), (const int));
+    SA_TYPE((std::move(cv)), (const X&&));
+    SA_SAME((decltype(cv)), (const X));
+    SA_TYPE((id(std::move(cv))), (const X&&));
+    SA_SAME((std::remove_reference_t<decltype(FWD(cv))>), (const X));
 
-    SA_SAME((decltype(id(std::move(cv)))), (const int&&));
+    SA_SAME((decltype(id(std::move(cv)))), (const X&&));
     SA_SAME(
-        (std::remove_reference_t < decltype(id(std::move(cv)))) >, (const int));
-
-    // TODO:
-    // SA_TYPE((copy_if_rvalue(std::move(cv))), (const int));
+        (std::remove_reference_t < decltype(id(std::move(cv)))) >, (const X));
+    SA_TYPE((copy_if_rvalue(std::move(cv))), (const X));
 
 
-    SA_TYPE((std::move(vv)), (volatile int&&));
-    SA_SAME((decltype(vv)), (volatile int));
-    SA_TYPE((id(std::move(vv))), (volatile int&&));
-    SA_SAME((std::remove_reference_t<decltype(FWD(vv))>), (volatile int));
+    SA_TYPE((std::move(vv)), (volatile X && ));
+    SA_SAME((decltype(vv)), (volatile X));
+    SA_TYPE((id(std::move(vv))), (volatile X && ));
+    SA_SAME((std::remove_reference_t<decltype(FWD(vv))>), (volatile X));
+    SA_TYPE((copy_if_rvalue(std::move(vv))), (volatile X));
 
-    // TODO:
-    // SA_TYPE((copy_if_rvalue(std::move(vv))), (volatile int));
-
-    SA_TYPE((std::move(cvv)), (const volatile int&&));
-    SA_SAME((decltype(cvv)), (const volatile int));
-    SA_TYPE((id(std::move(cvv))), (const volatile int&&));
-    SA_SAME(
-        (std::remove_reference_t<decltype(FWD(cvv))>), (const volatile int));
-
-    // TODO:
-    // SA_TYPE((copy_if_rvalue(std::move(cvv))), (const volatile int));
+    SA_TYPE((std::move(cvv)), (const volatile X&&));
+    SA_SAME((decltype(cvv)), (const volatile X));
+    SA_TYPE((id(std::move(cvv))), (const volatile X&&));
+    SA_SAME((std::remove_reference_t<decltype(FWD(cvv))>), (const volatile X));
+    SA_TYPE((copy_if_rvalue(std::move(cvv))), (const volatile X));
 }
 
 TEST_MAIN()
