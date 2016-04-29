@@ -143,7 +143,7 @@ VRM_CORE_NAMESPACE
                 fixed_vector(const fixed_vector&) = delete;
                 fixed_vector& operator=(const fixed_vector&) = delete;
 
-                // TODO: refactor and test
+                // TODO: test
                 fixed_vector(fixed_vector&& rhs) noexcept
                 {
                     reinitialize_from_move(rhs);
@@ -251,14 +251,7 @@ VRM_CORE_NAMESPACE
                     return static_cast<const T*>(_end);
                 }
 
-                // TODO: rename, probably misleading
-                auto& operator[](sz_t i) noexcept
-                {
-                    VRM_CORE_ASSERT_OP(i, <, size());
-                    return dense()[i];
-                }
-
-                const auto& operator[](sz_t i) const noexcept
+                auto at(sz_t i) const noexcept
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
                     return dense()[i];

@@ -85,9 +85,9 @@ VRM_CORE_NAMESPACE
             auto end() noexcept;
             auto end() const noexcept;
 
-            // TODO: misleading
-            auto& operator[](sz_t i) noexcept;
-            const auto& operator[](sz_t i) const noexcept;
+            /// @brief Returns the `nth` value in the dense collection.
+            /// @details Assumes `i` is a valid index.
+            auto at(sz_t i) const noexcept;
 
             /// @brief Reserves memory for `n` elements if the underlying
             /// storage type supports it.

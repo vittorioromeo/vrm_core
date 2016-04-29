@@ -202,17 +202,10 @@ VRM_CORE_NAMESPACE
                     return static_cast<const T*>(_end);
                 }
 
-                // TODO: rename, probably misleading
-                auto& operator[](sz_t i) noexcept
+                auto at(sz_t i) const noexcept
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
-                    return _dense[i];
-                }
-
-                const auto& operator[](sz_t i) const noexcept
-                {
-                    VRM_CORE_ASSERT_OP(i, <, size());
-                    return _dense[i];
+                    return dense()[i];
                 }
             };
         }

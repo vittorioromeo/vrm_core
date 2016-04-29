@@ -103,17 +103,10 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TSettings>
-        auto& VRM_CORE_PURE_FN base_sparse_set<TSettings>::operator[](
-            sz_t i) noexcept
+        auto VRM_CORE_PURE_FN base_sparse_set<TSettings>::at(sz_t i) const
+            noexcept
         {
-            return _impl[i];
-        }
-
-        template <typename TSettings>
-        const auto& VRM_CORE_PURE_FN base_sparse_set<TSettings>::operator[](
-            sz_t i) const noexcept
-        {
-            return _impl[i];
+            return _impl.at(i);
         }
 
         template <typename TSettings>
