@@ -15,7 +15,8 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TSettings>
-        bool base_sparse_set<TSettings>::has(value_type x) const noexcept
+        bool VRM_CORE_PURE_FN base_sparse_set<TSettings>::has(
+            value_type x) const noexcept
         {
             return _impl.has(x);
         }

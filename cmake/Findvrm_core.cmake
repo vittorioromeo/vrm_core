@@ -9,14 +9,8 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
 
-# TODO: document variables:
-# VRM_CORE_FOUND
-# VRM_CORE_INCLUDE_DIR
-# VRM_CORE_CLONE_DIR
-# VRM_CORE_ENABLE_TESTS
-
 find_path(
-    VRM_CORE_INCLUDE_DIR 
+    VRM_CORE_INCLUDE_DIR
 
     NAMES vrm/core.hpp
     DOC "Include directory for the vrm_core library"

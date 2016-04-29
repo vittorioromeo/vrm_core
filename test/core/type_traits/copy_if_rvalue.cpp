@@ -35,7 +35,7 @@ decltype(auto) id(T&& x)
     return FWD(x);
 }
 
-void y()
+void TEST_CONST y()
 {
     X v;
     const X cv;
