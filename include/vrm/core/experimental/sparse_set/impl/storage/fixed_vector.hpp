@@ -21,11 +21,11 @@ VRM_CORE_NAMESPACE
             // Assumes that the memory location of the buffers will never
             // change.
 
-            template <                                           // .
-                typename T,                                      // .
-                sz_t TCapacity,                                  // .
-                typename TDenseAllocator = ::std::allocator<T>,  // .
-                typename TSparseAllocator = ::std::allocator<T*> // .
+            template <                    // .
+                typename T,               // .
+                sz_t TCapacity,           // .
+                typename TDenseAllocator, // .
+                typename TSparseAllocator // .
                 >
             class fixed_vector
             {
@@ -255,6 +255,13 @@ VRM_CORE_NAMESPACE
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
                     return dense()[i];
+                }
+
+                void swap(fixed_vector& rhs) noexcept
+                {
+                    using std::swap;
+                    swap(_buffers, rhs._buffers);
+                    swap(_end, rhs._end);
                 }
             };
         }

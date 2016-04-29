@@ -114,6 +114,13 @@ VRM_CORE_NAMESPACE
         {
             return _impl.reserve(n);
         }
+
+        template <typename TSettings>
+        void base_sparse_set<TSettings>::swap(this_type& rhs) noexcept
+        {
+            using std::swap;
+            swap(_impl, rhs._impl);
+        }
     }
 }
 VRM_CORE_NAMESPACE_END

@@ -207,6 +207,14 @@ VRM_CORE_NAMESPACE
                     VRM_CORE_ASSERT_OP(i, <, size());
                     return dense()[i];
                 }
+
+                void swap(fixed_array& rhs) noexcept
+                {
+                    using std::swap;
+                    swap(_dense, rhs._dense);
+                    swap(_sparse, rhs._sparse);
+                    swap(_end, rhs._end);
+                }
             };
         }
     }

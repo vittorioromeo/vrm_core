@@ -18,10 +18,10 @@ VRM_CORE_NAMESPACE
     {
         namespace sparse_set_storage
         {
-            template <                                             // .
-                typename T,                                        // .
-                typename TDenseAllocator = ::std::allocator<T>,    // .
-                typename TSparseAllocator = ::std::allocator<sz_t> // .
+            template <                    // .
+                typename T,               // .
+                typename TDenseAllocator, // .
+                typename TSparseAllocator // .
                 >
             class dynamic_vector
             {
@@ -272,6 +272,14 @@ VRM_CORE_NAMESPACE
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
                     return dense()[i];
+                }
+
+                void swap(dynamic_vector& rhs) noexcept
+                {
+                    using std::swap;
+                    swap(_buffers, rhs._buffers);
+                    swap(_size, rhs._size);
+                    swap(_capacity, rhs._capacity);
                 }
             };
         }

@@ -24,9 +24,11 @@ VRM_CORE_NAMESPACE
         class base_sparse_set
         {
         public:
-            using size_type = typename TSettings::size_type;
-            using value_type = typename TSettings::value_type;
-            using storage_type = typename TSettings::storage_type;
+            using settings_type = TSettings;
+            using this_type = base_sparse_set<settings_type>;
+            using size_type = typename settings_type::size_type;
+            using value_type = typename settings_type::value_type;
+            using storage_type = typename settings_type::storage_type;
 
             // The stored value has to be an unsigned arithmetic type.
             VRM_CORE_STATIC_ASSERT_NM(std::is_unsigned<value_type>{});
@@ -94,6 +96,9 @@ VRM_CORE_NAMESPACE
             /// @details If the underlying storage type is fixed or does not
             /// support reserving, this is a no-op.
             void reserve(sz_t n);
+
+            /// @brief Swap implementation.
+            void swap(this_type& rhs) noexcept;
         };
     }
 }

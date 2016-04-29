@@ -22,21 +22,39 @@ VRM_CORE_NAMESPACE
 
     /// @brief Sparse integer set, with fixed vector storage.
     /// @details The storage is allocated using an allocator.
-    template <typename T, sz_t TCapacity>
-    using fixed_vector_sparse_set = impl::base_sparse_set<       // .
-        impl::sparse_set_settings<                               // .
-            T,                                                   // .
-            impl::sparse_set_storage::fixed_vector<T, TCapacity> // .
-            >                                                    // .
+    template <                                         // .
+        typename T,                                    // .
+        sz_t TCapacity,                                // .
+        typename TDenseAllocator = std::allocator<T>,  // .
+        typename TSparseAllocator = std::allocator<T*> // .
+        >
+    using fixed_vector_sparse_set = impl::base_sparse_set< // .
+        impl::sparse_set_settings<                         // .
+            T,                                             // .
+            impl::sparse_set_storage::fixed_vector<        // .
+                T,                                         // .
+                TCapacity,                                 // .
+                TDenseAllocator,                           // .
+                TSparseAllocator                           // .
+                >                                          // .
+            >                                              // .
         >;
 
     /// @brief Sparse integer set, with dynamic (auto-resizing) vector storage.
     /// @details The storage is allocated using an allocator.
-    template <typename T>
+    template <                                           // .
+        typename T,                                      // .
+        typename TDenseAllocator = std::allocator<T>,    // .
+        typename TSparseAllocator = std::allocator<sz_t> // .
+        >
     using dynamic_vector_sparse_set = impl::base_sparse_set< // .
         impl::sparse_set_settings<                           // .
             T,                                               // .
-            impl::sparse_set_storage::dynamic_vector<T>      // .
+            impl::sparse_set_storage::dynamic_vector<        // .
+                T,                                           // .
+                TDenseAllocator,                             // .
+                TSparseAllocator                             // .
+                >                                            // .
             >                                                // .
         >;
 }
