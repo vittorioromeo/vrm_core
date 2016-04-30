@@ -24,6 +24,7 @@ VRM_CORE_NAMESPACE_END
     {                                                                         \
     public:                                                                   \
         using strong_typedef_tag = ::vrm::core::impl::strong_typedef_marker;  \
+        using underlying_type = underlying;                                   \
                                                                               \
     private:                                                                  \
         underlying _value;                                                    \

@@ -30,8 +30,9 @@ VRM_CORE_NAMESPACE
             using value_type = typename settings_type::value_type;
             using storage_type = typename settings_type::storage_type;
 
+            // TODO: support strong typedefs
             // The stored value has to be an unsigned arithmetic type.
-            VRM_CORE_STATIC_ASSERT_NM(std::is_unsigned<value_type>{});
+            // VRM_CORE_STATIC_ASSERT_NM(std::is_unsigned<value_type>{});
 
         private:
             storage_type _impl;

@@ -16,6 +16,7 @@ VRM_CORE_NAMESPACE
         template <typename T, typename TStorage>
         struct sparse_set_settings
         {
+            // TODO: is_unsigned_strong_typedef...
             VRM_CORE_STATIC_ASSERT_NM(
                 is_strong_typedef_v<T> ||
                 (std::is_arithmetic<T>{} && std::is_unsigned<T>{}));
