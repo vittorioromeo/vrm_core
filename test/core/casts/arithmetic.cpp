@@ -197,10 +197,14 @@ void integral_tests()
     test_val<short>((int)numeric_limits<short>::min() - 1, true);
     test_val<int>((long)numeric_limits<int>::max() + 1, true);
     test_val<int>((long)numeric_limits<int>::min() - 1, true);
+
+#pragma GCC diagnostic ignored "-Woverflow"
+#pragma GCC diagnostic push
     test_val<long>((long long)numeric_limits<long>::max() + 1, true);
     test_val<long>((long long)numeric_limits<long>::min() - 1, true);
     test_val<long long>(numeric_limits<long long>::max() + 1, true);
     test_val<long long>(numeric_limits<long long>::min() - 1, true);
+#pragma GCC diagnostic pop
 
     // Should not fire asserts:
     test_val<unsigned char>(
