@@ -8,12 +8,12 @@ int main()
     volatile int x = 10;
     volatile bool y = true;
 
-    if(VRM_CORE_LIKELY(x))
+    if(likely(x))
     {
         TEST_ASSERT(true);
     }
 
-    if(VRM_CORE_UNLIKELY(y))
+    if(unlikely(y))
     {
         TEST_ASSERT(true);
     }

@@ -46,7 +46,7 @@ VRM_CORE_NAMESPACE
 
             void grow_if_necessary(size_type desired_size)
             {
-                if(VRM_CORE_UNLIKELY(desired_size > _capacity))
+                if(unlikely(desired_size > _capacity))
                 {
                     reserve((_capacity + 10) * 2);
                 }

@@ -14,7 +14,7 @@
 #define VRM_CORE_IMPL_ASSERT(lhs, op, rhs, msg)                                \
     do                                                                         \
     {                                                                          \
-        if(VRM_CORE_LIKELY(lhs op rhs)) break;                                 \
+        if(::vrm::core::likely(lhs op rhs)) break;                                 \
                                                                                \
         auto lhs_res(lhs);                                                     \
         auto rhs_res(rhs);                                                     \

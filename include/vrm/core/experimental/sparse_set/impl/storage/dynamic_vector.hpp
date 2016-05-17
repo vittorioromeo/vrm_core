@@ -94,7 +94,7 @@ VRM_CORE_NAMESPACE
                     // Since we need to access `sparse[x]`, growing only for
                     // size is not sufficient. We also have to check `x`.
                     VRM_CORE_ASSERT_OP(size(), <=, _capacity);
-                    if(VRM_CORE_LIKELY(x < _capacity))
+                    if(likely(x < _capacity))
                     {
                         return;
                     }
@@ -169,7 +169,7 @@ VRM_CORE_NAMESPACE
                 void reserve(sz_t n)
                 {
                     // Exit early if there is no need to reserve.
-                    if(VRM_CORE_UNLIKELY(_capacity >= n))
+                    if(unlikely(_capacity >= n))
                     {
                         return;
                     }

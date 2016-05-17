@@ -5,23 +5,40 @@
 
 #pragma once
 
-// TODO: make these functions, not macros
-
 #include <vrm/core/config.hpp>
 
 #if defined(VRM_CORE_COMPILER_CLANG) || defined(VRM_CORE_COMPILER_GCC)
 
-/// @macro Micro-optimization telling the compiler that this condition is more
-/// likely to happen than the `else` branch.
-#define VRM_CORE_LIKELY(...) __builtin_expect(!!(__VA_ARGS__), 1)
+VRM_CORE_NAMESPACE
+{
+    /// @brief Micro-optimization: condition likely to be true.
+    VRM_CORE_ALWAYS_INLINE auto likely(bool x) noexcept
+    {
+        return __builtin_expect(x, true);
+    }
 
-/// @macro Micro-optimization telling the compiler that this condition is less
-/// likely to happen than the `else` branch.
-#define VRM_CORE_UNLIKELY(...) __builtin_expect(!!(__VA_ARGS__), 0)
+    /// @brief Micro-optimization: condition unlikely to be true.
+    VRM_CORE_ALWAYS_INLINE auto unlikely(bool x) noexcept
+    {
+        return __builtin_expect(x, false);
+    }
+}
+VRM_CORE_NAMESPACE_END
 
 #else
 
-#define VRM_CORE_LIKELY(...) __VA_ARGS__
-#define VRM_CORE_UNLIKELY(...) __VA_ARGS__
+VRM_CORE_NAMESPACE
+{
+    VRM_CORE_ALWAYS_INLINE auto likely(bool x) noexcept
+    {
+        return x;
+    }
+
+    VRM_CORE_ALWAYS_INLINE auto unlikely(bool x) noexcept
+    {
+        return x;
+    }
+}
+VRM_CORE_NAMESPACE_END
 
 #endif
