@@ -16,35 +16,35 @@ VRM_CORE_NAMESPACE
         inline constexpr auto current_operating_system() noexcept
         {
 #if defined(VRM_CORE_OS_LINUX)
-            return operating_system::linux;
+            return operating_system::os_linux;
 #elif defined(VRM_CORE_OS_ANDROID)
-            return operating_system::android;
+            return operating_system::os_android;
 #elif defined(VRM_CORE_OS_FREEBSD)
-            return operating_system::freebsd;
+            return operating_system::os_freebsd;
 #elif defined(VRM_CORE_OS_WINDOWS)
-            return operating_system::windows;
+            return operating_system::os_windows;
 #elif defined(VRM_CORE_OS_MAC)
-            return operating_system::mac;
+            return operating_system::os_mac;
 #else
-            return operating_system::unknown;
+            return operating_system::os_unknown;
 #endif
         }
 
         inline constexpr auto on_unix() noexcept
         {
-            return current_operating_system() == operating_system::linux ||
-                   current_operating_system() == operating_system::android ||
-                   current_operating_system() == operating_system::freebsd;
+            return current_operating_system() == operating_system::os_linux ||
+                   current_operating_system() == operating_system::os_android ||
+                   current_operating_system() == operating_system::os_freebsd;
         }
 
         inline constexpr auto on_windows() noexcept
         {
-            return current_operating_system() == operating_system::windows;
+            return current_operating_system() == operating_system::os_windows;
         }
 
         inline constexpr auto on_mac() noexcept
         {
-            return current_operating_system() == operating_system::mac;
+            return current_operating_system() == operating_system::os_mac;
         }
     }
 }

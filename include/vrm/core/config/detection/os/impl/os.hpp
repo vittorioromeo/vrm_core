@@ -13,12 +13,12 @@ VRM_CORE_NAMESPACE
     {
         enum class operating_system
         {
-            linux,
-            windows,
-            mac,
-            android,
-            freebsd,
-            unknown
+            os_linux,
+            os_windows,
+            os_mac,
+            os_android,
+            os_freebsd,
+            os_unknown
         };
 
         constexpr auto current_operating_system() noexcept;
