@@ -29,7 +29,7 @@ VRM_CORE_NAMESPACE
                 >
             class fixed_vector
             {
-                friend struct sparse_set_storage::utils;
+                friend class sparse_set_storage::utils;
 
             public:
                 using value_type = T;

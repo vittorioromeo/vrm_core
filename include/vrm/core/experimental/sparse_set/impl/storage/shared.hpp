@@ -17,31 +17,9 @@ VRM_CORE_NAMESPACE
     {
         namespace sparse_set_storage
         {
-            struct utils
+            class utils
             {
-                template <typename TSparseSetStorage, typename T>
-                bool add_impl(TSparseSetStorage& s, T x) // .
-                    noexcept(noexcept(                   // .
-                        s.grow_if_required(x)            // .
-                        ))
-                {
-                    if(s.has(x))
-                    {
-                        // If `x` is already in the set, return `false`.
-                        return false;
-                    }
-
-                    // Grows the storage if possible and required.
-                    s.grow_if_required(x);
-
-                    // Assert the capacity is big enough.
-                    VRM_CORE_ASSERT_OP(s.size(), <, s.capacity());
-
-                    // Set last dense and sparse element and return.
-                    s.set_last_element(x);
-                    return true;
-                }
-
+            private:
                 template <typename TSparseSetStorage, typename T>
                 void nullify_and_decrement(TSparseSetStorage& s, T x) noexcept
                 {
@@ -55,14 +33,24 @@ VRM_CORE_NAMESPACE
                 }
 
                 template <typename TSparseSetStorage, typename T>
-                bool erase_impl(TSparseSetStorage& s, T x) noexcept
+                void unchecked_add(TSparseSetStorage& s, T x) // .
+                    noexcept(noexcept(                        // .
+                        s.grow_if_required(x)                 // .
+                        ))
                 {
-                    if(!s.has(x))
-                    {
-                        // If `x` is not in the set, return `false`.
-                        return false;
-                    }
+                    // Grows the storage if possible and required.
+                    s.grow_if_required(x);
 
+                    // Assert the capacity is big enough.
+                    VRM_CORE_ASSERT_OP(s.size(), <, s.capacity());
+
+                    // Set last dense and sparse element and return.
+                    s.set_last_element(x);
+                }
+
+                template <typename TSparseSetStorage, typename T>
+                void unchecked_erase(TSparseSetStorage& s, T x) noexcept
+                {
                     VRM_CORE_ASSERT_OP(s.size(), >, 0);
                     VRM_CORE_ASSERT(s.has(x));
 
@@ -88,6 +76,35 @@ VRM_CORE_NAMESPACE
                     }
 
                     nullify_and_decrement(s, x);
+                }
+
+            public:
+                template <typename TSparseSetStorage, typename T>
+                bool add_impl(TSparseSetStorage& s, T x) // .
+                    noexcept(noexcept(                   // .
+                        s.grow_if_required(x)            // .
+                        ))
+                {
+                    if(s.has(x))
+                    {
+                        // If `x` is already in the set, return `false`.
+                        return false;
+                    }
+
+                    unchecked_add(s, x);
+                    return true;
+                }
+
+                template <typename TSparseSetStorage, typename T>
+                bool erase_impl(TSparseSetStorage& s, T x) noexcept
+                {
+                    if(!s.has(x))
+                    {
+                        // If `x` is not in the set, return `false`.
+                        return false;
+                    }
+
+                    unchecked_erase(s, x);
                     return true;
                 }
 
