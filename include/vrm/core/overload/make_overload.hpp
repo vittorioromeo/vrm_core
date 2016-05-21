@@ -20,6 +20,10 @@ VRM_CORE_NAMESPACE
         {
             using call_type = TF;
             using call_type::operator();
+
+            VRM_CORE_ALWAYS_INLINE overload_set(TF&& f) noexcept : TF(FWD(f))
+            {
+            }
         };
 
         template <typename TF, typename... TFs>

@@ -82,5 +82,14 @@ int main()
     TEST_ASSERT_OP(tpl_ov(0.f), ==, 2);
     TEST_ASSERT_OP(tpl_ov(float{}), ==, 2);
 
+    auto single_templatized = make_overload([](auto)
+        {
+            return 0;
+        });
+
+    TEST_ASSERT_OP(single_templatized(0), ==, 0);
+    TEST_ASSERT_OP(single_templatized(1.f), ==, 0);
+    TEST_ASSERT_OP(single_templatized("xd"), ==, 0);
+
     return 0;
 }
