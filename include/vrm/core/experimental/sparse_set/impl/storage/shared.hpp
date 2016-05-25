@@ -20,6 +20,8 @@ VRM_CORE_NAMESPACE
             class utils
             {
             private:
+                using this_type = utils;
+
                 template <typename TSparseSetStorage, typename T>
                 void nullify_and_decrement(TSparseSetStorage& s, T x) noexcept
                 {
@@ -32,12 +34,15 @@ VRM_CORE_NAMESPACE
                     s.decrement_size();
                 }
 
+            public:
                 template <typename TSparseSetStorage, typename T>
                 void unchecked_add(TSparseSetStorage& s, T x) // .
                     noexcept(noexcept(                        // .
                         s.grow_if_required(x)                 // .
                         ))
                 {
+                    VRM_CORE_ASSERT(!s.has(x));
+
                     // Grows the storage if possible and required.
                     s.grow_if_required(x);
 
@@ -78,11 +83,10 @@ VRM_CORE_NAMESPACE
                     nullify_and_decrement(s, x);
                 }
 
-            public:
                 template <typename TSparseSetStorage, typename T>
-                bool add_impl(TSparseSetStorage& s, T x) // .
-                    noexcept(noexcept(                   // .
-                        s.grow_if_required(x)            // .
+                bool add_impl(TSparseSetStorage& s, T x)              // .
+                    noexcept(noexcept(                                // .
+                        std::declval<this_type>().unchecked_add(s, x) // .
                         ))
                 {
                     if(s.has(x))
@@ -96,7 +100,10 @@ VRM_CORE_NAMESPACE
                 }
 
                 template <typename TSparseSetStorage, typename T>
-                bool erase_impl(TSparseSetStorage& s, T x) noexcept
+                bool erase_impl(TSparseSetStorage& s, T x)              // .
+                    noexcept(noexcept(                                  // .
+                        std::declval<this_type>().unchecked_erase(s, x) // .
+                        ))
                 {
                     if(!s.has(x))
                     {

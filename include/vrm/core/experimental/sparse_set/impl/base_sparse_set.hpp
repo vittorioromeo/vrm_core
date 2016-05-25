@@ -57,6 +57,14 @@ VRM_CORE_NAMESPACE
             /// present.
             bool erase(value_type x) noexcept;
 
+            /// @brief Adds `x` in the set, returning `true` if it wasn't
+            /// already present. Assumes `!has(x)`.
+            void unchecked_add(value_type x) noexcept;
+
+            /// @brief Removes `x` from the set, returning `true` if it was
+            /// present. Assumes `has(x)`.
+            void unchecked_erase(value_type x) noexcept;
+
             /// @brief Clears the set.
             void clear() noexcept;
 

@@ -34,6 +34,18 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TSettings>
+        void base_sparse_set<TSettings>::unchecked_add(value_type x) noexcept
+        {
+            return _impl.unchecked_add(x);
+        }
+
+        template <typename TSettings>
+        void base_sparse_set<TSettings>::unchecked_erase(value_type x) noexcept
+        {
+            return _impl.unchecked_erase(x);
+        }
+
+        template <typename TSettings>
         void base_sparse_set<TSettings>::clear() noexcept
         {
             _impl.clear();

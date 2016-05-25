@@ -213,6 +213,16 @@ VRM_CORE_NAMESPACE
                     return utils{}.erase_impl(*this, x);
                 }
 
+                void unchecked_add(T x)
+                {
+                    return utils{}.unchecked_add(*this, x);
+                }
+
+                void unchecked_erase(T x) noexcept
+                {
+                    return utils{}.unchecked_erase(*this, x);
+                }
+
                 bool empty() const noexcept
                 {
                     return _size == 0;
