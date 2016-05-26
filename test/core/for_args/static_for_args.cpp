@@ -316,7 +316,7 @@ void TEST_CONST test_unary_for_accumulate2()
     SA_TYPE(                                                // .
         (unwrap(static_accumulator(int_v<10>, int_v<20>))), // .
         (int_<10 + 20>));
-        */
+    */
 }
 
 void TEST_CONST test_unary_for_accumulate_binary()

@@ -33,11 +33,6 @@ auto second = [](auto&&, auto&& x, auto&&...) -> const auto &
 };
 auto count = [](auto&&... xs)
 {
-    // TODO: GCC: BUG: gcc complains about xs... not being used.
-    [](auto&&... ys)
-    {
-        (void)std::forward_as_tuple(FWD(ys)...);
-    }(FWD(xs)...);
     return sizeof...(xs);
 };
 auto binary_append_fst = [](auto a, auto b, auto&&...)

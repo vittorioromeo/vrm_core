@@ -104,6 +104,7 @@ VRM_CORE_NAMESPACE
         template <typename T>
         VRM_CORE_ALWAYS_INLINE auto& buffer_of()
         {
+            std::terminate();
             // TODO:
             // return std::get<>(_buffers);
         }
