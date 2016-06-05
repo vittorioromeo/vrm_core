@@ -9,6 +9,29 @@ using namespace vrm::core;
 
 struct X
 {
+    X()
+    {
+    }
+
+    X(const X&)
+    {
+    }
+
+    X(const volatile X&)
+    {
+    }
+
+    X(X&&)
+    {
+    }
+
+    X(volatile X&&)
+    {
+    }
+
+    X(const volatile X&&)
+    {
+    }
 };
 
 SA_TYPE((copy_if_rvalue(1)), (int));
