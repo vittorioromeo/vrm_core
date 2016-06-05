@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 
-# Include SSVCmake.
+# Include `vrm_cmake`.
 list(APPEND CMAKE_MODULE_PATH
-    "${CMAKE_SOURCE_DIR}/../SSVCMake/cmake/modules/"
-    "${CMAKE_SOURCE_DIR}/extlibs/SSVCMake/cmake/modules/")
+    "${CMAKE_SOURCE_DIR}/../vrm_cmake/cmake/"
+    "${CMAKE_SOURCE_DIR}/extlibs/vrm_cmake/cmake/")
 
-include(SSVCMake)
+include(vrm_cmake)
 
 # Basic project setup.
 vrm_cmake_init_project(vrm_core)
@@ -17,11 +17,6 @@ include_directories("${VRM_CORE_INC_DIR}")
 
 # Other compiler flags.
 vrm_cmake_add_common_compiler_flags()
-
-# Setup user options.
-vrm_cmake_add_option_memcheck()
-vrm_cmake_add_option_no_exceptions()
-vrm_cmake_add_option_werror()
 
 # The `check` target runs all tests and examples.
 vrm_check_target()
