@@ -20,3 +20,10 @@ static_assert(vrm::core::is_strong_typedef_v<my_int>, "");
 static_assert(vrm::core::is_strong_typedef_v<my_float>, "");
 static_assert(!vrm::core::is_strong_typedef_v<int>, "");
 static_assert(!vrm::core::is_strong_typedef_v<float>, "");
+
+SA_SAME((vrm::core::underlying_if_strong_typedef_type<int>), (int));
+SA_SAME((vrm::core::underlying_if_strong_typedef_type<double>), (double));
+SA_SAME((vrm::core::underlying_if_strong_typedef_type<char>), (char));
+
+SA_SAME((vrm::core::underlying_if_strong_typedef_type<my_int>), (int));
+SA_SAME((vrm::core::underlying_if_strong_typedef_type<my_float>), (float));

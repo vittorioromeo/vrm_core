@@ -15,6 +15,11 @@ VRM_CORE_NAMESPACE
         struct strong_typedef_marker
         {
         };
+
+        // TODO:
+        // underlying_if_strong_typedef<T>
+        // * returns T if not strong typedef
+        // * returns T::underlying if strong typedef
     }
 }
 VRM_CORE_NAMESPACE_END
