@@ -8,19 +8,23 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases.hpp>
+#include <vrm/core/strong_typedef.hpp>
 
 VRM_CORE_NAMESPACE
 {
     namespace impl
     {
         template <typename T, typename TStorage>
-        struct sparse_set_settings
+        class sparse_set_settings
         {
-            // TODO: is_unsigned_strong_typedef...
-            VRM_CORE_STATIC_ASSERT_NM(
-                is_strong_typedef_v<T> ||
-                (std::is_arithmetic<T>{} && std::is_unsigned<T>{}));
+        private:
+            using underlying_value_type = underlying_if_strong_typedef_type<T>;
 
+            VRM_CORE_STATIC_ASSERT_NM(
+                std::is_arithmetic<underlying_value_type>{} &&
+                std::is_unsigned<underlying_value_type>{});
+
+        public:
             /// @brief Size type used for storage sizes/capacities.
             using size_type = sz_t;
 

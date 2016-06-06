@@ -17,11 +17,11 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr auto to_num(const TIn& x) noexcept
     {
         VRM_CORE_STATIC_ASSERT( // .
-            std::is_arithmetic<TOut>{} || is_strong_typedef_v<TOut>,
+            std::is_arithmetic<underlying_if_strong_typedef_type<TOut>>{},
             "`TOut` output type must be an arithmetic type.");
 
         VRM_CORE_STATIC_ASSERT( // .
-            std::is_arithmetic<TIn>{} || is_strong_typedef_v<TIn>,
+            std::is_arithmetic<underlying_if_strong_typedef_type<TIn>>{},
             "`TIn` input type must be an arithmetic type.");
 
         VRM_CORE_CONSTEXPR_ASSERT((!impl::will_overflow<TOut, TIn>(x)));

@@ -15,17 +15,23 @@ VRM_CORE_NAMESPACE
     {
         /// @brief Compile-time settings for handle manager.
         template <typename TTarget, typename TCounter>
-        struct settings
+        class settings
         {
-            // TODO: traits
+        private:
+            using target_underlying_type =
+                underlying_if_strong_typedef_type<TTarget>;
+
+            using counter_underlying_type =
+                underlying_if_strong_typedef_type<TCounter>;
+
             VRM_CORE_STATIC_ASSERT_NM(
-                is_strong_typedef_v<TTarget> ||
-                (std::is_arithmetic<TTarget>{} && std::is_unsigned<TTarget>{}));
+                std::is_arithmetic<target_underlying_type>{} &&
+                std::is_unsigned<target_underlying_type>{});
 
             VRM_CORE_STATIC_ASSERT_NM( // .
-                is_strong_typedef_v<TCounter> ||
-                std::is_arithmetic<TCounter>{});
+                std::is_arithmetic<counter_underlying_type>{});
 
+        public:
             /// @brief Points from metadata to target user-specified object.
             using target_type = TTarget;
 
