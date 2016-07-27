@@ -8,7 +8,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 #include <vrm/core/assert/assert.hpp>
-#include <vrm/core/experimental/resource/shared/ref_counter/ref_counter.hpp>
+#include "./ref_counter.hpp"
 
 VRM_CORE_NAMESPACE
 {

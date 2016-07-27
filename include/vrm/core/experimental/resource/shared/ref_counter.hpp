@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource/shared/ref_counter/ref_counter.hpp>
-#include <vrm/core/experimental/resource/shared/ref_counter/ref_counter.inl>
+#include "./ref_counter/ref_counter.hpp"
+#include "./ref_counter/ref_counter.inl"

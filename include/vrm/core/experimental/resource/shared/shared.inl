@@ -8,10 +8,10 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/experimental/resource/fwd.hpp>
-#include <vrm/core/experimental/resource/shared/metadata.hpp>
-#include <vrm/core/experimental/resource/shared/ref_counter.hpp>
-#include <vrm/core/experimental/resource/shared/policies.hpp>
-#include <vrm/core/experimental/resource/shared/shared.hpp>
+#include "./metadata.hpp"
+#include "./ref_counter.hpp"
+#include "./policies.hpp"
+#include "./shared.hpp"
 
 VRM_CORE_NAMESPACE
 {
