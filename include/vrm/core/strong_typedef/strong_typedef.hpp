@@ -12,14 +12,10 @@ VRM_CORE_NAMESPACE
 {
     namespace impl
     {
+        /// @brief Empty implementation `struct` used to "mark" strong typedefs.
         struct strong_typedef_marker
         {
         };
-
-        // TODO:
-        // underlying_if_strong_typedef<T>
-        // * returns T if not strong typedef
-        // * returns T::underlying if strong typedef
     }
 }
 VRM_CORE_NAMESPACE_END
