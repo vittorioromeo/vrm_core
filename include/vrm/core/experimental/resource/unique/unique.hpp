@@ -25,7 +25,7 @@ VRM_CORE_NAMESPACE
                 using handle_type = typename base_type::handle_type;
 
             private:
-                using is_nothrow_deinit = is_nothrow_deinit<TBehavior>;
+                using is_nothrow_deinit = is_nothrow_deinit_t<TBehavior>;
 
             public:
                 void reset() noexcept(is_nothrow_deinit{});

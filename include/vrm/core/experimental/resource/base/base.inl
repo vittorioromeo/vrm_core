@@ -43,7 +43,7 @@ VRM_CORE_NAMESPACE
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE void base<TBehavior>::deinit() // .
-                noexcept(is_nothrow_deinit<TBehavior>{})
+                noexcept(is_nothrow_deinit_t<TBehavior>{})
             {
                 behavior_type::deinit(_handle);
             }

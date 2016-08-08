@@ -47,7 +47,7 @@ VRM_CORE_NAMESPACE
 
                 auto is_null_handle() const noexcept;
 
-                void deinit() noexcept(is_nothrow_deinit<TBehavior>{});
+                void deinit() noexcept(is_nothrow_deinit_t<TBehavior>{});
                 void nullify() noexcept;
                 auto release_and_nullify() noexcept;
 

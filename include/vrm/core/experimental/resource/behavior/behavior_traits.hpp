@@ -14,10 +14,10 @@ VRM_CORE_NAMESPACE
     namespace resource
     {
         template <typename TBehavior>
-        using is_nothrow_init = bool_<noexcept(TBehavior::init())>;
+        using is_nothrow_init_t = bool_<noexcept(TBehavior::init())>;
 
         template <typename TBehavior>
-        using is_nothrow_deinit = bool_<noexcept(TBehavior::deinit(
+        using is_nothrow_deinit_t = bool_<noexcept(TBehavior::deinit(
             std::declval<typename TBehavior::handle_type>()))>;
 
         template <typename>

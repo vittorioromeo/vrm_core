@@ -38,7 +38,7 @@ VRM_CORE_NAMESPACE
                 using weak_type = weak<TBehavior, TLockPolicy>;
 
             private:
-                using is_nothrow_deinit = is_nothrow_deinit<TBehavior>;
+                using is_nothrow_deinit = is_nothrow_deinit_t<TBehavior>;
 
             private:
                 // In addition to an handle, we store a `ref_counter`.
