@@ -256,7 +256,7 @@ VRM_CORE_NAMESPACE
             bool operator==(const shared<TBehavior, TLockPolicy>& lhs,
                 const shared<TBehavior, TLockPolicy>& rhs) noexcept
             {
-                return lhs._handle == rhs._handle;
+                return lhs.get() == rhs.get();
             }
 
             template <typename TBehavior, typename TLockPolicy>

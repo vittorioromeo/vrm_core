@@ -1,7 +1,8 @@
 #include "../../../utils/test_res_utils.hpp"
 
 namespace test
-{ // Null shared
+{
+    // Null shared
     void shared_0()
     {
         assert_ck(0, 0);
@@ -191,7 +192,7 @@ namespace test
         assert_ck(3, 3);
     }
 
-    // TODO
+    // Create shared from non-null handle
     void shared_10()
     {
         {
@@ -209,6 +210,7 @@ namespace test
         assert_ck(1, 1);
     }
 
+    // Two shared pointing to same data
     void shared_11()
     {
         {
@@ -220,8 +222,7 @@ namespace test
             auto u1(u0);
             assert_ck(1, 0);
 
-            // TODO: fix
-            // assert(u0 == u1);
+            assert(u0 == u1);
 
             assert(u0.get() == u1.get());
         }
@@ -229,6 +230,7 @@ namespace test
         assert_ck(1, 1);
     }
 
+    // Get use count of two shareds pointing to same data
     void shared_12()
     {
         {
@@ -237,16 +239,22 @@ namespace test
             auto u0 = shared_test(test_behavior::init());
             assert_ck(1, 0);
 
-            auto u1 = u0;
-            assert_ck(1, 0);
+            {
+                auto u1 = u0;
+                assert_ck(1, 0);
 
-            assert(u0.use_count() == 2);
-            assert(u1.use_count() == 2);
+                assert(u0.use_count() == 2);
+                assert(u1.use_count() == 2);
+            }
+
+            assert_ck(1, 0);
+            assert(u0.use_count() == 1);
         }
 
         assert_ck(1, 1);
     }
 
+    // Copy shared
     void shared_13()
     {
         {
@@ -264,6 +272,7 @@ namespace test
         assert_ck(1, 1);
     }
 
+    // Swap two shared resources
     void shared_14()
     {
         {
@@ -292,6 +301,7 @@ namespace test
         assert_ck(2, 2);
     }
 
+    // Check uniqueness of shared
     void shared_15()
     {
         {

@@ -2,6 +2,7 @@
 
 namespace test
 {
+    // Weak from shared, check use count
     void weak_0()
     {
         assert_ck(0, 0);
@@ -16,12 +17,15 @@ namespace test
             weak_test w0(s0);
             assert_ck(1, 0);
 
+            assert(!w0.expired());
+            assert(w0.use_count() == 1);
             assert(s0.use_count() == w0.use_count());
         }
 
         assert_ck(1, 1);
     }
 
+    // Copy weak, access via shared
     void weak_1()
     {
         assert_ck(0, 0);
@@ -36,12 +40,19 @@ namespace test
             auto w1(w0);
             assert_ck(1, 0);
 
+            assert(!w0.expired());
+            assert(w0.use_count() == 1);
+
+            assert(!w1.expired());
+            assert(w1.use_count() == 1);
+
             assert(w0.lock().get() == w1.lock().get());
         }
 
         assert_ck(1, 1);
     }
 
+    // Use count
     void weak_2()
     {
         assert_ck(0, 0);
@@ -59,12 +70,14 @@ namespace test
         assert_ck(1, 1);
     }
 
+    // Expired
     void weak_3()
     {
         assert_ck(0, 0);
 
         {
             weak_test w0;
+            assert(w0.expired());
 
             {
                 shared_test s0(test_behavior::init());
@@ -82,6 +95,7 @@ namespace test
         assert_ck(1, 1);
     }
 
+    // Uniqueness
     void weak_4()
     {
         assert_ck(0, 0);
@@ -93,12 +107,14 @@ namespace test
             weak_test w0(s0);
             assert_ck(1, 0);
 
+            assert(s0.unique());
             assert(!w0.lock().unique());
         }
 
         assert_ck(1, 1);
     }
 
+    // Swap test
     void weak_5()
     {
         assert_ck(0, 0);
@@ -135,9 +151,37 @@ namespace test
 
         assert_ck(2, 2);
     }
-}
 
-// TODO: make tests where weak count is decremented
+    // Decrement weak count
+    void weak_6()
+    {
+        assert_ck(0, 0);
+
+        {
+            shared_test s0(test_behavior::init());
+            assert_ck(1, 0);
+
+            assert(s0.use_count() == 1);
+
+            weak_test w0(s0);
+
+            assert(s0.use_count() == 1);
+            assert(!w0.expired());
+
+            {
+                weak_test w1(w0);
+                assert(s0.use_count() == 1);
+                assert(!w0.expired());
+                assert(!w1.expired());
+            }
+
+            assert(s0.use_count() == 1);
+            assert(!w0.expired());
+        }
+
+        assert_ck(1, 1);
+    }
+}
 
 TEST_MAIN()
 {
@@ -149,4 +193,5 @@ TEST_MAIN()
     RUN_T(weak_3);
     RUN_T(weak_4);
     RUN_T(weak_5);
+    RUN_T(weak_6);
 }
