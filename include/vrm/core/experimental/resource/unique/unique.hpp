@@ -28,7 +28,12 @@ VRM_CORE_NAMESPACE
                 using is_nothrow_deinit = is_nothrow_deinit_t<TBehavior>;
 
             public:
+                /// @brief Deinitializes the stored handle and sets stored
+                /// handle to `null_handle`.
                 void reset() noexcept(is_nothrow_deinit{});
+
+                /// @brief Deinitializes the stored handle and sets stored
+                /// handle to `handle`.
                 void reset(const handle_type& handle) noexcept(
                     is_nothrow_deinit{});
 
@@ -37,20 +42,33 @@ VRM_CORE_NAMESPACE
                 unique() noexcept = default;
                 explicit unique(const handle_type& handle) noexcept;
 
+                // Disable copy operations.
                 unique(const unique&) = delete;
                 unique& operator=(const unique&) = delete;
 
+                /// @brief Takes ownership of `rhs`'s handle. `rhs` will point
+                /// to null.
                 unique(unique&& rhs) noexcept;
+
+                /// @brief Deinitializes the stored handle and takes ownership
+                /// of `rhs`'s handle. `rhs` will point to null.
                 auto& operator=(unique&&) noexcept(is_nothrow_deinit{});
 
+                /// @brief Loses ownership of the stored handle and returns it.
+                /// The handle is not deinitialized.
                 auto release() noexcept;
 
+                /// @brief Swaps the stored handle with `rhs`'s handle.
                 void swap(unique& rhs) noexcept;
 
+                /// @brief Returns `true` if both `lhs` and `rhs` store the same
+                /// handle.
                 template <typename>
                 friend bool operator==(
                     const unique& lhs, const unique& rhs) noexcept;
 
+                /// @brief Returns `true` if `lhs` and `rhs` store different
+                /// handles.
                 template <typename>
                 friend bool operator!=(
                     const unique& lhs, const unique& rhs) noexcept;

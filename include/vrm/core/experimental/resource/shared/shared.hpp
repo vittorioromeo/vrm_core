@@ -60,28 +60,60 @@ VRM_CORE_NAMESPACE
                 shared() noexcept = default;
                 ~shared() noexcept;
 
+                /// @brief Acquires ownership of `handle`, if it's not null.
                 explicit shared(const handle_type& handle) noexcept;
+
+                /// @brief Acquires ownership of `handle`, if it's not null.
                 explicit shared(const weak_type& handle) noexcept;
 
-                shared(const shared&);
-                auto& operator=(const shared&);
+                /// @brief Acquires ownership of `rhs`'s handle, if it's not
+                /// null. `rhs` won't lose its ownership.
+                shared(const shared& rhs);
 
+                /// @brief Acquires ownership of `rhs`'s handle, if it's not
+                /// null. `rhs` won't lose its ownership.
+                auto& operator=(const shared& rhs);
+
+                /// @brief Acquires ownership of `rhs`'s handle, if it's not
+                /// null. `rhs` loses its ownership and points to a null handle.
                 shared(shared&& rhs) noexcept;
+
+                /// @brief Acquires ownership of `rhs`'s handle, if it's not
+                /// null. `rhs` loses its ownership and points to a null handle.
                 auto& operator=(shared&&) noexcept(is_nothrow_deinit{});
 
+                /// @brief Deinitializes the stored handle and sets stored
+                /// handle to `null_handle`.
                 void reset() noexcept(is_nothrow_deinit{});
+
+                /// @brief Deinitializes the stored handle and sets stored
+                /// handle to `handle`.
                 void reset(const handle_type& handle) noexcept(
                     is_nothrow_deinit{});
 
+                /// @brief Swaps the stored handles and ref counters of `*this`
+                /// and `rhs`.
                 void swap(shared& rhs) noexcept;
 
+                /// @brief Returns the number of different `shared` instances
+                /// managing the current handle.
+                /// @details `*this` is included in the count. If a null handle
+                /// is being stored, `0` is returned.
                 auto use_count() const noexcept;
+
+                /// @brief Returns `true` if `*this` is the only instance
+                /// managing the stored handle.
+                /// @details Equivalent to `use_count() == 1`.
                 bool unique() const noexcept;
 
+                /// @brief Returns `true` if both `lhs` and `rhs` store the same
+                /// handle.
                 template <typename>
                 friend bool operator==(
                     const shared& lhs, const shared& rhs) noexcept;
 
+                /// @brief Returns `true` if `lhs` and `rhs` store different
+                /// handles.
                 template <typename>
                 friend bool operator!=(
                     const shared& lhs, const shared& rhs) noexcept;

@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource/unique/unique.hpp>
-#include <vrm/core/experimental/resource/unique/unique.inl>
+#include "./unique/unique.hpp"
+#include "./unique/unique.inl"

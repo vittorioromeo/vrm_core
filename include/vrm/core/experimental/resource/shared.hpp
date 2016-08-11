@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource/shared/metadata.hpp>
-#include <vrm/core/experimental/resource/shared/ref_counter.hpp>
-#include <vrm/core/experimental/resource/shared/policies.hpp>
-#include <vrm/core/experimental/resource/shared/shared.hpp>
-#include <vrm/core/experimental/resource/shared/shared.inl>
+#include "./shared/metadata.hpp"
+#include "./shared/ref_counter.hpp"
+#include "./shared/policies.hpp"
+#include "./shared/shared.hpp"
+#include "./shared/shared.inl"

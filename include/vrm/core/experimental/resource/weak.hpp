@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource/weak/weak.hpp>
-#include <vrm/core/experimental/resource/weak/weak.inl>
+#include "./weak/weak.hpp"
+#include "./weak/weak.inl"

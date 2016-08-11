@@ -95,7 +95,7 @@ VRM_CORE_NAMESPACE
             VRM_CORE_ALWAYS_INLINE bool operator==(const unique<TBehavior>& lhs,
                 const unique<TBehavior>& rhs) noexcept
             {
-                return lhs._handle == rhs._handle;
+                return lhs.get() == rhs.get();
             }
 
             template <typename TBehavior>
