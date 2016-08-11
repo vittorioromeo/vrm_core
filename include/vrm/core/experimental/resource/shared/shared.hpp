@@ -57,7 +57,7 @@ VRM_CORE_NAMESPACE
                 void acquire_existing_if_required();
 
             public:
-                shared() noexcept = default;
+                constexpr shared() noexcept = default;
                 ~shared() noexcept;
 
                 /// @brief Acquires ownership of `handle`, if it's not null.

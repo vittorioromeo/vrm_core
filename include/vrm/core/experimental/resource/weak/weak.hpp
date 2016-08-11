@@ -33,23 +33,56 @@ VRM_CORE_NAMESPACE
                 ref_counter_type _ref_counter;
 
             public:
-                weak() noexcept;
+                /// @brief Manages a null handle.
+                /// @details `expired()` will return `true`.
+                constexpr weak() noexcept;
+
+                /// @brief Manages `rhs`'s handle.
                 weak(const weak& rhs) noexcept;
+
+                /// @brief Manages `rhs`'s handle.
                 weak(const shared_type& rhs) noexcept;
+
+                /// @brief Manages `rhs`'s handle. `rhs` will stop managing its
+                /// handle.
                 weak(weak&& rhs) noexcept;
 
+                /// @brief Manages `rhs`'s handle.
                 auto& operator=(const weak& rhs) noexcept;
+
+                /// @brief Manages `rhs`'s handle.
                 auto& operator=(const shared_type& rhs) noexcept;
+
+                /// @brief Manages `rhs`'s handle. `rhs` will stop managing its
+                /// handle.
                 auto& operator=(weak&& rhs) noexcept;
 
+                /// @brief Destroys the weak resource.
+                /// @details Has no effect on the managed object.
                 ~weak();
 
+                /// @brief Swaps the stored handles and ref counters of `*this`
+                /// and `rhs`.
                 void swap(weak& rhs) noexcept;
+
+                /// @brief Releases the current handle.
+                /// @details `expired()` will return `true`. Has no effect on
+                /// the managed object.
                 void reset() noexcept;
 
+                /// @brief Returns the number of shared resources managing the
+                /// stored handle.
                 auto use_count() const noexcept;
+
+                /// @brief Returns `true` if the managed object has already been
+                /// deleted.
+                /// @details Equivalent to `use_count() == 0`.
                 auto expired() const noexcept;
 
+                /// @brief Creates a shared resource that shares ownership of
+                /// the managed object.
+                /// @details If the stored handle is null, a null shared
+                /// resource is returned.
                 auto lock() const noexcept;
 
                 template <typename>

@@ -39,7 +39,7 @@ VRM_CORE_NAMESPACE
 
                 ~unique() noexcept(is_nothrow_deinit{});
 
-                unique() noexcept = default;
+                constexpr unique() noexcept = default;
                 explicit unique(const handle_type& handle) noexcept;
 
                 // Disable copy operations.
