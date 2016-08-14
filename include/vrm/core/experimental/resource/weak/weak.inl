@@ -15,7 +15,7 @@ VRM_CORE_NAMESPACE
         namespace impl
         {
             template <typename TBehavior, typename TLockPolicy>
-            weak<TBehavior, TLockPolicy>::weak() noexcept
+            constexpr weak<TBehavior, TLockPolicy>::weak() noexcept
             {
             }
 
