@@ -96,7 +96,8 @@ VRM_CORE_NAMESPACE
                 f(m._target);
 
                 // Swap indices and `pop_back` (TODO:)
-                std::swap(m._target, last_m._target);
+                using std::swap;
+                swap(m._target, last_m._target);
                 --_next_ref;
             }
 

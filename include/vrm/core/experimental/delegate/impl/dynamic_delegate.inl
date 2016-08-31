@@ -38,7 +38,10 @@ VRM_CORE_NAMESPACE
             _hm.destroy(h, [this](auto i)
                 {
                     // Swap dead function with last function in the vector.
-                    std::swap(this->_functions[i], this->_functions.back());
+                    using std::swap;
+                    swap(this->_functions[i], this->_functions.back());
+
+                    // Pop back the dead function.
                     this->_functions.pop_back();
                 });
         }

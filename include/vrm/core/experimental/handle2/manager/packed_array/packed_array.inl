@@ -60,7 +60,8 @@ VRM_CORE_NAMESPACE
 
                 // Swap both target indices and target data.
                 f(i0, i1);
-                std::swap(i0, i1);
+                using std::swap;
+                swap(i0, i1);
 
                 // Decrement next valid metadata index.
                 --_next_ref;

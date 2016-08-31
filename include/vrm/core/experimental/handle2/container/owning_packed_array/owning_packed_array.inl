@@ -47,8 +47,8 @@ VRM_CORE_NAMESPACE
                 this->destroy_handle(h,
                     [this](auto invalid_index, auto valid_index)
                     {
-                        std::swap(
-                            _targets[invalid_index], _targets[valid_index]);
+                        using std::swap;
+                        swap(_targets[invalid_index], _targets[valid_index]);
                     });
             }
 
