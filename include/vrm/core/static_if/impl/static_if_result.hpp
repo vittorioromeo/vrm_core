@@ -18,7 +18,7 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TFunctionToCall>
-        struct static_if_result : TFunctionToCall
+        struct static_if_result final : TFunctionToCall
         {
             template <typename TFFwd>
             VRM_CORE_ALWAYS_INLINE constexpr static_if_result(

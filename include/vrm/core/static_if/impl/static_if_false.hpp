@@ -18,7 +18,7 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <>
-        struct static_if_<false>
+        struct static_if_<false> final
         {
             template <typename TF>
             VRM_CORE_ALWAYS_INLINE constexpr auto& then(TF&&) noexcept
