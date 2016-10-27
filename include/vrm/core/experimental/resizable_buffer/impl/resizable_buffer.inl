@@ -47,7 +47,7 @@ VRM_CORE_NAMESPACE
     void resizable_buffer<T, TAllocator>::destroy(size_type from, size_type to)
     {
 #if defined(VRM_CORE_DEBUG)
-        if(to - from > 0)
+        if(to > from)
         {
             VRM_CORE_ASSERT_OP(_data, !=, nullptr);
         }
