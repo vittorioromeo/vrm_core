@@ -195,7 +195,7 @@ VRM_CORE_NAMESPACE
                 {
                     auto& my_buffer(this->nth_buffer<decltype(data)::index>());
                     auto& result_buffer(
-                        result.nth_buffer<decltype(data)::index>());
+                        result.template nth_buffer<decltype(data)::index>());
 
                     result_buffer = std::move(my_buffer.copy(n));
                 },
