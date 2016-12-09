@@ -42,7 +42,7 @@ struct item
 
 using namespace vrm::core;
 template <typename T>
-bool VRM_CORE_PURE_FN all_null(const T& dt)
+bool VRM_CORE_PURE_FN all_null(const T& dt) noexcept
 {
     bool result{true};
 
