@@ -26,5 +26,10 @@ VRM_CORE_NAMESPACE
     /// `TTemplate`.
     template <typename T, template <typename...> class TTemplate>
     using is_specialization_of_t = is_specialization_of<T, TTemplate>;
+
+    /// @brief Evaluates to `true` if `T` is a specialization of `TTemplate`.
+    template <typename T, template <typename...> class TTemplate>
+    constexpr auto is_specialization_of_v =
+        is_specialization_of<T, TTemplate>{};
 }
 VRM_CORE_NAMESPACE_END
