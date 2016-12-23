@@ -46,7 +46,29 @@ SA_TYPE((std::forward<int&&>(test_int)), (int&&));
 SA_TYPE((forward_like<int>(test_float)), (float&&));
 SA_TYPE((forward_like<int&&>(test_float)), (float&&));
 
+template <int>
+struct nocopy
+{
+    nocopy() = default;
+    nocopy(const nocopy&) = delete;
+    nocopy(nocopy&&) = default;
+};
+
+template <typename T>
+void g(T) { }
+
+template <typename T0, typename T1>
+void f(T0&& x0, T1&& x1)
+{
+    g(std::forward<T0>(x0));
+    g(std::forward<T1>(x1));
+    g(forward_like<T0>(x1));
+    g(forward_like<T1>(x0));
+}
+
 TEST_MAIN()
 {
+    f(nocopy<0>{}, nocopy<1>{});
+
     return 0;
 }

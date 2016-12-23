@@ -9,14 +9,23 @@ include_directories(${VRM_CORE_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-# TODO: how to add compiler/linker arguments to every test target?
-# vrm_cmake_add_compiler_flag(HAS_SANITIZE_UNDEFINED -fsanitize=undefined)
-# vrm_cmake_add_compiler_flag(HAS_SANITIZE_ADDRESS -fsanitize=address)
-# vrm_cmake_add_compiler_flag(HAS_SANITIZE_INTEGER -fsanitize=integer)
-
 # Generate all the header unit tests.
 # vrm_cmake_generate_public_header_tests_glob("*.hpp" "${VRM_CORE_SOURCE_DIR}/include")
 
 # Generate all the unit tests.
 vrm_cmake_generate_unit_tests_glob("*.cpp")
 
+foreach(_x IN LISTS vrm_cmake_out)
+#{
+    target_compile_options(${_x} PUBLIC "-fdiagnostics-color=always")
+
+    vrm_cmake_augment_test_asan(${_x})
+    vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+
+    vrm_cmake_augment_test_tsan(${_x})
+    vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+
+    vrm_cmake_augment_test_ubsan(${_x})
+    vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+#}
+endforeach()

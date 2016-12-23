@@ -17,8 +17,7 @@ VRM_CORE_NAMESPACE
             std::conditional_t<!std::is_reference<TSource>{}, T,
                 std::conditional_t<std::is_lvalue_reference<TSource>{},
                     std::add_lvalue_reference_t<T>,
-                    std::conditional_t<std::is_rvalue_reference<TSource>{},
-                                       std::add_rvalue_reference_t<T>, void>>>;
+                    std::add_rvalue_reference_t<T>>>;
     }
 
     /// @brief Removes reference from `T`, then applies `TSource`'s
