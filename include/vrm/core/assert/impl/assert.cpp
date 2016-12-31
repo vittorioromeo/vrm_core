@@ -4,6 +4,7 @@
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #include <vrm/core/assert/assert_macros.hpp>
+#include <vrm/core/config.hpp>
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
 
@@ -15,7 +16,7 @@ VRM_CORE_NAMESPACE
     {
         namespace assert
         {
-            state& VRM_CORE_CONST_FN get_state() noexcept
+            VRM_CORE_FN_API state& VRM_CORE_CONST_FN get_state() noexcept
             {
                 thread_local state result;
                 return result;
