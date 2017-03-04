@@ -5,23 +5,23 @@
 
 #pragma once
 
-#include <vrm/pp.hpp>
-#include <vrm/core/config.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/tuple_utils/apply.hpp>
-#include <vrm/core/args_utils/nth_arg.hpp>
 #include <vrm/core/args_utils/args_slice.hpp>
 #include <vrm/core/args_utils/args_slice_aliases.hpp>
+#include <vrm/core/args_utils/nth_arg.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/apply.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/pp.hpp>
 
 /// @macro Defines a `constexpr`-friendly struct that wraps an arg-slicing
 /// function. The struct has name `name` and wraps the function `fn`.
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER(name, fn)           \
     template <sz_t TN>                                              \
-    struct name                                                     \
+    struct name final                                               \
     {                                                               \
         template <typename... Ts>                                   \
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()( \
-            Ts && ... xs) noexcept                                  \
+            Ts&&... xs) noexcept                                    \
         {                                                           \
             return fn<TN>(FWD(xs)...);                              \
         }                                                           \

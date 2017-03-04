@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
-#include <vrm/core/assert/static_assert_macros.hpp>
 #include <vrm/core/assert/assert_macros.hpp>
 #include <vrm/core/assert/assert_macros_interface.hpp>
+#include <vrm/core/assert/static_assert_macros.hpp>
+#include <vrm/core/config.hpp>
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
 
@@ -21,7 +21,7 @@ VRM_CORE_NAMESPACE
             /// @brief Assertion management state.
             /// @details Controls whether or not future assertion will be
             /// skipped.
-            struct state
+            struct state final
             {
                 bool _skip{false};
             };

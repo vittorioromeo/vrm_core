@@ -311,12 +311,10 @@ void TEST_CONST test_unary_for_accumulate2()
         (unwrap(static_accumulator(int_v<1>, int_v<2>, int_v<3>))), // .
         (int_<1 + 2 + 3>));
 
-    // TODO: GCC: possible g++ 6 bug?
-    /*
     SA_TYPE(                                                // .
         (unwrap(static_accumulator(int_v<10>, int_v<20>))), // .
         (int_<10 + 20>));
-    */
+    
 }
 
 void TEST_CONST test_unary_for_accumulate_binary()

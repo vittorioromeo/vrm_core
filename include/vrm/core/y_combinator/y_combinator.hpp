@@ -16,7 +16,7 @@ VRM_CORE_NAMESPACE
     namespace impl
     {
         template <typename TF>
-        class y_combinator_result
+        class y_combinator_result final
         {
         private:
             using this_type = y_combinator_result<TF>;

@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/integral_constant.hpp>
+#include <vrm/core/type_traits/void_t.hpp>
 
 VRM_CORE_NAMESPACE
 {
@@ -19,9 +20,6 @@ VRM_CORE_NAMESPACE
         template <typename TBehavior>
         using is_nothrow_deinit_t = bool_<noexcept(TBehavior::deinit(
             std::declval<typename TBehavior::handle_type>()))>;
-
-        template <typename>
-        using void_t = void;
 
         template <typename T>
         using is_zero_sized = std::integral_constant<bool, sizeof(T) == 1>;

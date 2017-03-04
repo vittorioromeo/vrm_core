@@ -225,21 +225,21 @@ void run_test(const TAllocator& allocator = TAllocator{})
 
     vrm::core::resizable_buffer<item, TAllocator> rb{allocator};
 
-    TEST_ASSERT_NS_OP(rb.data(), ==, nullptr);
+    TEST_ASSERT_OP(rb.data(), ==, nullptr);
     TEST_ASSERT_OP(cc, ==, 0);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb.grow_and_construct(0, 10);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb.grow_and_construct(10, 20);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 10);
     TEST_ASSERT_OP(dd, ==, 10);
@@ -258,21 +258,21 @@ void run_test2(const TAllocator& allocator = TAllocator{})
 
     vrm::core::resizable_buffer<item, TAllocator> rb{allocator};
 
-    TEST_ASSERT_NS_OP(rb.data(), ==, nullptr);
+    TEST_ASSERT_OP(rb.data(), ==, nullptr);
     TEST_ASSERT_OP(cc, ==, 0);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb.grow_and_construct(0, 10);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb.grow_and_construct(10, 20);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 10);
     TEST_ASSERT_OP(dd, ==, 10);
@@ -289,29 +289,29 @@ void run_test3(const TAllocator& allocator = TAllocator{})
 
     vrm::core::resizable_buffer<item, TAllocator> rb{allocator};
 
-    TEST_ASSERT_NS_OP(rb.data(), ==, nullptr);
+    TEST_ASSERT_OP(rb.data(), ==, nullptr);
     TEST_ASSERT_OP(cc, ==, 0);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb.grow_and_construct(0, 10);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb.grow_and_construct(10, 20);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 10);
     TEST_ASSERT_OP(dd, ==, 10);
 
     auto rb2 = rb.copy(20);
 
-    TEST_ASSERT_NS_OP(rb.data(), !=, nullptr);
-    TEST_ASSERT_NS_OP(rb2.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb2.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 30);
     TEST_ASSERT_OP(dd, ==, 10);
@@ -331,14 +331,14 @@ void run_test4(const TAllocator& allocator = TAllocator{})
 
     vrm::core::resizable_buffer<item, TAllocator> rb0{allocator};
 
-    TEST_ASSERT_NS_OP(rb0.data(), ==, nullptr);
+    TEST_ASSERT_OP(rb0.data(), ==, nullptr);
     TEST_ASSERT_OP(cc, ==, 0);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb0.grow_and_construct(0, 10);
 
-    TEST_ASSERT_NS_OP(rb0.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb0.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
@@ -347,22 +347,22 @@ void run_test4(const TAllocator& allocator = TAllocator{})
 
     vrm::core::resizable_buffer<item, TAllocator> rb1{allocator};
 
-    TEST_ASSERT_NS_OP(rb1.data(), ==, nullptr);
+    TEST_ASSERT_OP(rb1.data(), ==, nullptr);
     TEST_ASSERT_OP(cc, ==, 10);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb1.grow_and_construct(0, 10);
 
-    TEST_ASSERT_NS_OP(rb1.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb1.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);
 
     rb0.swap(rb1);
 
-    TEST_ASSERT_NS_OP(rb0.data(), !=, nullptr);
-    TEST_ASSERT_NS_OP(rb1.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb0.data(), !=, nullptr);
+    TEST_ASSERT_OP(rb1.data(), !=, nullptr);
     TEST_ASSERT_OP(cc, ==, 20);
     TEST_ASSERT_OP(copies, ==, 0);
     TEST_ASSERT_OP(dd, ==, 0);

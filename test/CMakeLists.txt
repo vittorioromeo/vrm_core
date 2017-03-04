@@ -19,13 +19,18 @@ foreach(_x IN LISTS vrm_cmake_out)
 #{
     target_compile_options(${_x} PUBLIC "-fdiagnostics-color=always")
 
-    vrm_cmake_augment_test_asan(${_x})
-    vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+    # TODO:
+    if(FALSE)
+    #{
+        vrm_cmake_augment_test_asan(${_x})
+        vrm_cmake_augment_test_ofast(${vrm_cmake_out})
 
-    vrm_cmake_augment_test_tsan(${_x})
-    vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+        vrm_cmake_augment_test_tsan(${_x})
+        vrm_cmake_augment_test_ofast(${vrm_cmake_out})
 
-    vrm_cmake_augment_test_ubsan(${_x})
-    vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+        vrm_cmake_augment_test_ubsan(${_x})
+        vrm_cmake_augment_test_ofast(${vrm_cmake_out})
+    #}
+    endif()
 #}
 endforeach()

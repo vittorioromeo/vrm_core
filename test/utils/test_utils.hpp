@@ -10,11 +10,12 @@
 // VRMCW_TEST_OP(l, op, r) -> VRM_CORE_WORKFLOW_TEST_OP(l, op, r) ->
 // TEST_ASSERT_OP(l, op, r)
 
-#include <exception>
-#include <string>
-#include <sstream>
-#include <iostream>
 #include <cassert>
+#include <exception>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vrm/core/type_traits/streamable.hpp>
 
 #define TEST_CONST __attribute__((const))
 #define TEST_MAIN(...) int TEST_CONST main(__VA_ARGS__)
@@ -66,9 +67,15 @@ namespace test_impl
         }
 
         template <typename TStream, typename T>
-        inline void output_result(TStream& s, const T& lhs_result)
+        inline void output_result(
+            TStream& s, const T& lhs_result, std::true_type)
         {
             s << "result: " << lhs_result << "\n";
+        }
+
+        template <typename TStream, typename T>
+        inline void output_result(TStream&, const T&, std::false_type)
+        {
         }
 
         template <typename TStream>
@@ -78,14 +85,20 @@ namespace test_impl
         }
 
         template <typename TStream, typename T>
-        inline void output_expected(
-            TStream& s, const char* expected, const T& rhs_result)
+        inline void output_expected(TStream& s, const char* expected,
+            const T& rhs_result, std::true_type)
         {
             s << "expected: " << expected << " -> " << rhs_result << "\n";
         }
 
+        template <typename TStream, typename T>
+        inline void output_expected(
+            TStream&, const char*, const T&, std::false_type)
+        {
+        }
+
         template <typename TF>
-        inline auto do_test(bool x, TF&& f)
+        inline void do_test(bool x, TF&& f)
         {
             if(VRM_CORE_LIKELY(x)) return;
 
@@ -96,48 +109,27 @@ namespace test_impl
     }
 
     template <typename T>
-    inline auto test_expr(
+    inline void test_expr(
         int line, bool x, T&& lhs_result, const char* expr) noexcept
     {
-        return impl::do_test(x, [&](auto& s)
-            {
-                impl::output_line(s, line);
-                impl::output_expr(s, expr);
-                impl::output_result(s, lhs_result);
-            });
+        impl::do_test(x, [&](auto& s) {
+            impl::output_line(s, line);
+            impl::output_expr(s, expr);
+            impl::output_result(s, lhs_result, vrm::core::ostreamable<T>);
+        });
     }
 
     template <typename TLhs, typename TRhs>
-    inline auto test_op(int line, bool x, TLhs&& lhs_result, TRhs&& rhs_result,
+    inline void test_op(int line, bool x, TLhs&& lhs_result, TRhs&& rhs_result,
         const char* expr, const char* expected)
     {
-        return impl::do_test(x, [&](auto& s)
-            {
-                impl::output_line(s, line);
-                impl::output_expr(s, expr);
-                impl::output_result(s, lhs_result);
-                impl::output_expected(s, expected, rhs_result);
-            });
-    }
-
-    inline auto test_expr_ns(int line, bool x, const char* expr) noexcept
-    {
-        return impl::do_test(x, [&](auto& s)
-            {
-                impl::output_line(s, line);
-                impl::output_expr(s, expr);
-            });
-    }
-
-    inline auto test_op_ns(
-        int line, bool x, const char* expr, const char* expected)
-    {
-        return impl::do_test(x, [&](auto& s)
-            {
-                impl::output_line(s, line);
-                impl::output_expr(s, expr);
-                impl::output_expected(s, expected);
-            });
+        impl::do_test(x, [&](auto& s) {
+            impl::output_line(s, line);
+            impl::output_expr(s, expr);
+            impl::output_result(s, lhs_result, vrm::core::ostreamable<TLhs>);
+            impl::output_expected(
+                s, expected, rhs_result, vrm::core::ostreamable<TRhs>);
+        });
     }
 }
 
@@ -160,21 +152,4 @@ namespace test_impl
         auto _t_x(ct(_t_xl) op ct(_t_xr));                                     \
                                                                                \
         test_impl::test_op(__LINE__, _t_x, _t_xl, _t_xr, #lhs #op #rhs, #rhs); \
-    } while(false)
-
-#define TEST_ASSERT_NS(expr)                            \
-    do                                                  \
-    {                                                   \
-        auto _t_x(expr);                                \
-                                                        \
-        test_impl::test_expr_ns(__LINE__, _t_x, #expr); \
-    } while(false)
-
-#define TEST_ASSERT_NS_OP(lhs, op, rhs)                             \
-    do                                                              \
-    {                                                               \
-        auto _t_xl(lhs);                                            \
-        auto _t_x(_t_xl op rhs);                                    \
-                                                                    \
-        test_impl::test_op_ns(__LINE__, _t_x, #lhs #op #rhs, #rhs); \
     } while(false)

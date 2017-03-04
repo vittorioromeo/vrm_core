@@ -6,15 +6,15 @@
 #pragma once
 
 #include <cassert>
-#include <vrm/pp/utils.hpp>
-#include <vrm/pp/sep_to_str.hpp>
 #include <vrm/core/utility_macros/likely_unlikely.hpp>
+#include <vrm/pp/sep_to_str.hpp>
+#include <vrm/pp/utils.hpp>
 
 /// @macro Implementation of generic assertion.
 #define VRM_CORE_IMPL_ASSERT(lhs, op, rhs, msg)                                \
     do                                                                         \
     {                                                                          \
-        if(::vrm::core::likely(lhs op rhs)) break;                                 \
+        if(::vrm::core::likely(lhs op rhs)) break;                             \
                                                                                \
         auto lhs_res(lhs);                                                     \
         auto rhs_res(rhs);                                                     \
