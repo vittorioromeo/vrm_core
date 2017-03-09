@@ -15,8 +15,10 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vrm/core/type_traits/streamable.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
+
+#ifndef FWD
+#define FWD(...) ::std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
+#endif
 
 #define TEST_CONST __attribute__((const))
 #define TEST_MAIN(...) int TEST_CONST main(__VA_ARGS__)
@@ -34,6 +36,27 @@
 
 namespace test_impl
 {
+    namespace impl
+    {
+        template <typename...>
+        using void_t = void;
+
+        template <typename T, typename = void>
+        struct can_print_t : std::false_type
+        {
+        };
+
+        template <typename T>
+        struct can_print_t<T, void_t<decltype(std::declval<std::ostream&>()
+                                              << std::declval<T>())>>
+            : std::true_type
+        {
+        };
+
+        template <typename T>
+        constexpr can_print_t<T> can_print{};
+    }
+
     namespace impl
     {
         inline auto& get_oss() noexcept
@@ -116,7 +139,7 @@ namespace test_impl
         impl::do_test(x, [&](auto& s) {
             impl::output_line(s, line);
             impl::output_expr(s, expr);
-            impl::output_result(s, lhs_result, vrm::core::ostreamable<T>);
+            impl::output_result(s, lhs_result, impl::can_print<T>);
         });
     }
 
@@ -127,9 +150,9 @@ namespace test_impl
         impl::do_test(x, [&](auto& s) {
             impl::output_line(s, line);
             impl::output_expr(s, expr);
-            impl::output_result(s, lhs_result, vrm::core::ostreamable<TLhs>);
+            impl::output_result(s, lhs_result, impl::can_print<TLhs>);
             impl::output_expected(
-                s, expected, rhs_result, vrm::core::ostreamable<TRhs>);
+                s, expected, rhs_result, impl::can_print<TRhs>);
         });
     }
 }
