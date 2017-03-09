@@ -15,6 +15,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #ifndef FWD
 #define FWD(...) ::std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
