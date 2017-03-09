@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_traits/streamable.hpp>
 
