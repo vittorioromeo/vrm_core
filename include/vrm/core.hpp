@@ -25,14 +25,17 @@
 #include <vrm/core/for_args.hpp>
 
 #include <vrm/core/args_utils.hpp>
+#include <vrm/core/fwd_capture.hpp>
 #include <vrm/core/is_valid.hpp>
 #include <vrm/core/literals.hpp>
 #include <vrm/core/make_array.hpp>
 #include <vrm/core/ostream_utils.hpp>
 #include <vrm/core/overload.hpp>
+#include <vrm/core/perfect_wrapper.hpp>
 #include <vrm/core/static_if.hpp>
 #include <vrm/core/strong_typedef.hpp>
 #include <vrm/core/tuple_utils.hpp>
 #include <vrm/core/type_aliases.hpp>
+#include <vrm/core/value_wrapper.hpp>
 #include <vrm/core/variadic_min_max.hpp>
 #include <vrm/core/y_combinator.hpp>

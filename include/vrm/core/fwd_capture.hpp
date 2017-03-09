@@ -5,10 +5,6 @@
 
 #pragma once
 
-#include <utility>
-
-#define VRM_CORE_FWD(...) ::std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)
-
-#if !defined(VRM_CORE_NO_FWD_MACRO) && !defined(FWD)
-#define FWD VRM_CORE_FWD
-#endif
+#include <vrm/core/fwd_capture/apply.hpp>
+#include <vrm/core/fwd_capture/pack.hpp>
+#include <vrm/core/fwd_capture/single.hpp>
