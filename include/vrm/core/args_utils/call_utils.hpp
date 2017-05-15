@@ -6,7 +6,7 @@
 #pragma once
 
 #include <vrm/pp.hpp>
-#include <vrm/core/utility_macros/impl/noexcept.hpp>
+#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/tuple_utils/apply.hpp>
@@ -33,8 +33,8 @@
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(name, fn)                     \
     template <sz_t TN, typename TF, typename... Ts>                          \
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) name(TF&& f, Ts&&... xs) \
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(                           \
-            VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn))
+        VRM_CORE_RETURNS(                                                    \
+            VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn));
 
 /// @macro Defines an utility function to call another function with a slice of
 /// variadic arguments. The name of the wrapper is created by concatenating

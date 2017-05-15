@@ -43,7 +43,7 @@ VRM_CORE_NAMESPACE
         template <typename TFArgGetter, typename TF, typename... Ts>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)        // .
             args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs) // .
-            VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(         // .
+            VRM_CORE_RETURNS(                                  // .
                 apply(f, TFArgGetter{}(FWD(xs)...))            // .
                 )
     }

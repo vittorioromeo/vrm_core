@@ -6,13 +6,13 @@
 #pragma once
 
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/utility_macros.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/for_args.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/type_traits/tuple.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/for_args.hpp>
+#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/variadic_min_max.hpp>
 
 VRM_CORE_NAMESPACE
@@ -67,11 +67,6 @@ VRM_CORE_NAMESPACE
         };
     }
 
-#define VRM_CORE_IMPL_BODY()                                                 \
-    ::vrm::core::impl::for_tuple_data_helper<::vrm::core::variadic_min(      \
-                                                 decay_tuple_size<Ts>()...), \
-        Ts...>::exec(FWD(f), FWD(ts)...)
-
     /// @brief Iterates over a tuple's elements passing current iteration data
     /// and them to `f` one at a time.
     /// @details Can iterate over multiple tuples at once, passing the Nth
@@ -79,10 +74,10 @@ VRM_CORE_NAMESPACE
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) for_tuple_data(
-        TF && f, Ts && ... ts) //
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY()
-
-#undef VRM_CORE_IMPL_BODY
+        TF && f, Ts && ... ts)
+        VRM_CORE_RETURNS(::vrm::core::impl::for_tuple_data_helper<
+            ::vrm::core::variadic_min(decay_tuple_size<Ts>()...),
+            Ts...>::exec(FWD(f), FWD(ts)...))
 }
 VRM_CORE_NAMESPACE_END
 
@@ -99,7 +94,8 @@ VRM_CORE_NAMESPACE
         public:
             template <typename TFFwd>
             VRM_CORE_ALWAYS_INLINE constexpr for_tuple_caller(
-                TFFwd&& f) noexcept : _f{FWD(f)}
+                TFFwd&& f) noexcept
+                : _f{FWD(f)}
             {
             }
 
@@ -123,9 +119,10 @@ VRM_CORE_NAMESPACE
     /// element of every tuple to `f` simultaneously.
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE                                                 // .
-        constexpr decltype(auto) for_tuple(TF && f, Ts && ... xs)          // .
-        VRM_CORE_IMPL_NOEXCEPT_AND_RETURN_BODY_VA(                         // .
+    VRM_CORE_ALWAYS_INLINE // .
+        constexpr decltype(auto)
+        for_tuple(TF && f, Ts && ... xs)                                   // .
+        VRM_CORE_RETURNS(                                                  // .
             for_tuple_data(impl::for_tuple_caller<TF>{FWD(f)}, FWD(xs)...) // .
             )
 }
