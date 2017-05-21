@@ -12,13 +12,13 @@
 VRM_CORE_NAMESPACE
 {
     /// @brief Micro-optimization: condition likely to be true.
-    VRM_CORE_ALWAYS_INLINE auto likely(bool x) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto likely(bool x) noexcept
     {
         return __builtin_expect(x, true);
     }
 
     /// @brief Micro-optimization: condition unlikely to be true.
-    VRM_CORE_ALWAYS_INLINE auto unlikely(bool x) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto unlikely(bool x) noexcept
     {
         return __builtin_expect(x, false);
     }
@@ -29,12 +29,12 @@ VRM_CORE_NAMESPACE_END
 
 VRM_CORE_NAMESPACE
 {
-    VRM_CORE_ALWAYS_INLINE auto likely(bool x) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto likely(bool x) noexcept
     {
         return x;
     }
 
-    VRM_CORE_ALWAYS_INLINE auto unlikely(bool x) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto unlikely(bool x) noexcept
     {
         return x;
     }

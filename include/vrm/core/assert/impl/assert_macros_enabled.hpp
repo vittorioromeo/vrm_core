@@ -32,24 +32,13 @@
                                                                                \
     } while(false)
 
-
-
-#ifdef __EXCEPTIONS
-
 /// @macro Implementation of `constexpr`-friendly assertion.
-#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg) \
-    do                                                    \
-    {                                                     \
-        if(!(lhs op rhs)){ throw 0; }                     \
-                                                          \
+/// @details See https://akrzemi1.wordpress.com/2017/05/18/asserts-in-constexpr-functions/.
+#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg)   \
+    do                                                      \
+    {                                                       \
+        (::vrm::core::likely(lhs op rhs)                    \
+            ? void(0)                                       \
+            : []{ assert(!VRM_PP_TOSTR(lhs, op, rhs));}()); \
+                                                            \
     } while(false)
-
-#else
-
-/// @macro Implementation of `constexpr`-friendly assertion.
-#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg) \
-    do                                                    \
-    {                                                     \
-    } while(false)
-
-#endif

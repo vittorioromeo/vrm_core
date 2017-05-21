@@ -34,7 +34,7 @@
     template <sz_t TN, typename TF, typename... Ts>                \
     VRM_CORE_ALWAYS_INLINE constexpr auto name(TF&& f, Ts&&... xs) \
         VRM_CORE_RETURNS(                                          \
-            VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn));
+            VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn))
 
 /// @macro Defines an utility function to call another function with a slice of
 /// variadic arguments. The name of the wrapper is created by concatenating
