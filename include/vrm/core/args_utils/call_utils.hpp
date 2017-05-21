@@ -30,10 +30,10 @@
 
 /// @macro Defines an utility function to call another function with a slice of
 /// variadic arguments.
-#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(name, fn)                     \
-    template <sz_t TN, typename TF, typename... Ts>                          \
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) name(TF&& f, Ts&&... xs) \
-        VRM_CORE_RETURNS(                                                    \
+#define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(name, fn)           \
+    template <sz_t TN, typename TF, typename... Ts>                \
+    VRM_CORE_ALWAYS_INLINE constexpr auto name(TF&& f, Ts&&... xs) \
+        VRM_CORE_RETURNS(                                          \
             VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn));
 
 /// @macro Defines an utility function to call another function with a slice of

@@ -41,7 +41,7 @@ VRM_CORE_NAMESPACE
         /// @details The used slicing function is passed in as `TFArgGetter`,
         /// under the form of a `constexpr`-friendly wrapper.
         template <typename TFArgGetter, typename TF, typename... Ts>
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)        // .
+        VRM_CORE_ALWAYS_INLINE constexpr auto                  // .
             args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs) // .
             VRM_CORE_RETURNS(                                  // .
                 apply(f, TFArgGetter{}(FWD(xs)...))            // .

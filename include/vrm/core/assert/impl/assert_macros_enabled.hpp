@@ -32,10 +32,24 @@
                                                                                \
     } while(false)
 
+
+
+#ifdef __EXCEPTIONS
+
 /// @macro Implementation of `constexpr`-friendly assertion.
 #define VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg) \
     do                                                    \
     {                                                     \
-        assert(lhs op rhs);                               \
+        if(!(lhs op rhs)){ throw 0; }                     \
                                                           \
     } while(false)
+
+#else
+
+/// @macro Implementation of `constexpr`-friendly assertion.
+#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(lhs, op, rhs, msg) \
+    do                                                    \
+    {                                                     \
+    } while(false)
+
+#endif

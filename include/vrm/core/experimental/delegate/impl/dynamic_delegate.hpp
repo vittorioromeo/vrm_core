@@ -37,9 +37,9 @@ VRM_CORE_NAMESPACE
             using base_type = impl::base_delegate<TSettings>;
             using allocator_type = typename base_type::allocator_type;
 
+            // TODO: propagate allocator properly?
             using handle_storage_type =
-                handle::storage::hs_vector<handle_settings_type,
-                    allocator_type>;
+                handle::storage::hs_vector<handle_settings_type>;
 
             using handle_manager_type =
                 handle::manager<handle::strategy::storage<handle_settings_type,

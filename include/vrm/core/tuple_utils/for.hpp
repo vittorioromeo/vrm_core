@@ -73,7 +73,7 @@ VRM_CORE_NAMESPACE
     /// element of every tuple to `f` simultaneously.
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) for_tuple_data(
+    VRM_CORE_ALWAYS_INLINE constexpr auto for_tuple_data(
         TF && f, Ts && ... ts)
         VRM_CORE_RETURNS(::vrm::core::impl::for_tuple_data_helper<
             ::vrm::core::variadic_min(decay_tuple_size<Ts>()...),
@@ -120,7 +120,7 @@ VRM_CORE_NAMESPACE
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
     VRM_CORE_ALWAYS_INLINE // .
-        constexpr decltype(auto)
+        constexpr auto
         for_tuple(TF && f, Ts && ... xs)                                   // .
         VRM_CORE_RETURNS(                                                  // .
             for_tuple_data(impl::for_tuple_caller<TF>{FWD(f)}, FWD(xs)...) // .
