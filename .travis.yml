@@ -3,7 +3,7 @@ os: linux
 sudo: false
 cache: apt
 
-compiler: 
+compiler:
     - clang
     - gcc
 
@@ -39,5 +39,6 @@ before_script:
 
 script:
     - cd ${TRAVIS_BUILD_DIR}
-    - cd build    
+    - cd build
     - make -j4 check
+
