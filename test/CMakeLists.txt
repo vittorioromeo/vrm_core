@@ -20,7 +20,7 @@ foreach(_x IN LISTS vrm_cmake_out)
     target_compile_options(${_x} PUBLIC "-fdiagnostics-color=always")
 
     # TODO:
-    if(FALSE)
+    if(DEFINED AUGMENT_TESTS AND NOT DEFINED WIN_MINGW_DEVEL)
     #{
         vrm_cmake_augment_test_asan(${_x})
         vrm_cmake_augment_test_ofast(${vrm_cmake_out})

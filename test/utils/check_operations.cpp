@@ -1,4 +1,5 @@
 #include "./test_utils.hpp"
+#include "./tracked_object.hpp"
 #include <vrm/core/utility_macros/fwd.hpp>
 
 TEST_MAIN()
@@ -17,7 +18,7 @@ TEST_MAIN()
     {
         auto a0 = ctx.anything("A");
         auto a1 = a0;
-        
+
     }).expect_that("A").ctors(1)
                        .copies(1)
                        .no_moves()
@@ -30,7 +31,7 @@ TEST_MAIN()
 
         auto b0 = ctx.anything("B");
         auto b1 = std::move(b0);
-        
+
     }).expect_that("A").ctors(1)
                        .copies(1)
                        .no_moves()
