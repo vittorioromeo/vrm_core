@@ -15,6 +15,17 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 # Generate all the unit tests.
 vrm_cmake_generate_unit_tests_glob("*.cpp")
 
+macro(augment_test x xname flags)
+#{
+    set(AUGMENTED_TEST_NAME "${x}_${xname}")
+    get_target_property(xsrcs ${x} SOURCES)
+
+    add_executable("${AUGMENTED_TEST_NAME}" EXCLUDE_FROM_ALL ${xsrcs})
+    vrm_cmake_add_unit_test("${AUGMENTED_TEST_NAME}" ${CMAKE_CURRENT_BINARY_DIR}/${AUGMENTED_TEST_NAME})
+    target_compile_options("${AUGMENTED_TEST_NAME}" PUBLIC ${ARGN})
+#}
+endmacro()
+
 foreach(_x IN LISTS vrm_cmake_out)
 #{
     target_compile_options(${_x} PUBLIC "-fdiagnostics-color=always")
