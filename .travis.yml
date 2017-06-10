@@ -30,7 +30,7 @@ before_script:
     - if [ "$CXX" = "clang++" ]; then export CXX="clang++-5.0" CC="clang-5.0"; fi
     - cd ${TRAVIS_BUILD_DIR}
     - mkdir build && cd build
-    - cmake -DCMAKE_CXX_STANDARD=14 -DAUGMENT_TESTS=1 ..
+    - cmake -DCMAKE_CXX_STANDARD=14 ..
 
 script:
     - cd ${TRAVIS_BUILD_DIR}
