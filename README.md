@@ -21,7 +21,7 @@
 [stability]: http://github.com/badges/stability-badges
 [license]: https://github.com/SuperV1234/vrm_core/blob/master/LICENSE
 [gratipay]: https://gratipay.com/~SuperV1234/
-[on-wandbox]: https://wandbox.org/permlink/3oM6SqIb0WLGy0iY
+[on-wandbox]: https://wandbox.org/permlink/DfXLlf7bHm2rDfFj
 [on-godbolt]: https://godbolt.org/g/9t8gN5
 
 
