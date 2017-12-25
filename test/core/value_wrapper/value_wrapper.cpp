@@ -18,6 +18,7 @@ TEST_MAIN()
     {
         auto l = [](int){ return 2; };
         value_wrapper<decltype(l)> w(std::move(l));
+        (void) w;
         TEST_ASSERT(l(42) == 2);
     }
 }
