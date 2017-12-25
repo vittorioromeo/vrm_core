@@ -29,6 +29,7 @@ find_path(
         /opt/
         "${PROJECT_SOURCE_DIR}/extlibs/vrm_core/"
         "${CMAKE_CURRENT_LIST_DIR}/../../"
+        "${CMAKE_CURRENT_LIST_DIR}/../"
 
         NO_DEFAULT_PATH
 )
