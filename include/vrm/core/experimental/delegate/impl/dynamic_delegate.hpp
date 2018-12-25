@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -19,7 +19,7 @@
 // TODO:
 // Strong handle typedefs for index/target
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -78,4 +78,3 @@ VRM_CORE_NAMESPACE
     using dynamic_delegate = impl::dynamic_delegate<
         impl::delegate_settings<std::function, TSignature, TAllocator>>;
 }
-VRM_CORE_NAMESPACE_END

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -8,9 +8,8 @@
 #include <type_traits>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/integral_constant.hpp>
-#include <vrm/core/type_traits/void_t.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace resource
     {
@@ -30,7 +29,7 @@ VRM_CORE_NAMESPACE
         };
 
         template <typename T>
-        struct has_init<T, void_t<decltype(&T::init)>> : std::true_type
+        struct has_init<T, std::void_t<decltype(&T::init)>> : std::true_type
         {
         };
 
@@ -40,7 +39,6 @@ VRM_CORE_NAMESPACE
             >;
     }
 }
-VRM_CORE_NAMESPACE_END
 
 // TODO: use is_valid ?
 // TODO: check other methods

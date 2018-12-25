@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,12 +7,10 @@
 
 #include <type_traits>
 #include <utility>
-#include <vrm/core/assert/static_assert_macros.hpp>
 #include <vrm/core/config.hpp>
-#include <vrm/core/type_traits/callable.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     /// @brief Class with a similar interface to `std::reference_wrapper` that
     /// uses value semantics.
@@ -21,7 +19,7 @@ VRM_CORE_NAMESPACE
     template <typename T>
     class value_wrapper
     {
-        VRM_CORE_STATIC_ASSERT_NM(!std::is_reference<T>{});
+        static_assert(!std::is_reference<T>{});
 
     private:
         T _value;
@@ -37,7 +35,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename... TArgs,
-            typename = std::enable_if_t<callable<T&(TArgs&&...)>>>
+            typename = std::enable_if_t<std::is_invocable_v<T&, TArgs&&...>>>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
             TArgs&&... args) noexcept(noexcept(_value(FWD(args)...)))
         {
@@ -45,7 +43,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename... TArgs,
-            typename = std::enable_if_t<callable<const T&(TArgs&&...)>>>
+            typename = std::enable_if_t<std::is_invocable_v<const T&, TArgs&&...>>>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
             TArgs&&... args) const noexcept(noexcept(_value(FWD(args)...)))
         {
@@ -85,4 +83,3 @@ VRM_CORE_NAMESPACE
         }
     };
 }
-VRM_CORE_NAMESPACE_END

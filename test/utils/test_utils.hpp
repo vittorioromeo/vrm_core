@@ -44,16 +44,13 @@ namespace test_impl
 {
     namespace impl
     {
-        template <typename...>
-        using void_t = void;
-
         template <typename T, typename = void>
         struct can_print_t : std::false_type
         {
         };
 
         template <typename T>
-        struct can_print_t<T, void_t<decltype(std::declval<std::ostream&>()
+        struct can_print_t<T, std::void_t<decltype(std::declval<std::ostream&>()
                                               << std::declval<T>())>>
             : std::true_type
         {

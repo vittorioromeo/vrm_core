@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -11,7 +11,7 @@
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/args_utils/nth_arg.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -27,11 +27,10 @@ VRM_CORE_NAMESPACE
     VRM_CORE_ALWAYS_INLINE constexpr auto args_slice(Ts && ... xs) noexcept
     {
         // Assert range validity.
-        VRM_CORE_STATIC_ASSERT_NM(TIEnd >= TIBegin);
-        VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) >= TIEnd - TIBegin);
+        static_assert(TIEnd >= TIBegin);
+        static_assert(sizeof...(xs) >= TIEnd - TIBegin);
 
         return impl::build_args_slice<TIBegin>(
             std::make_index_sequence<TIEnd - TIBegin>(), FWD(xs)...);
     }
 }
-VRM_CORE_NAMESPACE_END

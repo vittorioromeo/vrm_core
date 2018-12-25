@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,11 +7,10 @@
 
 #include <functional>
 #include <type_traits>
-#include <vrm/core/config/names.hpp>
 #include <vrm/core/perfect_wrapper.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -62,7 +61,6 @@ VRM_CORE_NAMESPACE
         }
     }
 }
-VRM_CORE_NAMESPACE_END
 
 #define VRM_CORE_FWD_CAPTURE(...) \
     ::vrm::core::impl::fwd_capture(FWD(__VA_ARGS__))

@@ -1,9 +1,8 @@
 #include "../../utils/test_utils.hpp"
 #include <cstddef>
 #include <vrm/core/config.hpp>
-#include <vrm/core/is_valid.hpp>
 #include <vrm/core/for_args.hpp>
-#include <vrm/core/static_if.hpp>
+#include <vrm/core/is_valid.hpp>
 
 using namespace vrm::core;
 
@@ -37,29 +36,17 @@ struct chestnut
     }
 };
 
-auto has_peel(is_valid([](auto&& x) -> decltype(x.peel())
-    {
-    }));
+auto has_peel(is_valid([](auto&& x) -> decltype(x.peel()) {}));
 
-auto has_eat_banana(is_valid([](auto&& x) -> decltype(x.eat_banana())
-    {
-    }));
+auto has_eat_banana(is_valid([](auto&& x) -> decltype(x.eat_banana()) {}));
 
-auto has_eat_apple(is_valid([](auto&& x) -> decltype(x.eat_apple())
-    {
-    }));
+auto has_eat_apple(is_valid([](auto&& x) -> decltype(x.eat_apple()) {}));
 
-auto has_x(is_valid([](auto&& x) -> decltype(x.x)
-    {
-    }));
+auto has_x(is_valid([](auto&& x) -> decltype(x.x) {}));
 
-auto has_y(is_valid([](auto&& x) -> decltype(x.y)
-    {
-    }));
+auto has_y(is_valid([](auto&& x) -> decltype(x.y) {}));
 
-auto has_z(is_valid([](auto&& x) -> decltype(x.z)
-    {
-    }));
+auto has_z(is_valid([](auto&& x) -> decltype(x.z) {}));
 
 
 template <typename T>
@@ -95,27 +82,23 @@ TEST_MAIN()
     static_assert(has_z(chestnut{}), "");
 
     for_args(
-        [](auto t)
-        {
+        [](auto t) {
             using real_t = typename decltype(t)::type;
 
-            static_if(has_peel(real_t{}))
-                .then([](auto&& x)
-                    {
-                        x.peel();
-                    })(real_t{});
+            if constexpr(has_peel(real_t{}))
+            {
+                real_t{}.peel();
+            }
 
-            static_if(has_eat_banana(real_t{}))
-                .then([](auto&& x)
-                    {
-                        x.eat_banana();
-                    })(real_t{});
+            if constexpr(has_eat_banana(real_t{}))
+            {
+                real_t{}.eat_banana();
+            }
 
-            static_if(has_eat_apple(real_t{}))
-                .then([](auto&& x)
-                    {
-                        x.eat_apple();
-                    })(real_t{});
+            if constexpr(has_eat_apple(real_t{}))
+            {
+                real_t{}.eat_apple();
+            }
         },
         type_<banana>{}, type_<apple>{}, type_<chestnut>{});
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -17,7 +17,7 @@
 #include <vrm/core/casts/self.hpp>
 #include <vrm/core/tuple_utils/impl/tuple_transposer.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <sz_t TRowCount, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
@@ -105,6 +105,5 @@ VRM_CORE_NAMESPACE
             FWD(rows)...);
     }
 }
-VRM_CORE_NAMESPACE_END
 
 // TODO: noexcept(...

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -12,7 +12,7 @@
 #include <vrm/core/args_utils/nth_arg.hpp>
 #include <vrm/core/args_utils/args_slice.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <sz_t TN, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr auto first_n_args(Ts && ... xs) noexcept
@@ -65,4 +65,3 @@ VRM_CORE_NAMESPACE
         return copy_if_rvalue(std::get<0>(last_n_args<1>(FWD(xs)...)));
     }
 }
-VRM_CORE_NAMESPACE_END

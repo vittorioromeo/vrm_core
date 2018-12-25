@@ -9,6 +9,7 @@ include(vrm_cmake)
 
 # Basic project setup.
 vrm_cmake_init_project(vrm_core)
+vrm_cmake_set_cxxstd(17)
 vrm_cmake_find_extlib(vrm_pp)
 
 # Alias the include directory.

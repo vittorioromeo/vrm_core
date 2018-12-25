@@ -18,10 +18,10 @@ void ensure_assert()
 template <typename TOut, typename TIn>
 constexpr auto fake_to_num(const TIn& x) noexcept
 {
-    VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TOut>{},
+    static_assert(std::is_arithmetic<TOut>{},
         "`TOut` output type must be an arithmetic type.");
 
-    VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TIn>{},
+    static_assert(std::is_arithmetic<TIn>{},
         "`TIn` input type must be an arithmetic type.");
 
     FAKE_ASSERT((!vrm::core::impl::will_overflow<TOut, TIn>(x)));

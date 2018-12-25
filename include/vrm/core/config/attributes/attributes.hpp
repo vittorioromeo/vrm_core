@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -11,9 +11,6 @@
 /// @macro Macro that expands to an attribute.
 /// @details Uses ` __attribute__`.
 #define VRM_CORE_ATTRIBUTE(...) VRM_CORE_IMPL_ATTRIBUTE(__VA_ARGS__)
-
-/// @macro Expands to the `unused` attribute.
-#define VRM_CORE_UNUSED VRM_CORE_ATTRIBUTE(unused)
 
 /// @macro Expands to the `always_inline` attribute.
 /// @details Generally, functions are not inlined unless optimization is
@@ -34,13 +31,6 @@
 /// (From GCC documentation.)
 #define VRM_CORE_NEVER_INLINE VRM_CORE_ATTRIBUTE(noinline)
 
-/// @macro Expands to the `unused` attribute.
-/// @details This attribute, attached to a function, means that the function is
-/// meant to be possibly unused. GCC does not produce a warning for this
-/// function.
-/// (From GCC documentation.)
-#define VRM_CORE_UNUSED_FN VRM_CORE_UNUSED
-
 /// @macro Expands to the `pure` attribute.
 /// @details Many functions have no effects except the return value and their
 /// return value depends only on the parameters and/or global variables. Such a
@@ -60,15 +50,6 @@
 /// const. It does not make sense for a const function to return void.
 /// (From GCC documentation.)
 #define VRM_CORE_CONST_FN VRM_CORE_ATTRIBUTE(const)
-
-/// @macro Expands to the `noreturn` attribute.
-/// @details A few standard library functions, such as abort and exit, cannot
-/// return. GCC knows this automatically. Some programs define their own
-/// functions that never return. You can declare them noreturn to tell the
-/// compiler this fact. It does not make sense for a noreturn function to have a
-/// return type other than void.
-/// (From GCC documentation.)
-#define VRM_CORE_NORETURN_FN VRM_CORE_ATTRIBUTE(noreturn)
 
 // TODO: docs, conditional compilator depending on compiler if necessary
 // TODO: function_attributes.hpp, class_attributes.hpp, ...

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -13,7 +13,7 @@
 #include <vrm/core/experimental/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -124,7 +124,7 @@ VRM_CORE_NAMESPACE
             void unsafe_emplace_back(
                 Ts&&... xs) // TODO: noexcept(noexcept(...))
             {
-                VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) == buffer_count);
+                static_assert(sizeof...(xs) == buffer_count);
 
                 VRM_CORE_ASSERT_OP(_capacity, >, _size);
                 auto ref_tuple(_multi_buffer[_size]);
@@ -144,7 +144,7 @@ VRM_CORE_NAMESPACE
                                 new(address) type(FWD(args)...);
                             });
 
-                        apply(placement_new, r);
+                        std::apply(placement_new, r);
                     },
                     FWD(xs)...);
 
@@ -209,7 +209,6 @@ VRM_CORE_NAMESPACE
         };
     }
 }
-VRM_CORE_NAMESPACE_END
 
 // TODO:
 // * split to inl

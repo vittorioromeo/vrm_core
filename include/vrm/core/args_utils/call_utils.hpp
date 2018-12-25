@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -42,7 +42,7 @@
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(fn) \
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(VRM_PP_CAT(call_with_, fn), fn)
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     // Call the macros to define all call utility functions.
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(first_n_args)
@@ -52,7 +52,6 @@ VRM_CORE_NAMESPACE
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_until)
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_before)
 }
-VRM_CORE_NAMESPACE_END
 
 #undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN
 #undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER

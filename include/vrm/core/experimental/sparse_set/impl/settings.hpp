@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -10,7 +10,7 @@
 #include <vrm/core/type_aliases.hpp>
 #include <vrm/core/strong_typedef.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -20,7 +20,7 @@ VRM_CORE_NAMESPACE
         private:
             using underlying_value_type = underlying_if_strong_typedef_type<T>;
 
-            VRM_CORE_STATIC_ASSERT_NM(
+            static_assert(
                 std::is_arithmetic<underlying_value_type>{} &&
                 std::is_unsigned<underlying_value_type>{});
 
@@ -36,4 +36,3 @@ VRM_CORE_NAMESPACE
         };
     }
 }
-VRM_CORE_NAMESPACE_END

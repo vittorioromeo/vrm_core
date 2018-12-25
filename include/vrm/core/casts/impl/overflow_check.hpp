@@ -1,25 +1,25 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <cstdint>
 #include <cfenv>
+#include <cstdint>
 #include <limits>
 #include <type_traits>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_traits.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/integral_constant.hpp>
+#include <vrm/core/type_traits.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
         template <typename TOut, typename TIn>
-        constexpr bool will_overflow_impl(
+        [[nodiscard]] constexpr bool will_overflow_impl(
             const TIn& x, std::false_type, std::false_type) noexcept
         {
             if(x > std::numeric_limits<TOut>::max() ||
@@ -51,7 +51,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        constexpr bool will_overflow_impl(
+        [[nodiscard]] constexpr bool will_overflow_impl(
             const TIn& x, std::true_type, std::false_type) noexcept
         {
             if((long double)x > (long double)std::numeric_limits<TOut>::max() ||
@@ -65,7 +65,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        constexpr bool will_overflow_impl(
+        [[nodiscard]] constexpr bool will_overflow_impl(
             const TIn& x, std::false_type, std::true_type) noexcept
         {
             if((long double)x > (long double)std::numeric_limits<TOut>::max() ||
@@ -79,7 +79,7 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        constexpr bool will_overflow_impl(
+        [[nodiscard]] constexpr bool will_overflow_impl(
             const TIn& x, std::true_type, std::true_type) noexcept
         {
             using out_lim = std::numeric_limits<TOut>;
@@ -154,12 +154,11 @@ VRM_CORE_NAMESPACE
         }
 
         template <typename TOut, typename TIn>
-        constexpr bool will_overflow(const TIn& x) noexcept
+        [[nodiscard]] constexpr bool will_overflow(const TIn& x) noexcept
         {
             return will_overflow_impl<TOut, TIn>(x,
-                bool_v<std::is_integral<TOut>{}>,
-                bool_v<std::is_integral<TIn>{}>);
+                bool_v<std::is_integral_v<TOut>>,
+                bool_v<std::is_integral_v<TIn>>);
         }
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace impl
+} // namespace vrm::core

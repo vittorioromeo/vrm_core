@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -15,7 +15,7 @@
 #include <vrm/core/utility_macros.hpp>
 #include <vrm/core/variadic_min_max.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -79,9 +79,8 @@ VRM_CORE_NAMESPACE
             ::vrm::core::variadic_min(decay_tuple_size<Ts>()...),
             Ts...>::exec(FWD(f), FWD(ts)...))
 }
-VRM_CORE_NAMESPACE_END
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -109,9 +108,8 @@ VRM_CORE_NAMESPACE
         };
     }
 }
-VRM_CORE_NAMESPACE_END
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     /// @brief Iterates over a tuple's elements passing them to `f` one at a
     /// time.
@@ -126,6 +124,5 @@ VRM_CORE_NAMESPACE
             for_tuple_data(impl::for_tuple_caller<TF>{FWD(f)}, FWD(xs)...) // .
             )
 }
-VRM_CORE_NAMESPACE_END
 
 // TODO: implement using static_for?

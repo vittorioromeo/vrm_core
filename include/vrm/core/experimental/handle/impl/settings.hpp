@@ -1,15 +1,13 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-#include <vrm/core/assert/static_assert_macros.hpp>
 #include <vrm/core/strong_typedef.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace handle
     {
@@ -24,11 +22,11 @@ VRM_CORE_NAMESPACE
             using counter_underlying_type =
                 underlying_if_strong_typedef_type<TCounter>;
 
-            VRM_CORE_STATIC_ASSERT_NM(
+            static_assert(
                 std::is_arithmetic<target_underlying_type>{} &&
                 std::is_unsigned<target_underlying_type>{});
 
-            VRM_CORE_STATIC_ASSERT_NM( // .
+            static_assert( // .
                 std::is_arithmetic<counter_underlying_type>{});
 
         public:
@@ -49,4 +47,3 @@ VRM_CORE_NAMESPACE
         };
     }
 }
-VRM_CORE_NAMESPACE_END

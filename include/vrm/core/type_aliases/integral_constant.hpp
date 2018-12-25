@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -8,7 +8,6 @@
 #include <cstddef>
 #include <type_traits>
 #include <vrm/pp/cat.hpp>
-#include <vrm/core/config/names.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
 // TODO: auto-generate literal operator (with extra macro parameter)?
@@ -77,7 +76,7 @@
 #define VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(x) \
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER(x, x)
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     // Signed integral constants.
     VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN(char)
@@ -113,7 +112,6 @@ VRM_CORE_NAMESPACE
     template <sz_t TI>
     constexpr sz_t_<TI> sz_v{};
 }
-VRM_CORE_NAMESPACE_END
 
 #undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN
 #undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER

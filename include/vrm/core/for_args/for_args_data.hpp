@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -16,14 +16,14 @@
 // http://stackoverflow.com/a/29901074/598696
 
 // TODO: cleanup with cppcon2015 implementation
-// TODO: short circuiting with static_if
+// TODO: short circuiting with if constexpr?
 // TODO: return value
 /*
 struct for_args_continue{};
        struct for_args_break{};
        struct for_args_return{};*/
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -90,10 +90,10 @@ VRM_CORE_NAMESPACE
             VRM_CORE_ALWAYS_INLINE constexpr static void exec(TF&& f,
                 Ts&&... xs) noexcept(noexcept(VRM_CORE_IMPL_FORNARGS_BODY()))
             {
-                VRM_CORE_STATIC_ASSERT(
+                static_assert(
                     TArity > 0, "Unallowed arity: must be greater than 0");
 
-                VRM_CORE_STATIC_ASSERT(sizeof...(Ts) % TArity == 0,
+                static_assert(sizeof...(Ts) % TArity == 0,
                     "Unallowed arity: not divisible by number of arguments");
 
                 VRM_CORE_IMPL_FORNARGS_BODY();
@@ -112,4 +112,3 @@ VRM_CORE_NAMESPACE
         impl::for_args_data_dispatch<TArity>::exec(FWD(f), FWD(xs)...);
     }
 }
-VRM_CORE_NAMESPACE_END

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -13,7 +13,7 @@
 #include <vrm/core/experimental/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <typename... TBufferTypes>
     class multi_resizable_buffer;
@@ -26,7 +26,7 @@ VRM_CORE_NAMESPACE
     template <typename... TBufferTypes>
     class VRM_CORE_CLASS_API multi_resizable_buffer
     {
-        VRM_CORE_STATIC_ASSERT_NM(sizeof...(TBufferTypes) > 0);
+        static_assert(sizeof...(TBufferTypes) > 0);
 
     private:
         using this_type = multi_resizable_buffer<TBufferTypes...>;
@@ -83,21 +83,21 @@ VRM_CORE_NAMESPACE
         template <sz_t TN>
             VRM_CORE_ALWAYS_INLINE auto& nth_buffer() & noexcept
         {
-            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            static_assert(buffer_count > TN);
             return std::get<TN>(_buffers);
         }
 
         template <sz_t TN>
         VRM_CORE_ALWAYS_INLINE const auto& nth_buffer() const& noexcept
         {
-            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            static_assert(buffer_count > TN);
             return std::get<TN>(_buffers);
         }
 
         template <sz_t TN>
             VRM_CORE_ALWAYS_INLINE auto nth_buffer() && noexcept
         {
-            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            static_assert(buffer_count > TN);
             return std::move(std::get<TN>(_buffers));
         }
 
@@ -264,7 +264,6 @@ VRM_CORE_NAMESPACE
         lhs.swap(rhs);
     }
 }
-VRM_CORE_NAMESPACE_END
 
 // TODO:
 // * split to inl

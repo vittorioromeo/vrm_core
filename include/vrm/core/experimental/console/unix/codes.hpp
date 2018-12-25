@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,12 +7,11 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <vrm/core/config/names.hpp>
 #include <vrm/core/make_array.hpp>
 #include <vrm/core/experimental/console/format_types.hpp>
 #include <vrm/core/experimental/console/format_state.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace console
     {
@@ -98,4 +97,3 @@ VRM_CORE_NAMESPACE
         }
     }
 }
-VRM_CORE_NAMESPACE_END

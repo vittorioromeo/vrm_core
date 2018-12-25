@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -12,7 +12,7 @@
 #include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/casts/self.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     /// @brief Returns the `TN`-th argument of a variadic argument pack, casting
     /// it to the type it would have when wrapped into a `ref_tuple`.
@@ -23,10 +23,9 @@ VRM_CORE_NAMESPACE
         noexcept(noexcept(std::get<TN>(make_ref_tuple(FWD(xs)...))))
     {
         // Assert index validity.
-        VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) > TN);
+        static_assert(sizeof...(xs) > TN);
 
         // Return the `TN`-th element of, copying it if it's an rvalue.
         return copy_if_rvalue(std::get<TN>(make_ref_tuple(FWD(xs)...)));
     }
 }
-VRM_CORE_NAMESPACE_END

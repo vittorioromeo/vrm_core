@@ -51,10 +51,10 @@ void TEST_CONST noncopy_test()
         auto t0 = std::make_tuple(noncopy{0}, 'a');
         auto t1 = std::make_tuple(noncopy{1}, 'b');
 
-        TEST_ASSERT_OP(apply(first, t0).x, ==, 0);
-        TEST_ASSERT_OP(apply(first, t1).x, ==, 1);
-        //  TEST_ASSERT_OP(apply(second, t0), ==, 'a');
-        //  TEST_ASSERT_OP(apply(second, t1), ==, 'b');
+        TEST_ASSERT_OP(std::apply(first, t0).x, ==, 0);
+        TEST_ASSERT_OP(std::apply(first, t1).x, ==, 1);
+        //  TEST_ASSERT_OP(std::apply(second, t0), ==, 'a');
+        //  TEST_ASSERT_OP(std::apply(second, t1), ==, 'b');
     }
 
     {
@@ -97,18 +97,18 @@ int main()
     auto t0 = std::make_tuple(0, 'a', 1, 'b');
     auto t1 = std::make_tuple(2, 'c', 3, 'd');
 
-    TEST_ASSERT_OP(apply(first, t0), ==, 0);
-    TEST_ASSERT_OP(apply(first, t1), ==, 2);
-    TEST_ASSERT_OP(apply(second, t0), ==, 'a');
-    TEST_ASSERT_OP(apply(second, t1), ==, 'c');
+    TEST_ASSERT_OP(std::apply(first, t0), ==, 0);
+    TEST_ASSERT_OP(std::apply(first, t1), ==, 2);
+    TEST_ASSERT_OP(std::apply(second, t0), ==, 'a');
+    TEST_ASSERT_OP(std::apply(second, t1), ==, 'c');
 
     TEST_ASSERT_OP(apply_interleaved<2>(first, t0), ==, 0);
     TEST_ASSERT_OP(apply_interleaved<2>(first, t1), ==, 2);
     TEST_ASSERT_OP(apply_interleaved<2>(second, t0), ==, 1);
     TEST_ASSERT_OP(apply_interleaved<2>(second, t1), ==, 3);
 
-    TEST_ASSERT_OP(apply(count, t0), ==, 4);
-    TEST_ASSERT_OP(apply(count, t1), ==, 4);
+    TEST_ASSERT_OP(std::apply(count, t0), ==, 4);
+    TEST_ASSERT_OP(std::apply(count, t1), ==, 4);
 
     TEST_ASSERT_OP(apply_interleaved<2>(count, t0), ==, 4);
     TEST_ASSERT_OP(apply_interleaved<2>(count, t1), ==, 4);

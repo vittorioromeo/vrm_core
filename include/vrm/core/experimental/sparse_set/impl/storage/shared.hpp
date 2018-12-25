@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -11,7 +11,7 @@
 #include <vrm/core/casts.hpp>
 #include <vrm/core/experimental/resizable_buffer.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -125,4 +125,3 @@ VRM_CORE_NAMESPACE
         }
     }
 }
-VRM_CORE_NAMESPACE_END

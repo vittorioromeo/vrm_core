@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -32,7 +32,7 @@
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(fn) \
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER(VRM_PP_CAT(fn, _wrapper), fn)
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -41,12 +41,12 @@ VRM_CORE_NAMESPACE
         /// @details The used slicing function is passed in as `TFArgGetter`,
         /// under the form of a `constexpr`-friendly wrapper.
         template <typename TFArgGetter, typename TF, typename... Ts>
-        VRM_CORE_ALWAYS_INLINE constexpr auto                  // .
-            args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs) // .
-            VRM_CORE_RETURNS(                                  // .
-                apply(f, TFArgGetter{}(FWD(xs)...))            // .
-                )
-    }
+        VRM_CORE_ALWAYS_INLINE constexpr auto              // .
+        args_call_wrapper(TFArgGetter, TF&& f, Ts&&... xs) // .
+            VRM_CORE_RETURNS(                              // .
+                apply(f, TFArgGetter{}(FWD(xs)...))        // .
+            )
+    } // namespace impl
 
     namespace impl
     {
@@ -57,9 +57,8 @@ VRM_CORE_NAMESPACE
         VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_after)
         VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_until)
         VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN(all_args_before)
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace impl
+} // namespace vrm::core
 
 #undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER_SN
 #undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_WRAPPER

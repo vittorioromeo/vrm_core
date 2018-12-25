@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2019 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -9,12 +9,11 @@
 #include <utility>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_traits/nonesuch.hpp>
-#include <vrm/core/type_traits/void_t.hpp>
 
 // From:
 // http://en.cppreference.com/w/cpp/experimental/is_detected
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -40,12 +39,12 @@ VRM_CORE_NAMESPACE
             template <typename...> class TOp, // .
             typename... Ts                    // .
             >
-        struct detector<TDefault, void_t<TOp<Ts...>>, TOp, Ts...>
+        struct detector<TDefault, std::void_t<TOp<Ts...>>, TOp, Ts...>
         {
             using value_t = std::true_type;
             using type = TOp<Ts...>;
         };
-    }
+    } // namespace impl
 
     template <template <typename...> class TOp, typename... Ts>
     using is_detected =
@@ -82,5 +81,4 @@ VRM_CORE_NAMESPACE
     template <typename To, template <typename...> class TOp, typename... Ts>
     constexpr bool is_detected_convertible_v =
         is_detected_convertible<To, TOp, Ts...>::value;
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core
