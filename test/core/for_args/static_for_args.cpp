@@ -246,7 +246,7 @@ void test_unary_for_accumulate()
 
             // "Recursive" case.
             // Sum with previous return type.
-            return metadata.continue_(int_v<unwrap(metadata) + y>);
+            return metadata.continue_(int_v<unwrap(metadata) + x>);
         }
     });
 
@@ -274,7 +274,7 @@ void test_unary_for_accumulate()
     }
 }
 
-void TEST_CONST test_unary_for_accumulate2()
+void test_unary_for_accumulate2()
 {
     auto static_accumulator = static_for([](auto mx, auto x) {
         if constexpr(mx.has_no_return())
@@ -283,8 +283,8 @@ void TEST_CONST test_unary_for_accumulate2()
         }
         else
         {
-            return mx.continue_(int_v<unwrap(my) + x>);
-        };
+            return mx.continue_(int_v<unwrap(mx) + x>);
+        }
     });
 
     SA_TYPE(                                                        // .
@@ -300,7 +300,7 @@ void TEST_CONST test_unary_for_accumulate2()
         (int_<10 + 20>));
 }
 
-void TEST_CONST test_unary_for_accumulate_binary()
+void test_unary_for_accumulate_binary()
 {
     auto static_b_acc = static_for<2>([](auto mx, auto x0, auto x1) {
         if constexpr(mx.has_no_return())
@@ -313,7 +313,7 @@ void TEST_CONST test_unary_for_accumulate_binary()
             auto l1 = unwrap<1>(mx);
 
             return mx.continue_with(int_v<l0 + x0>, int_v<l1 + x1>);
-        };
+        }
     });
 
     auto r = static_b_acc(   // .

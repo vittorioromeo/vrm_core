@@ -16,7 +16,7 @@ namespace vrm::core
     namespace impl
     {
         template <typename TF>
-        class y_combinator_result final
+        class y_combinator_result
         {
         private:
             using this_type = y_combinator_result<TF>;
@@ -31,8 +31,8 @@ namespace vrm::core
             }
 
             template <typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
-                Ts&&... xs) noexcept(noexcept(                        // .
+            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)
+            operator()(Ts&&... xs) noexcept(noexcept(                 // .
                 _f(std::declval<std::reference_wrapper<this_type>>(), // .
                     FWD(xs)...)                                       // .
                 ))
@@ -40,11 +40,12 @@ namespace vrm::core
                 return _f(std::ref(*this), FWD(xs)...);
             }
         };
-    }
+    } // namespace impl
 
     template <typename TF>
-    VRM_CORE_ALWAYS_INLINE constexpr auto y_combinator(TF && f) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto y_combinator(
+        TF&& f) noexcept
     {
         return impl::y_combinator_result<std::decay_t<TF>>(FWD(f));
     }
-}
+} // namespace vrm::core

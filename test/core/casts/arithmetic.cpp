@@ -3,11 +3,14 @@
 
 bool assert_fired{false};
 
-#define FAKE_ASSERT(...)     \
-    if(!(__VA_ARGS__))       \
-    {                        \
-        assert_fired = true; \
-    }
+#define FAKE_ASSERT(...)         \
+    do                           \
+    {                            \
+        if(!(__VA_ARGS__))       \
+        {                        \
+            assert_fired = true; \
+        }                        \
+    } while(false)
 
 void ensure_assert()
 {
@@ -200,10 +203,13 @@ void integral_tests()
 
 #pragma GCC diagnostic ignored "-Woverflow"
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winteger-overflow"
+#pragma GCC diagnostic push
     test_val<long>((long long)numeric_limits<long>::max() + 1, true);
     test_val<long>((long long)numeric_limits<long>::min() - 1, true);
     test_val<long long>(numeric_limits<long long>::max() + 1, true);
     test_val<long long>(numeric_limits<long long>::min() - 1, true);
+#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 
     // Should not fire asserts:

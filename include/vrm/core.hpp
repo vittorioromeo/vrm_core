@@ -32,7 +32,6 @@
 #include <vrm/core/ostream_utils.hpp>
 #include <vrm/core/overload.hpp>
 #include <vrm/core/perfect_wrapper.hpp>
-#include <vrm/core/static_if.hpp>
 #include <vrm/core/strong_typedef.hpp>
 #include <vrm/core/tuple_utils.hpp>
 #include <vrm/core/type_aliases.hpp>

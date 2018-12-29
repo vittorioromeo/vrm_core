@@ -12,7 +12,8 @@
 namespace vrm::core
 {
     template <typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto make_array(Ts && ... xs) // .
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto make_array(
+        Ts&&... xs) // .
         VRM_CORE_RETURNS(
             std::array<std::decay_t<std::common_type_t<Ts...>>, sizeof...(Ts)>{
                 {FWD(xs)...}})

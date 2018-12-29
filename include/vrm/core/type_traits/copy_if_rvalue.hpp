@@ -16,9 +16,9 @@
 namespace vrm::core
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto copy_if_rvalue(T&& x) noexcept(
-        !std::is_rvalue_reference_v<T> ||
-        std::is_nothrow_copy_constructible_v<T>)
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto copy_if_rvalue(
+        T&& x) noexcept(!std::is_rvalue_reference_v<T> ||
+                        std::is_nothrow_copy_constructible_v<T>)
         -> remove_rvalue_reference_t<decltype(FWD(x))>
     {
         return FWD(x);

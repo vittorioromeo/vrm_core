@@ -10,8 +10,8 @@
 
 #include <vrm/core/args_utils.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/config.hpp>
 #include <vrm/core/casts/polymorphic.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/apply.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits.hpp>
@@ -108,12 +108,12 @@ namespace vrm::core
             if constexpr(is_skip<T>{})
             {
                 // `true` branch -> return its inner value.
-                return impl::skip_value_returner{};
+                return impl::skip_value_returner{}(T{});
             }
             else
             {
                 // `else` branch -> return `0`.
-                return impl::zero_returner{};
+                return impl::zero_returner{}(T{});
             }
         }
 
@@ -314,7 +314,7 @@ namespace vrm::core
             VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) impl_fn_call(
                 TDataType, Ts&&... xs)
             {
-                return call_with_arity(TDataType{}, std::forward<Ts>(xs)...);
+                return call_with_arity(TDataType{}, FWD(xs)...);
             }
 
             template <typename TRetT>
@@ -386,18 +386,18 @@ namespace vrm::core
 
                 // "Predict" what the current iteration will return.
                 using ret_t = adapt_return_type<decltype(
-                    impl_fn_call(curr_metadata{}, std::forward<Ts>(xs)...))>;
+                    impl_fn_call(curr_metadata{}, FWD(xs)...))>;
 
                 // Call the body of the `static_for`.
-                impl_fn_call(curr_metadata{}, std::forward<Ts>(xs)...);
+                impl_fn_call(curr_metadata{}, FWD(xs)...);
 
                 if constexpr(is_break<ret_t>{})
                 {
-                    return then_branch<ret_t>{this};
+                    return then_branch<ret_t>{this}(FWD(xs)...);
                 }
                 else
                 {
-                    return else_branch<ret_t, curr_metadata>{this};
+                    return else_branch<ret_t, curr_metadata>{this}(FWD(xs)...);
                 }
             }
 

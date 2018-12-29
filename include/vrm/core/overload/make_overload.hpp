@@ -11,42 +11,23 @@ namespace vrm::core
 {
     namespace impl
     {
-        template <typename...>
-        struct overload_set;
-
-        template <typename TF>
-        struct overload_set<TF> : TF
+        template <typename... TFs>
+        struct overload_set : TFs...
         {
-            using call_type = TF;
-            using call_type::operator();
-
-            VRM_CORE_ALWAYS_INLINE overload_set(TF&& f) noexcept : TF(FWD(f))
-            {
-            }
-        };
-
-        template <typename TF, typename... TFs>
-        struct overload_set<TF, TFs...> : TF, overload_set<TFs...>::call_type
-        {
-            using base_type = typename overload_set<TFs...>::call_type;
-
-            using f_type = TF;
-            using call_type = overload_set;
-
-            VRM_CORE_ALWAYS_INLINE overload_set(TF &&f, TFs &&... fs) noexcept
-                : f_type(FWD(f)),
-                  base_type(FWD(fs)...)
+            constexpr VRM_CORE_ALWAYS_INLINE overload_set(TFs&&... fs) noexcept(
+                (noexcept(TFs(FWD(fs))) && ...))
+                : TFs(FWD(fs))...
             {
             }
 
-            using f_type::operator();
-            using base_type::operator();
+            using TFs::operator()...;
         };
-    }
+    } // namespace impl
 
     template <typename... TFs>
-    VRM_CORE_ALWAYS_INLINE auto make_overload(TFs && ... fs) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto make_overload(
+        TFs&&... fs) noexcept(noexcept(impl::overload_set<TFs...>{FWD(fs)...}))
     {
         return impl::overload_set<TFs...>{FWD(fs)...};
     }
-}
+} // namespace vrm::core

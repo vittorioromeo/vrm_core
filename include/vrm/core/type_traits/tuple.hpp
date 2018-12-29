@@ -13,7 +13,8 @@
 namespace vrm::core
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto decay_tuple_size() noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto
+    decay_tuple_size() noexcept
     {
         return std::tuple_size<std::decay_t<T>>{};
     }
@@ -21,4 +22,4 @@ namespace vrm::core
     template <typename T>
     using make_tuple_index_sequence =
         std::make_index_sequence<decay_tuple_size<T>()>;
-}
+} // namespace vrm::core

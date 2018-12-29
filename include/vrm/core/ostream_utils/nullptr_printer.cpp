@@ -10,7 +10,6 @@ namespace std
 {
     auto& operator<<(std::ostream& o, const std::nullptr_t&)
     {
-        o << "nullptr";
-        return o;
+        return o << "nullptr";
     }
-}
+} // namespace std
