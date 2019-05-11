@@ -5,6 +5,6 @@
 
 #pragma once
 
+#include <vrm/core/config/api.hpp>
 #include <vrm/core/config/attributes.hpp>
 #include <vrm/core/config/detection.hpp>
-#include <vrm/core/config/api.hpp>

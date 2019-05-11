@@ -19,6 +19,6 @@ namespace vrm::core
 
             template <typename TBehavior, typename TLockPolicy>
             class shared;
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

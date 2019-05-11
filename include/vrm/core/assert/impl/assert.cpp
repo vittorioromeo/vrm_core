@@ -21,8 +21,8 @@ namespace vrm::core
                 thread_local state result;
                 return result;
             }
-        }
-    }
-}
+        } // namespace assert
+    }     // namespace impl
+} // namespace vrm::core
 
 #endif

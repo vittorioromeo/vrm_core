@@ -6,7 +6,7 @@
 #pragma once
 
 #include "./shared/metadata.hpp"
-#include "./shared/ref_counter.hpp"
 #include "./shared/policies.hpp"
+#include "./shared/ref_counter.hpp"
 #include "./shared/shared.hpp"
 #include "./shared/shared.inl"

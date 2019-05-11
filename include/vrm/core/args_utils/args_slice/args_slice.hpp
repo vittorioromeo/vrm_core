@@ -21,10 +21,10 @@ namespace vrm::core
         template <sz_t TIBegin, sz_t... TIs, typename... Ts>
         constexpr auto build_args_slice(
             std::index_sequence<TIs...>, Ts&&... xs) noexcept;
-    }
+    } // namespace impl
 
     /// @brief Returns a `[TIBegin, TIEnd)` slice of the variadic arguments.
     /// @details A `ref_tuple` is used to store the arguments.
     template <sz_t TIBegin, sz_t TIEnd, typename... Ts>
-    constexpr auto args_slice(Ts && ... xs) noexcept;
-}
+    constexpr auto args_slice(Ts&&... xs) noexcept;
+} // namespace vrm::core

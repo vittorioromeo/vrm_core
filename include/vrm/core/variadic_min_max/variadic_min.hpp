@@ -6,25 +6,28 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
 namespace vrm::core
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(T a) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) variadic_min(
+        T&& a) noexcept
     {
-        return a;
-    }
-
-    template <typename T0, typename T1>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(T0 a, T1 b) noexcept
-    {
-        return a < b ? a : b;
+        return FWD(a);
     }
 
     template <typename T0, typename T1, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(
-        T0 a, T1 b, Ts... xs) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) variadic_min(
+        T0&& a, T1&& b, Ts&&... xs) noexcept
     {
-        return variadic_min(a, variadic_min(b, xs...));
+        if constexpr(sizeof...(Ts) == 0)
+        {
+            return a < b ? FWD(a) : FWD(b);
+        }
+        else
+        {
+            return variadic_min(FWD(a), variadic_min(FWD(b), FWD(xs)...));
+        }
     }
-}
+} // namespace vrm::core

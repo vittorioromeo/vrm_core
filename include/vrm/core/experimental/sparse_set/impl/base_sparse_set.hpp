@@ -7,13 +7,13 @@
 
 #include <array>
 #include <type_traits>
-#include <vrm/core/experimental/resizable_buffer.hpp>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases.hpp>
 #include <vrm/core/casts.hpp>
-#include <vrm/core/experimental/sparse_set/impl/storage.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/experimental/resizable_buffer.hpp>
 #include <vrm/core/experimental/sparse_set/impl/settings.hpp>
+#include <vrm/core/experimental/sparse_set/impl/storage.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 namespace vrm::core
 {
@@ -109,5 +109,5 @@ namespace vrm::core
             /// @brief Swap implementation.
             void swap(this_type& rhs) noexcept;
         };
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

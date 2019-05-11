@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -31,8 +31,7 @@ namespace vrm::core
 
         public:
             template <typename... Ts>
-            manager(Ts&&... xs)
-                : _strategy(FWD(xs)...)
+            manager(Ts&&... xs) : _strategy(FWD(xs)...)
             {
             }
 
@@ -70,8 +69,8 @@ namespace vrm::core
             /// @brief Retrieves the target from an handle. (const version)
             const auto& access(const handle_type& h) const noexcept;
         };
-    }
-}
+    } // namespace handle
+} // namespace vrm::core
 
 // TODO: generalize: make storage optional, use function object to retrieve
 // counters and targets

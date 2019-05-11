@@ -6,8 +6,8 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/experimental/resource/fwd.hpp>
 #include <vrm/core/experimental/resource/behavior.hpp>
+#include <vrm/core/experimental/resource/fwd.hpp>
 
 namespace vrm::core
 {
@@ -57,6 +57,6 @@ namespace vrm::core
                 auto get() const noexcept;
                 explicit operator bool() const noexcept;
             };
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

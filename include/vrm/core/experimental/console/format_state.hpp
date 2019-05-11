@@ -21,6 +21,6 @@ namespace vrm::core
                 color _fg_color{color::none};
                 color _bg_color{color::none};
             };
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace console
+} // namespace vrm::core

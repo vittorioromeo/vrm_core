@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <vrm/core/type_traits.hpp>
-#include <vrm/core/type_aliases.hpp>
 #include <vrm/core/strong_typedef/is_strong_typedef.hpp>
+#include <vrm/core/type_aliases.hpp>
+#include <vrm/core/type_traits.hpp>
 
 namespace vrm::core
 {
@@ -27,7 +27,7 @@ namespace vrm::core
         {
             using type = T;
         };
-    }
+    } // namespace impl
 
     /// @brief Returns `T` if `T` is not a strong typedef, `typename
     /// T::underlying_type` otherwise.
@@ -35,4 +35,4 @@ namespace vrm::core
     using underlying_if_strong_typedef_type =
         typename impl::underyling_if_strong_typedef_dispatch<T,
             bool_<is_strong_typedef_v<T>>>::type;
-}
+} // namespace vrm::core

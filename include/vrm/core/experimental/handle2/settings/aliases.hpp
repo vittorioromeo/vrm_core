@@ -24,6 +24,6 @@ namespace vrm::core
 
             template <typename TSettings>
             using handle_type = typename TSettings::handle_type;
-        }
-    }
-}
+        } // namespace aliases
+    }     // namespace handle2
+} // namespace vrm::core

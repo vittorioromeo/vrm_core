@@ -6,9 +6,9 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/experimental/resource/unique.hpp>
 #include <vrm/core/experimental/resource/shared.hpp>
+#include <vrm/core/experimental/resource/unique.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
 namespace vrm::core
 {
@@ -38,7 +38,7 @@ namespace vrm::core
                     return resource_type{init_resource(FWD(xs)...)};
                 }
             };
-        }
+        } // namespace impl
 
         template <template <typename> class TResource, typename TBehavior,
             typename... Ts>
@@ -58,7 +58,7 @@ namespace vrm::core
         {
             return make_resource<resource::shared, TBehavior>(FWD(xs)...);
         }
-    }
-}
+    } // namespace resource
+} // namespace vrm::core
 
 // TODO: test, docs, split into inl

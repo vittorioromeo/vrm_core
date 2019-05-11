@@ -33,5 +33,5 @@ namespace vrm::core
                 counter_type _counter{0};
             };
         };
-    }
-}
+    } // namespace handle2
+} // namespace vrm::core

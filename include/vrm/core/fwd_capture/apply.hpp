@@ -12,11 +12,12 @@
 namespace vrm::core
 {
     template <typename TF, typename... TFwdCaptures>
-    constexpr decltype(auto) apply_fwd_capture(TF && f, TFwdCaptures && ... fcs)
+    constexpr decltype(auto) apply_fwd_capture(TF&& f, TFwdCaptures&&... fcs)
     // TODO: noexcept
     {
-        return multi_apply([&f](auto&&... xs) -> decltype(
-                               auto) { return FWD(f)(xs.fwd_get()...); },
+        return multi_apply(
+            [&f](auto&&... xs) -> decltype(
+                                   auto) { return FWD(f)(xs.fwd_get()...); },
             FWD(fcs)...);
     }
-}
+} // namespace vrm::core

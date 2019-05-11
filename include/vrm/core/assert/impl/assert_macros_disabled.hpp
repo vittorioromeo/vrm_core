@@ -6,7 +6,7 @@
 #pragma once
 
 /// @macro Assertion in release mode: this macro does nothing.
-#define VRM_CORE_IMPL_ASSERT(...)
+#define VRM_CORE_IMPL_ASSERT(...) (void)0
 
 /// @macro Assertion in release mode: this macro does nothing.
-#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(...)
+#define VRM_CORE_IMPL_CONSTEXPR_ASSERT(...) (void)0

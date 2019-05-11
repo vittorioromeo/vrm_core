@@ -1,7 +1,7 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/casts/string_to_num.hpp>
 #include <utility>
+#include <vrm/core/casts/string_to_num.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 TEST_MAIN()
 {

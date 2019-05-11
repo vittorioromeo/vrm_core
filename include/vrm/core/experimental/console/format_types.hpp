@@ -23,7 +23,7 @@ namespace vrm::core
 
             /// @brief Number of colors.
             constexpr sz_t color_count{16};
-        }
+        } // namespace impl
 
         /// @brief Enum class representing all the possible styles.
         enum class style : impl::style_type
@@ -58,5 +58,5 @@ namespace vrm::core
             light_cyan = 15,
             light_white = 16
         };
-    }
-}
+    } // namespace console
+} // namespace vrm::core

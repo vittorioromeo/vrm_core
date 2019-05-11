@@ -6,8 +6,8 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/type_aliases/integral_constant.hpp>
 #include <vrm/core/experimental/resource/base.hpp>
+#include <vrm/core/type_aliases/integral_constant.hpp>
 
 namespace vrm::core
 {
@@ -76,8 +76,8 @@ namespace vrm::core
                 template <typename>
                 friend void swap(unique& lhs, unique& rhs) noexcept;
             };
-        }
+        } // namespace impl
 
         using impl::unique;
-    }
-}
+    } // namespace resource
+} // namespace vrm::core

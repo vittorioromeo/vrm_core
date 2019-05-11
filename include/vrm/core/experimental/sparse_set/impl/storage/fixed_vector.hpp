@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
-#include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases.hpp>
-#include <vrm/core/casts.hpp>
-#include <vrm/core/experimental/resizable_buffer.hpp>
 #include "./shared.hpp"
+#include <vrm/core/assert.hpp>
+#include <vrm/core/casts.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/experimental/resizable_buffer.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 namespace vrm::core
 {
@@ -41,7 +41,8 @@ namespace vrm::core
                 multi_resizable_buffer<                                  // .
                     resizable_buffer<value_type, dense_allocator_type>,  // .
                     resizable_buffer<sparse_type, sparse_allocator_type> // .
-                    > _buffers;
+                    >
+                    _buffers;
 
                 sparse_type _end;
 
@@ -163,10 +164,7 @@ namespace vrm::core
                 void clear() noexcept
                 {
                     // Clear all used set elements.
-                    for_each([this](auto x)
-                        {
-                            sparse()[x] = nullptr;
-                        });
+                    for_each([this](auto x) { sparse()[x] = nullptr; });
 
                     // Re-initalize end pointer.
                     _end = dense().data();
@@ -276,6 +274,6 @@ namespace vrm::core
                     swap(_end, rhs._end);
                 }
             };
-        }
-    }
-}
+        } // namespace sparse_set_storage
+    }     // namespace impl
+} // namespace vrm::core

@@ -1,6 +1,6 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/casts/storage.hpp>
 #include <utility>
+#include <vrm/core/casts/storage.hpp>
 
 TEST_MAIN()
 {

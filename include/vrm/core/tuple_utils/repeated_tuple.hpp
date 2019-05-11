@@ -6,11 +6,11 @@
 #pragma once
 
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/for.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -38,7 +38,7 @@ namespace vrm::core
             using type =
                 typename tuple_repeat_impl_helper<T, TS, std::tuple<>>::type;
         };
-    }
+    } // namespace impl
 
     /// @brief Type of a tuple with `T` repeated `TN` times.
     /// @code
@@ -54,13 +54,8 @@ namespace vrm::core
     {
         auto result(repeated_tuple<TN, T>{});
 
-        for_tuple(
-            [&x](auto& elem)
-            {
-                elem = x;
-            },
-            result);
+        for_tuple([&x](auto& elem) { elem = x; }, result);
 
         return result;
     }
-}
+} // namespace vrm::core

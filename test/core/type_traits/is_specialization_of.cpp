@@ -1,20 +1,28 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/type_traits/is_specialization_of.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits/is_specialization_of.hpp>
 
 using namespace vrm::core;
 
 template <typename>
-struct S1 { };
+struct S1
+{
+};
 
 template <typename, typename>
-struct S2 { };
+struct S2
+{
+};
 
 template <typename...>
-struct SV { };
+struct SV
+{
+};
 
 template <typename = int>
-struct SD1 { };
+struct SD1
+{
+};
 
 static_assert(is_specialization_of_t<S1<int>, S1>{}, "");
 static_assert(!is_specialization_of_t<S1<int>, S2>{}, "");

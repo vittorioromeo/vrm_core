@@ -7,8 +7,8 @@
 
 #include <cstddef>
 #include <type_traits>
-#include <vrm/pp/cat.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/pp/cat.hpp>
 
 // TODO: auto-generate literal operator (with extra macro parameter)?
 
@@ -44,14 +44,13 @@
         VRM_CORE_IMPL_IC_ALIAS(type, name)<TV>;                                \
                                                                                \
     template <type TV>                                                         \
-    constexpr VRM_CORE_IMPL_IC_SHORT_ALIAS(                                    \
-        type, name)<TV> VRM_CORE_IMPL_IC_SHORT_ALIAS_V(type, name){};          \
+    constexpr VRM_CORE_IMPL_IC_SHORT_ALIAS(type, name)<TV>                     \
+        VRM_CORE_IMPL_IC_SHORT_ALIAS_V(type, name){};                          \
                                                                                \
     namespace impl                                                             \
     {                                                                          \
         template <typename T>                                                  \
-        struct VRM_CORE_IMPL_IS_IC_HELPER(type, name)                          \
-            : ::std::false_type                                                \
+        struct VRM_CORE_IMPL_IS_IC_HELPER(type, name) : ::std::false_type      \
         {                                                                      \
         };                                                                     \
                                                                                \
@@ -111,7 +110,7 @@ namespace vrm::core
     // Shortcut alias for `sz_t_v`.
     template <sz_t TI>
     constexpr sz_t_<TI> sz_v{};
-}
+} // namespace vrm::core
 
 #undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER_SN
 #undef VRM_CORE_IMPL_DEFINE_INTEGRAL_CONSTANT_WRAPPER

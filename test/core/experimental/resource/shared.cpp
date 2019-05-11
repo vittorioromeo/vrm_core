@@ -323,7 +323,7 @@ namespace test
 
         assert_ck(2, 2);
     }
-}
+} // namespace test
 
 TEST_MAIN()
 {

@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/manager.hpp>
 #include <vrm/core/experimental/handle/strategy.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -52,7 +52,7 @@ namespace vrm::core
                         TCustomGetters    // .
                         >                 // .
                     >;                    // .
-        }
+        }                                 // namespace impl
 
         template <             // .
             typename TTarget,  // .
@@ -85,5 +85,5 @@ namespace vrm::core
             strategy::custom_getters<                            // .
                 TMetadataRefType, TTargetGetter, TCounterGetter> // .
             >;
-    }
-}
+    } // namespace handle
+} // namespace vrm::core

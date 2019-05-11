@@ -22,5 +22,5 @@ namespace vrm::core
         template <typename TSignature>
         using signature_return_type =
             typename signature_helper<TSignature>::return_type;
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

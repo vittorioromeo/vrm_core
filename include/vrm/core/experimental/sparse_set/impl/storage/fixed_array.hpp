@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <array>
-#include <vrm/core/config.hpp>
-#include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases.hpp>
-#include <vrm/core/casts.hpp>
 #include "./shared.hpp"
+#include <array>
+#include <vrm/core/assert.hpp>
+#include <vrm/core/casts.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 namespace vrm::core
 {
@@ -116,10 +116,7 @@ namespace vrm::core
 
                 void clear() noexcept
                 {
-                    for_each([this](auto x)
-                        {
-                            _sparse[x] = nullptr;
-                        });
+                    for_each([this](auto x) { _sparse[x] = nullptr; });
 
                     _end = _dense.data();
                 }
@@ -229,6 +226,6 @@ namespace vrm::core
                     swap(_end, rhs._end);
                 }
             };
-        }
-    }
-}
+        } // namespace sparse_set_storage
+    }     // namespace impl
+} // namespace vrm::core

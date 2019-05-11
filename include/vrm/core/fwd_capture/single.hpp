@@ -59,8 +59,8 @@ namespace vrm::core
         {
             return fwd_capture_wrapper<T>(x);
         }
-    }
-}
+    } // namespace impl
+} // namespace vrm::core
 
 #define VRM_CORE_FWD_CAPTURE(...) \
     ::vrm::core::impl::fwd_capture(FWD(__VA_ARGS__))

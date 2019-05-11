@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/experimental/handle2/settings/settings.hpp>
 #include <vrm/core/experimental/handle2/settings/aliases.hpp>
+#include <vrm/core/experimental/handle2/settings/settings.hpp>

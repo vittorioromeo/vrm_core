@@ -7,11 +7,11 @@
 
 #include <memory>
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -130,8 +130,7 @@ namespace vrm::core
                 auto ref_tuple(_multi_buffer[_size]);
 
                 for_args_data(
-                    [&ref_tuple](auto data, auto&& r)
-                    {
+                    [&ref_tuple](auto data, auto&& r) {
                         using type =
                             nth_buffer_value_type<decltype(data)::index>;
 
@@ -139,10 +138,9 @@ namespace vrm::core
 
                         auto address(&(std::get<type_ref>(ref_tuple)));
 
-                        auto placement_new([&](auto&&... args)
-                            {
-                                new(address) type(FWD(args)...);
-                            });
+                        auto placement_new([&](auto&&... args) {
+                            new(address) type(FWD(args)...);
+                        });
 
                         std::apply(placement_new, r);
                     },
@@ -207,8 +205,8 @@ namespace vrm::core
             // return _multi_buffer
             //}
         };
-    }
-}
+    } // namespace impl
+} // namespace vrm::core
 
 // TODO:
 // * split to inl

@@ -24,4 +24,4 @@ namespace vrm::core
     template <typename T, typename TSource>
     using copy_referenceness =
         impl::copy_referenceness_impl<std::remove_reference_t<T>, TSource>;
-}
+} // namespace vrm::core

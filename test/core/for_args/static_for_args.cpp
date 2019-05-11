@@ -233,7 +233,8 @@ void test_unary_for_accumulate()
         if constexpr(metadata.has_no_return())
         {
             static_assert(!is_int_constant<decltype(unwrap(metadata))>{});
-            static_assert(std::is_same_v<decltype(unwrap(metadata)), no_return>);
+            static_assert(
+                std::is_same_v<decltype(unwrap(metadata)), no_return>);
             static_assert(is_int_constant<decltype(x)>{});
 
             // Base case.

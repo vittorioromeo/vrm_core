@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -71,5 +71,5 @@ namespace vrm::core
                 ++(counter(hd));
             }
         };
-    }
-}
+    } // namespace handle2
+} // namespace vrm::core

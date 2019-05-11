@@ -30,4 +30,4 @@ namespace vrm::core
     template <typename T, template <typename...> class TTemplate>
     constexpr auto is_specialization_of_v =
         is_specialization_of<T, TTemplate>{};
-}
+} // namespace vrm::core

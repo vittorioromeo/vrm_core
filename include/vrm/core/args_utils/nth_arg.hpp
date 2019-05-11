@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/casts/self.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits/copy_if_rvalue.hpp>
-#include <vrm/core/tuple_utils/ref_tuple.hpp>
-#include <vrm/core/casts/self.hpp>
 
 namespace vrm::core
 {
@@ -19,7 +19,7 @@ namespace vrm::core
     /// @details The casted type is a reference if the argument is an lvalue, a
     /// value (moved) if the argument is an rvalue.
     template <sz_t TN, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) nth_arg(Ts && ... xs) // .
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) nth_arg(Ts&&... xs) // .
         noexcept(noexcept(std::get<TN>(make_ref_tuple(FWD(xs)...))))
     {
         // Assert index validity.
@@ -28,4 +28,4 @@ namespace vrm::core
         // Return the `TN`-th element of, copying it if it's an rvalue.
         return copy_if_rvalue(std::get<TN>(make_ref_tuple(FWD(xs)...)));
     }
-}
+} // namespace vrm::core

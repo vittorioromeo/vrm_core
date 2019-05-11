@@ -1,6 +1,6 @@
 #include "../../../utils/test_utils.hpp"
-#include <vrm/core/experimental/multi_vector.hpp>
 #include <vrm/core/casts/arithmetic.hpp>
+#include <vrm/core/experimental/multi_vector.hpp>
 
 volatile int cc = 0;
 volatile int dd = 0;

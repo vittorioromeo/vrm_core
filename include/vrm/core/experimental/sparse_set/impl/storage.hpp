@@ -5,6 +5,6 @@
 
 #pragma once
 
+#include <vrm/core/experimental/sparse_set/impl/storage/dynamic_vector.hpp>
 #include <vrm/core/experimental/sparse_set/impl/storage/fixed_array.hpp>
 #include <vrm/core/experimental/sparse_set/impl/storage/fixed_vector.hpp>
-#include <vrm/core/experimental/sparse_set/impl/storage/dynamic_vector.hpp>

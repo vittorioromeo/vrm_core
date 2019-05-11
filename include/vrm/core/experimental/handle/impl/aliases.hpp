@@ -26,6 +26,6 @@ namespace vrm::core
 
             template <typename T, typename TMetadataRef>
             using handle_type = typename T::template handle_type<TMetadataRef>;
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace handle
+} // namespace vrm::core

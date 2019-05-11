@@ -22,4 +22,4 @@ namespace vrm::core
         std::reference_wrapper<std::remove_reference_t<T>>, // .
         vrm::core::value_wrapper<T>                         // .
         >;
-}
+} // namespace vrm::core

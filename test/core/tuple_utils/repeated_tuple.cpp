@@ -16,8 +16,7 @@ int main()
 
     int n = 0;
     for_tuple(
-        [&](const auto& x)
-        {
+        [&](const auto& x) {
             ++n;
             TEST_ASSERT_OP(x, ==, 10.f);
         },

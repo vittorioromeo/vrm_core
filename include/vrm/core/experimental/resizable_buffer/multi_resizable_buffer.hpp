@@ -7,11 +7,11 @@
 
 #include <memory>
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -19,8 +19,8 @@ namespace vrm::core
     class multi_resizable_buffer;
 
     template <typename... Ts>
-    void swap(multi_resizable_buffer<Ts...> & lhs,
-        multi_resizable_buffer<Ts...> & rhs) // .
+    void swap(multi_resizable_buffer<Ts...>& lhs,
+        multi_resizable_buffer<Ts...>& rhs) // .
         noexcept(noexcept(lhs.swap(rhs)));
 
     template <typename... TBufferTypes>
@@ -70,12 +70,7 @@ namespace vrm::core
         template <typename TF>
         VRM_CORE_ALWAYS_INLINE void for_buffers(TF&& f)
         {
-            for_tuple(
-                [&f](auto& bx)
-                {
-                    f(bx);
-                },
-                _buffers);
+            for_tuple([&f](auto& bx) { f(bx); }, _buffers);
         }
 
 
@@ -122,68 +117,47 @@ namespace vrm::core
 
         void construct_at(size_type idx)
         {
-            for_buffers([this, &idx](auto& b)
-                {
-                    b.construct_at(idx);
-                });
+            for_buffers([this, &idx](auto& b) { b.construct_at(idx); });
         }
 
         void destroy_at(size_type idx)
         {
-            for_buffers([this, &idx](auto& b)
-                {
-                    b.destroy_at(idx);
-                });
+            for_buffers([this, &idx](auto& b) { b.destroy_at(idx); });
         }
 
         void destroy(size_type from, size_type to)
         {
-            for_buffers([this, &from, &to](auto& b)
-                {
-                    b.destroy(from, to);
-                });
+            for_buffers([this, &from, &to](auto& b) { b.destroy(from, to); });
         }
 
         void deallocate(size_type n)
         {
-            for_buffers([this, &n](auto& b)
-                {
-                    b.deallocate(n);
-                });
+            for_buffers([this, &n](auto& b) { b.deallocate(n); });
         }
 
         void destroy_and_deallocate(size_type n)
         {
-            for_buffers([this, &n](auto& b)
-                {
-                    b.destroy_and_deallocate(n);
-                });
+            for_buffers([this, &n](auto& b) { b.destroy_and_deallocate(n); });
         }
 
 
         void grow(size_type old_capacity, size_type new_capacity)
         {
-            for_buffers([this, &old_capacity, &new_capacity](auto& b)
-                {
-                    b.grow(old_capacity, new_capacity);
-                });
+            for_buffers([this, &old_capacity, &new_capacity](
+                            auto& b) { b.grow(old_capacity, new_capacity); });
         }
 
         void construct(size_type from, size_type to)
         {
-            for_buffers([this, &from, &to](auto& b)
-                {
-                    b.construct(from, to);
-                });
+            for_buffers([this, &from, &to](auto& b) { b.construct(from, to); });
         }
 
 
         void grow_and_construct(size_type old_capacity, size_type new_capacity)
         {
-            for_buffers([this, &old_capacity, &new_capacity](auto& b)
-                {
-                    b.grow_and_construct(old_capacity, new_capacity);
-                });
+            for_buffers([this, &old_capacity, &new_capacity](auto& b) {
+                b.grow_and_construct(old_capacity, new_capacity);
+            });
         }
 
         auto copy(size_type n)
@@ -191,8 +165,7 @@ namespace vrm::core
             this_type result;
 
             for_tuple_data(
-                [this, &result, &n](auto data, auto&)
-                {
+                [this, &result, &n](auto data, auto&) {
                     auto& my_buffer(this->nth_buffer<decltype(data)::index>());
                     auto& result_buffer(
                         result.template nth_buffer<decltype(data)::index>());
@@ -257,13 +230,13 @@ namespace vrm::core
     };
 
     template <typename... Ts>
-    VRM_CORE_ALWAYS_INLINE void swap(multi_resizable_buffer<Ts...> & lhs,
-        multi_resizable_buffer<Ts...> & rhs) // .
+    VRM_CORE_ALWAYS_INLINE void swap(multi_resizable_buffer<Ts...>& lhs,
+        multi_resizable_buffer<Ts...>& rhs) // .
         noexcept(noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
     }
-}
+} // namespace vrm::core
 
 // TODO:
 // * split to inl

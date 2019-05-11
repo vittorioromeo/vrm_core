@@ -7,23 +7,13 @@ int main()
 
     {
         int acc{0};
-        for_args(
-            [&acc](auto x)
-            {
-                acc += x;
-            },
-            0, 1, 2, 3, 4, 5);
+        for_args([&acc](auto x) { acc += x; }, 0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
     }
 
     {
         int acc{0};
-        for_args(
-            [&acc](auto&& x)
-            {
-                acc += x;
-            },
-            0, 1, 2, 3, 4, 5);
+        for_args([&acc](auto&& x) { acc += x; }, 0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
     }
 
@@ -31,32 +21,27 @@ int main()
         int steps = 0;
         int ctrl = 0;
 
-        auto a = [&steps, &ctrl]
-        {
+        auto a = [&steps, &ctrl] {
             ++steps;
             ctrl = 1;
             return 1;
         };
-        auto b = [&steps, &ctrl]
-        {
+        auto b = [&steps, &ctrl] {
             ++steps;
             ctrl = 2;
             return 2;
         };
-        auto c = [&steps, &ctrl]
-        {
+        auto c = [&steps, &ctrl] {
             ++steps;
             ctrl = 3;
             return 3;
         };
-        auto d = [&steps, &ctrl]
-        {
+        auto d = [&steps, &ctrl] {
             ++steps;
             ctrl = 4;
             return 4;
         };
-        auto e = [&steps, &ctrl]
-        {
+        auto e = [&steps, &ctrl] {
             ++steps;
             ctrl = 5;
             return 5;
@@ -64,8 +49,7 @@ int main()
 
         int acc{0};
         for_args(
-            [&](auto x)
-            {
+            [&](auto x) {
                 auto val(x());
                 acc += val;
 
@@ -81,60 +65,33 @@ int main()
 
     {
         int acc{0};
-        for_args<1>(
-            [&acc](auto x)
-            {
-                acc += x;
-            },
-            0, 1, 2, 3, 4, 5);
+        for_args<1>([&acc](auto x) { acc += x; }, 0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
 
         acc = 0;
-        for_args<1>(
-            [&acc](auto&& x)
-            {
-                acc += x;
-            },
-            0, 1, 2, 3, 4, 5);
+        for_args<1>([&acc](auto&& x) { acc += x; }, 0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
     }
 
     {
         int acc{0};
-        for_args<2>(
-            [&acc](auto x, auto y)
-            {
-                acc += x + y;
-            },
-            0, 1, 2, 3, 4, 5);
+        for_args<2>([&acc](auto x, auto y) { acc += x + y; }, 0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
 
         acc = 0;
         for_args<2>(
-            [&acc](auto&& x, auto&& y)
-            {
-                acc += x + y;
-            },
-            0, 1, 2, 3, 4, 5);
+            [&acc](auto&& x, auto&& y) { acc += x + y; }, 0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
     }
 
     {
         int acc{0};
-        for_args<3>(
-            [&acc](auto x, auto y, auto z)
-            {
-                acc += x + y + z;
-            },
-            0, 1, 2, 3, 4, 5);
+        for_args<3>([&acc](auto x, auto y, auto z) { acc += x + y + z; }, 0, 1,
+            2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
 
         acc = 0;
-        for_args<3>(
-            [&acc](auto&& x, auto&& y, auto&& z)
-            {
-                acc += x + y + z;
-            },
+        for_args<3>([&acc](auto&& x, auto&& y, auto&& z) { acc += x + y + z; },
             0, 1, 2, 3, 4, 5);
         TEST_ASSERT_OP(acc, ==, (0 + 1 + 2 + 3 + 4 + 5));
     }

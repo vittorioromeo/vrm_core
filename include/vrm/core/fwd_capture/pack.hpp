@@ -25,8 +25,8 @@ namespace vrm::core
         {
             return std::make_tuple(VRM_CORE_FWD_COPY_CAPTURE(xs)...);
         }
-    }
-}
+    } // namespace impl
+} // namespace vrm::core
 
 #define VRM_CORE_FWD_CAPTURE_PACK(...) \
     vrm::core::impl::fwd_capture_pack(FWD(__VA_ARGS__)...)

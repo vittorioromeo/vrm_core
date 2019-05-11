@@ -8,10 +8,7 @@ int main()
 
     bool testState{false};
     delegate<void()> del1;
-    del1 += [&testState]
-    {
-        testState = !testState;
-    };
+    del1 += [&testState] { testState = !testState; };
 
     del1();
     TEST_ASSERT(testState == true);
@@ -19,44 +16,24 @@ int main()
     TEST_ASSERT(testState == false);
 
     delegate<int(int)> del2;
-    del2 += [](int x)
-    {
-        return x + x;
-    };
-    del2 += [](int x)
-    {
-        return x * x;
-    };
+    del2 += [](int x) { return x + x; };
+    del2 += [](int x) { return x * x; };
 
     std::vector<int> del2result;
 
-    del2.call_and_use_result(
-        [&](auto x)
-        {
-            del2result.emplace_back(x);
-        },
-        3);
+    del2.call_and_use_result([&](auto x) { del2result.emplace_back(x); }, 3);
     TEST_ASSERT(del2result[0] == 6);
     TEST_ASSERT(del2result[1] == 9);
     TEST_ASSERT(del2result.size() == 2);
 
     delegate<void()> del3;
-    del3 += [&del1]
-    {
-        del1();
-    };
+    del3 += [&del1] { del1(); };
     del3();
     TEST_ASSERT(testState == true);
 
     delegate<void(int&)> del4;
-    del4 += [](int& i)
-    {
-        i += 1;
-    };
-    del4 += [](int& i)
-    {
-        i += 1;
-    };
+    del4 += [](int& i) { i += 1; };
+    del4 += [](int& i) { i += 1; };
 
     int f = 0;
     del4(f);
@@ -71,8 +48,7 @@ int main()
     {
         int i = 0;
         delegate<int()> del5;
-        del5 += [i]() mutable
-        {
+        del5 += [i]() mutable {
             i += 1;
             return i;
         };

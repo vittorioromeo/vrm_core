@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <cassert>
-#include <cstdlib>
 #include <vrm/core/config.hpp>
 
 #if defined(VRM_CORE_COMPILER_CLANG) || defined(VRM_CORE_COMPILER_GCC)
@@ -16,6 +14,9 @@
 #define VRM_CORE_UNREACHABLE() __builtin_unreachable()
 
 #else
+
+#include <cassert>
+#include <cstdlib>
 
 /// @macro Unreachable code. Uses an assert and `exit(EXIT_FAILURE);`.
 /// Requires semicolon at the end.

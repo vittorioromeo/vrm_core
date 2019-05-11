@@ -7,8 +7,8 @@
 
 #include <iosfwd>
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/type_aliases.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -45,12 +45,12 @@ namespace vrm::core
         struct is_ignore_manipulator<ignore_manipulator<T>> : std::true_type
         {
         };
-    }
+    } // namespace impl
 
     template <typename T>
-    auto make_ignore_manipulator(T && x);
+    auto make_ignore_manipulator(T&& x);
 
     template <typename T>
-    auto operator<<(std::ostream & o, const T& im)
-        ->std::enable_if_t<impl::is_ignore_manipulator<T>{}, std::ostream&>;
-}
+    auto operator<<(std::ostream& o, const T& im)
+        -> std::enable_if_t<impl::is_ignore_manipulator<T>{}, std::ostream&>;
+} // namespace vrm::core

@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/variadic_min_max/variadic_min.hpp>
 #include <vrm/core/variadic_min_max/variadic_max.hpp>
+#include <vrm/core/variadic_min_max/variadic_min.hpp>

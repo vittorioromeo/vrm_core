@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
-#include <vrm/core/experimental/resource/fwd.hpp>
-#include <vrm/core/experimental/resource/base.hpp>
 #include "./metadata.hpp"
-#include "./ref_counter.hpp"
 #include "./policies.hpp"
+#include "./ref_counter.hpp"
+#include <vrm/core/config.hpp>
+#include <vrm/core/experimental/resource/base.hpp>
+#include <vrm/core/experimental/resource/fwd.hpp>
 
 namespace vrm::core
 {
@@ -121,9 +121,9 @@ namespace vrm::core
                 template <typename>
                 friend void swap(shared& lhs, shared& rhs) noexcept;
             };
-        }
+        } // namespace impl
 
         template <typename TBehavior>
         using shared = impl::shared<TBehavior, impl::shared_lock_policy::none>;
-    }
-}
+    } // namespace resource
+} // namespace vrm::core

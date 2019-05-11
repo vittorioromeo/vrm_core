@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <iosfwd>
 #include <cstddef>
+#include <iosfwd>
 #include <vrm/core/config.hpp>
 
 namespace std

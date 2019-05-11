@@ -65,7 +65,7 @@ namespace vrm::core
             {
             }
         };
-    }
+    } // namespace impl
 
     /// @brief Iterates over a tuple's elements passing current iteration data
     /// and them to `f` one at a time.
@@ -73,12 +73,11 @@ namespace vrm::core
     /// element of every tuple to `f` simultaneously.
     /// If the tuples have different sizes, the minimum size will be used.
     template <typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto for_tuple_data(
-        TF && f, Ts && ... ts)
+    VRM_CORE_ALWAYS_INLINE constexpr auto for_tuple_data(TF&& f, Ts&&... ts)
         VRM_CORE_RETURNS(::vrm::core::impl::for_tuple_data_helper<
             ::vrm::core::variadic_min(decay_tuple_size<Ts>()...),
             Ts...>::exec(FWD(f), FWD(ts)...))
-}
+} // namespace vrm::core
 
 namespace vrm::core
 {
@@ -106,8 +105,8 @@ namespace vrm::core
                 return _f(FWD(xs)...);
             }
         };
-    }
-}
+    } // namespace impl
+} // namespace vrm::core
 
 namespace vrm::core
 {
@@ -119,10 +118,10 @@ namespace vrm::core
     template <typename TF, typename... Ts>
     VRM_CORE_ALWAYS_INLINE // .
         constexpr auto
-        for_tuple(TF && f, Ts && ... xs)                                   // .
+        for_tuple(TF&& f, Ts&&... xs)                                      // .
         VRM_CORE_RETURNS(                                                  // .
             for_tuple_data(impl::for_tuple_caller<TF>{FWD(f)}, FWD(xs)...) // .
-            )
-}
+        )
+} // namespace vrm::core
 
 // TODO: implement using static_for?

@@ -22,9 +22,8 @@ namespace vrm::core
             using counter_underlying_type =
                 underlying_if_strong_typedef_type<TCounter>;
 
-            static_assert(
-                std::is_arithmetic<target_underlying_type>{} &&
-                std::is_unsigned<target_underlying_type>{});
+            static_assert(std::is_arithmetic<target_underlying_type>{} &&
+                          std::is_unsigned<target_underlying_type>{});
 
             static_assert( // .
                 std::is_arithmetic<counter_underlying_type>{});
@@ -45,5 +44,5 @@ namespace vrm::core
                 counter_type _counter{0};
             };
         };
-    }
-}
+    } // namespace handle
+} // namespace vrm::core

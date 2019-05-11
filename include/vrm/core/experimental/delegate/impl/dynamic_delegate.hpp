@@ -70,11 +70,11 @@ namespace vrm::core
 
             // TODO: clear/reserve hm
         };
-    }
+    } // namespace impl
 
     template <typename TSignature,
         typename TAllocator =
             impl::default_delegate_allocator<std::function, TSignature>>
     using dynamic_delegate = impl::dynamic_delegate<
         impl::delegate_settings<std::function, TSignature, TAllocator>>;
-}
+} // namespace vrm::core

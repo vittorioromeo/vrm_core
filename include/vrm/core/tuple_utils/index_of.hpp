@@ -6,10 +6,10 @@
 #pragma once
 
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/utility_macros.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -30,7 +30,7 @@ namespace vrm::core
                   1 + tuple_index_of_helper<T1, std::tuple<Ts...>>{}>
         {
         };
-    }
+    } // namespace impl
 
     /// @brief Returns the index of the first occurrence of the type `T` in a
     /// tuple.
@@ -43,8 +43,8 @@ namespace vrm::core
     /// @brief Returns the index of the first occurrence of the type `T` in a
     /// tuple. Deduces type.
     template <typename T, typename TT>
-    VRM_CORE_ALWAYS_INLINE constexpr auto tuple_index_of(TT&)noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto tuple_index_of(TT&) noexcept
     {
         return impl::tuple_index_of_helper<T, TT>{};
     }
-}
+} // namespace vrm::core

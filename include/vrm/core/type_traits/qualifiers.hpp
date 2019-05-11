@@ -23,4 +23,4 @@ namespace vrm::core
     template <typename T, typename TSource>
     using copy_cv_qualifiers =
         copy_const_qualifier<copy_volatile_qualifier<T, TSource>, TSource>;
-}
+} // namespace vrm::core

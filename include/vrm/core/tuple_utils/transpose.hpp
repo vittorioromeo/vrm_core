@@ -7,21 +7,21 @@
 
 #include <tuple>
 #include <type_traits>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/variadic_min_max.hpp>
+#include <vrm/core/casts/self.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/impl/tuple_transposer.hpp>
+#include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/utility_macros.hpp>
-#include <vrm/core/tuple_utils/ref_tuple.hpp>
-#include <vrm/core/casts/self.hpp>
-#include <vrm/core/tuple_utils/impl/tuple_transposer.hpp>
+#include <vrm/core/variadic_min_max.hpp>
 
 namespace vrm::core
 {
     template <sz_t TRowCount, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        make_transposed_tuple(Ts && ... xs) noexcept
+    make_transposed_tuple(Ts&&... xs) noexcept
     {
         return impl::make_generic_transposed_tuple<TRowCount>( // .
             impl::make_tuple_wrapper{}, FWD(xs)...);
@@ -29,7 +29,7 @@ namespace vrm::core
 
     template <sz_t TRowCount, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        make_transposed_ref_tuple(Ts && ... xs) noexcept
+    make_transposed_ref_tuple(Ts&&... xs) noexcept
     {
         return impl::make_generic_transposed_tuple<TRowCount>( // .
             impl::make_ref_tuple_wrapper{}, FWD(xs)...);
@@ -37,7 +37,7 @@ namespace vrm::core
 
     template <sz_t TRowCount, typename... Ts>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        forward_as_transposed_tuple(Ts && ... xs) noexcept
+    forward_as_transposed_tuple(Ts&&... xs) noexcept
     {
         return impl::make_generic_transposed_tuple<TRowCount>( // .
             impl::forward_as_tuple_wrapper{}, FWD(xs)...);
@@ -47,7 +47,7 @@ namespace vrm::core
 
     template <sz_t TRowCount, typename T>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        to_transposed_tuple(T && t) noexcept
+    to_transposed_tuple(T&& t) noexcept
     {
         return impl::to_generic_transposed_tuple<TRowCount>( // .
             impl::make_tuple_wrapper{}, FWD(t));
@@ -55,7 +55,7 @@ namespace vrm::core
 
     template <sz_t TRowCount, typename T>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        to_transposed_ref_tuple(T && t) noexcept
+    to_transposed_ref_tuple(T&& t) noexcept
     {
         return impl::to_generic_transposed_tuple<TRowCount>( // .
             impl::make_ref_tuple_wrapper{}, FWD(t));
@@ -63,7 +63,7 @@ namespace vrm::core
 
     template <sz_t TRowCount, typename T>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        to_forwarded_transposed_tuple(T && t) noexcept
+    to_forwarded_transposed_tuple(T&& t) noexcept
     {
         return impl::to_generic_transposed_tuple<TRowCount>( // .
             impl::forward_as_tuple_wrapper{}, FWD(t));
@@ -71,11 +71,10 @@ namespace vrm::core
 
     template <typename... TRows>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        to_transposed_tuple_from_rows(TRows && ... rows)
+    to_transposed_tuple_from_rows(TRows&&... rows)
     {
         return impl::to_generic_transposed_tuple_from_rows(
-            [](auto&& t) -> decltype(auto)
-            {
+            [](auto&& t) -> decltype(auto) {
                 return to_transposed_tuple<sizeof...(TRows)>(FWD(t));
             },
             FWD(rows)...);
@@ -83,11 +82,10 @@ namespace vrm::core
 
     template <typename... TRows>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        to_transposed_ref_tuple_from_rows(TRows && ... rows)
+    to_transposed_ref_tuple_from_rows(TRows&&... rows)
     {
         return impl::to_generic_transposed_tuple_from_rows(
-            [](auto&& t) -> decltype(auto)
-            {
+            [](auto&& t) -> decltype(auto) {
                 return to_transposed_ref_tuple<sizeof...(TRows)>(FWD(t));
             },
             FWD(rows)...);
@@ -95,15 +93,14 @@ namespace vrm::core
 
     template <typename... TRows>
     VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-        to_forwarded_transposed_tuple_from_rows(TRows && ... rows)
+    to_forwarded_transposed_tuple_from_rows(TRows&&... rows)
     {
         return impl::to_generic_transposed_tuple_from_rows(
-            [](auto&& t) -> decltype(auto)
-            {
+            [](auto&& t) -> decltype(auto) {
                 return to_forwarded_transposed_tuple<sizeof...(TRows)>(FWD(t));
             },
             FWD(rows)...);
     }
-}
+} // namespace vrm::core
 
 // TODO: noexcept(...

@@ -6,10 +6,10 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle2/settings.hpp>
 #include <vrm/core/experimental/handle2/context.hpp>
 #include <vrm/core/experimental/handle2/manager.hpp>
+#include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -86,6 +86,6 @@ namespace vrm::core
                     return target(this->data(h));
                 }
             };
-        }
-    }
-}
+        } // namespace container
+    }     // namespace handle2
+} // namespace vrm::core

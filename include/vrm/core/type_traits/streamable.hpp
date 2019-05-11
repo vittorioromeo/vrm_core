@@ -21,7 +21,7 @@ namespace vrm::core
         template <typename T>
         using istreamable_detector =
             decltype(std::declval<std::istream&>() >> std::declval<T&>());
-    }
+    } // namespace impl
 
     /// @brief Evaluates to `std::true_type` if `T` can be streamed to an
     /// `std::ostream`, to `std::false_type` otherwise.
@@ -32,4 +32,4 @@ namespace vrm::core
     /// `std::istream`, to `std::false_type` otherwise.
     template <typename T>
     constexpr is_detected<impl::istreamable_detector, T> istreamable{};
-}
+} // namespace vrm::core

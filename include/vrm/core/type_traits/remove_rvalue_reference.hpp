@@ -29,4 +29,4 @@ namespace vrm::core
     /// @details Type alias.
     template <typename T>
     using remove_rvalue_reference_t = typename remove_rvalue_reference<T>::type;
-}
+} // namespace vrm::core

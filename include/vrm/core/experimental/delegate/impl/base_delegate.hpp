@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/experimental/delegate/signature_helper.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
 // TODO:
 // * unordered_fixed_delegate<TFnSignature, TSize>
@@ -96,7 +96,7 @@ namespace vrm::core
             this_type{}, result_handler, FWD(xs)...)));                   \
                                                                           \
     template <typename... Ts>                                             \
-    auto operator()(Ts && ... xs)                                         \
+    auto operator()(Ts&&... xs)                                           \
         qualifier noexcept(noexcept(call_impl(this_type{}, FWD(xs)...))); \
                                                                           \
     template <typename... Ts>                                             \
@@ -113,5 +113,5 @@ namespace vrm::core
             void clear() noexcept;
             auto empty() const noexcept;
         };
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

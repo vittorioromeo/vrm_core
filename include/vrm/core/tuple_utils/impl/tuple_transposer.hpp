@@ -7,15 +7,15 @@
 
 #include <tuple>
 #include <type_traits>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/variadic_min_max.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/casts/self.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/ref_tuple.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/type_traits/tuple.hpp>
+#include <vrm/core/utility_macros.hpp>
+#include <vrm/core/variadic_min_max.hpp>
 
 namespace vrm::core
 {
@@ -116,7 +116,7 @@ namespace vrm::core
 
         template <sz_t TRowCount, typename TF, typename... Ts>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-            make_generic_transposed_tuple(TF&& f, Ts&&... xs) noexcept
+        make_generic_transposed_tuple(TF&& f, Ts&&... xs) noexcept
         {
             constexpr auto column_count(sizeof...(xs) / TRowCount);
 
@@ -126,7 +126,7 @@ namespace vrm::core
 
         template <sz_t TRowCount, typename TF, typename T>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-            to_generic_transposed_tuple(TF&& f, T&& t) noexcept
+        to_generic_transposed_tuple(TF&& f, T&& t) noexcept
         {
             return invoke_tuple_transposer< // .
                 tuple_column_count<TRowCount, T>, TRowCount>(f, FWD(t));
@@ -137,7 +137,7 @@ namespace vrm::core
         // TODO: check apply(...);
         template <typename T, sz_t... TIs>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-            tuple_ref_to_ref_tuple(T&& t, std::index_sequence<TIs...>) noexcept
+        tuple_ref_to_ref_tuple(T&& t, std::index_sequence<TIs...>) noexcept
         {
             return std::forward_as_tuple(std::get<TIs>(FWD(t))...);
         }
@@ -145,11 +145,10 @@ namespace vrm::core
 
         template <typename TF, typename... TRows>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-            to_generic_transposed_tuple_from_rows(
-                TF&& f, TRows&&... rows) noexcept
+        to_generic_transposed_tuple_from_rows(TF&& f, TRows&&... rows) noexcept
         {
             return f(std::tuple_cat(tuple_ref_to_ref_tuple(
                 FWD(rows), make_tuple_index_sequence<decltype(rows)>{})...));
         }
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

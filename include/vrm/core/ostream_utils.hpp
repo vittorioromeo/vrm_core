@@ -5,5 +5,5 @@
 
 #pragma once
 
-#include <vrm/core/ostream_utils/nullptr_printer.hpp>
 #include <vrm/core/ostream_utils/ignore_manipulator.hpp>
+#include <vrm/core/ostream_utils/nullptr_printer.hpp>

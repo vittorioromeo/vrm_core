@@ -7,8 +7,8 @@
 
 #include <tuple>
 #include <utility>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
@@ -60,7 +60,7 @@ namespace vrm::core
 #undef VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY
 
 #define VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY()                       \
-    (void) swallow                                                    \
+    (void)swallow                                                     \
     {                                                                 \
         (exec_n<Bs, (Bs * sizeof...(Cs))>(f, FWD(xs)), true)..., true \
     }
@@ -101,14 +101,15 @@ namespace vrm::core
         };
 
 #undef VRM_CORE_IMPL_FORNARGS_BODY
-    }
+    } // namespace impl
 
     template <sz_t TArity = 1, typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE                                  // .
-        constexpr void for_args_data(TF && f, Ts && ... xs) // .
+    VRM_CORE_ALWAYS_INLINE // .
+        constexpr void
+        for_args_data(TF&& f, Ts&&... xs) // .
         noexcept(noexcept(
             impl::for_args_data_dispatch<TArity>::exec(FWD(f), FWD(xs)...)))
     {
         impl::for_args_data_dispatch<TArity>::exec(FWD(f), FWD(xs)...);
     }
-}
+} // namespace vrm::core

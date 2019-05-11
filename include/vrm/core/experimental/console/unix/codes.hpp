@@ -7,9 +7,9 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <vrm/core/make_array.hpp>
-#include <vrm/core/experimental/console/format_types.hpp>
 #include <vrm/core/experimental/console/format_state.hpp>
+#include <vrm/core/experimental/console/format_types.hpp>
+#include <vrm/core/make_array.hpp>
 
 namespace vrm::core
 {
@@ -94,6 +94,6 @@ namespace vrm::core
 
             // VRM_CORE_ALWAYS_INLINE const auto& style_codes() noexcept
             // {}
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace console
+} // namespace vrm::core

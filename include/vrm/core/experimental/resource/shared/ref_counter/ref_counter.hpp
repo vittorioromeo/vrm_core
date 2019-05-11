@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
 #include <vrm/core/assert/assert.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resource/shared/metadata.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
 namespace vrm::core
 {
@@ -66,6 +66,6 @@ namespace vrm::core
                 template <typename TF>
                 void lose_weak(TF&& deleter);
             };
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

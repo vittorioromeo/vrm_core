@@ -37,8 +37,8 @@ namespace vrm::core
         using is_valid_behavior = std::integral_constant<bool, // .
             is_zero_sized<T>{} && has_init<T>{}                // .
             >;
-    }
-}
+    } // namespace resource
+} // namespace vrm::core
 
 // TODO: use is_valid ?
 // TODO: check other methods

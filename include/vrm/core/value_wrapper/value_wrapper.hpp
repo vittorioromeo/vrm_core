@@ -43,43 +43,46 @@ namespace vrm::core
         }
 
         template <typename... TArgs,
-            typename = std::enable_if_t<std::is_invocable_v<const T&, TArgs&&...>>>
+            typename =
+                std::enable_if_t<std::is_invocable_v<const T&, TArgs&&...>>>
         VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator()(
             TArgs&&... args) const noexcept(noexcept(_value(FWD(args)...)))
         {
             return _value(FWD(args)...);
         }
 
-        VRM_CORE_ALWAYS_INLINE constexpr auto& get() & noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto& get() & noexcept
         {
             return _value;
         }
 
-        VRM_CORE_ALWAYS_INLINE constexpr const auto& get() const & noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr const auto&
+        get() const& noexcept
         {
             return _value;
         }
 
-        VRM_CORE_ALWAYS_INLINE constexpr T get() &&
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr T&& get() &&
             noexcept(std::is_nothrow_move_constructible<T>{})
         {
             return std::move(_value);
         }
 
-        VRM_CORE_ALWAYS_INLINE constexpr operator T&() & noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr operator T&() & noexcept
         {
             return _value;
         }
 
-        VRM_CORE_ALWAYS_INLINE constexpr operator const T&() const noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr operator const T&() const
+            noexcept
         {
             return _value;
         }
 
-        VRM_CORE_ALWAYS_INLINE constexpr operator T() &&
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr operator T &&() &&
             noexcept(std::is_nothrow_move_constructible<T>{})
         {
             return std::move(_value);
         }
     };
-}
+} // namespace vrm::core

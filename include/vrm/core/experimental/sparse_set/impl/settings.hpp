@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/strong_typedef.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 namespace vrm::core
 {
@@ -20,9 +20,8 @@ namespace vrm::core
         private:
             using underlying_value_type = underlying_if_strong_typedef_type<T>;
 
-            static_assert(
-                std::is_arithmetic<underlying_value_type>{} &&
-                std::is_unsigned<underlying_value_type>{});
+            static_assert(std::is_arithmetic<underlying_value_type>{} &&
+                          std::is_unsigned<underlying_value_type>{});
 
         public:
             /// @brief Size type used for storage sizes/capacities.
@@ -34,5 +33,5 @@ namespace vrm::core
             /// @brief Type of storage.
             using storage_type = TStorage;
         };
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

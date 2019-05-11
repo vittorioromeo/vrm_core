@@ -21,8 +21,8 @@ namespace vrm::core
     /// // tuple_element_t<1>(t) is int
     /// @endcode
     template <typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto make_ref_tuple(Ts && ... xs) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto make_ref_tuple(Ts&&... xs) noexcept
     {
         return std::tuple<Ts...>(FWD(xs)...);
     }
-}
+} // namespace vrm::core

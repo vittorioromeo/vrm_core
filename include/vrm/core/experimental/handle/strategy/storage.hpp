@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -94,6 +94,6 @@ namespace vrm::core
                     return _storage.metadata_from_handle(h)._target;
                 }
             };
-        }
-    }
-}
+        } // namespace strategy
+    }     // namespace handle
+} // namespace vrm::core

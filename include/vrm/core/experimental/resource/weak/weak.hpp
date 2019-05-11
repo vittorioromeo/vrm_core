@@ -88,6 +88,6 @@ namespace vrm::core
                 template <typename>
                 friend void swap(weak& lhs, weak& rhs) noexcept;
             };
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -83,8 +83,7 @@ namespace vrm::core
 
             public:
                 template <typename... Ts>
-                custom(Ts&&... xs)
-                    : _custom_getters(FWD(xs)...)
+                custom(Ts&&... xs) : _custom_getters(FWD(xs)...)
                 {
                 }
 
@@ -159,6 +158,6 @@ namespace vrm::core
                     return _custom_getters.target(h._metadata_ref);
                 }
             };
-        }
-    }
-}
+        } // namespace strategy
+    }     // namespace handle
+} // namespace vrm::core

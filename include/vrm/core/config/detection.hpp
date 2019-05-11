@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <vrm/core/config/detection/os.hpp>
 #include <vrm/core/config/detection/arch.hpp>
 #include <vrm/core/config/detection/compiler.hpp>
 #include <vrm/core/config/detection/debug.hpp>
-#include <vrm/core/config/detection/stdlib.hpp>
+#include <vrm/core/config/detection/os.hpp>
 #include <vrm/core/config/detection/rtti.hpp>
+#include <vrm/core/config/detection/stdlib.hpp>

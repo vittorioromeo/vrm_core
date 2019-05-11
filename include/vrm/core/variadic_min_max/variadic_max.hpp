@@ -10,21 +10,23 @@
 namespace vrm::core
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_max(T a) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) variadic_max(
+        T&& a) noexcept
     {
-        return a;
-    }
-
-    template <typename T0, typename T1>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_max(T0 a, T1 b) noexcept
-    {
-        return a < b ? b : a;
+        return FWD(a);
     }
 
     template <typename T0, typename T1, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_max(
-        T0 a, T1 b, Ts... xs) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) variadic_max(
+        T0&& a, T1&& b, Ts&&... xs) noexcept
     {
-        return variadic_max(a, variadic_max(b, xs...));
+        if constexpr(sizeof...(Ts) == 0)
+        {
+            return a < b ? FWD(b) : FWD(a);
+        }
+        else
+        {
+            return variadic_max(FWD(a), variadic_max(FWD(b), FWD(xs)...));
+        }
     }
-}
+} // namespace vrm::core

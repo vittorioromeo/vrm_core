@@ -23,7 +23,7 @@ namespace vrm::core
                 };
 
                 // TODO: other policies!
-            }
-        }
-    }
-}
+            } // namespace shared_lock_policy
+        }     // namespace impl
+    }         // namespace resource
+} // namespace vrm::core

@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/experimental/delegate/base_delegate.hpp>
 
 // TODO: WIP
@@ -43,11 +43,11 @@ namespace vrm::core
             template <typename TF>
             void operator+=(TF&& f);
         };
-    }
+    } // namespace impl
 
     template <typename TSignature,
         typename TAllocator =
             impl::default_delegate_allocator<std::function, TSignature>>
     using delegate = impl::delegate<
         impl::delegate_settings<std::function, TSignature, TAllocator>>;
-}
+} // namespace vrm::core

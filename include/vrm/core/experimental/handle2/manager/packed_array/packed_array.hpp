@@ -6,9 +6,9 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle2/settings.hpp>
 #include <vrm/core/experimental/handle2/context.hpp>
+#include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -84,6 +84,6 @@ namespace vrm::core
 
                 void clear_metadata() noexcept;
             };
-        }
-    }
-}
+        } // namespace manager
+    }     // namespace handle2
+} // namespace vrm::core

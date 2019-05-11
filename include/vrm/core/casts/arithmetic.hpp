@@ -5,6 +5,6 @@
 
 #pragma once
 
-#include <vrm/core/casts/impl/overflow_check.hpp>
 #include <vrm/core/casts/impl/arithmetic.hpp>
 #include <vrm/core/casts/impl/arithmetic_conversions.hpp>
+#include <vrm/core/casts/impl/overflow_check.hpp>

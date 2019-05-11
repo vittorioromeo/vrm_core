@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert/assert_macros.hpp>
 #include <vrm/core/assert/assert_macros_interface.hpp>
+#include <vrm/core/config.hpp>
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
 

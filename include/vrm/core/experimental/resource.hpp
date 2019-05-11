@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource/behavior.hpp>
 #include <vrm/core/experimental/resource/base.hpp>
-#include <vrm/core/experimental/resource/unique.hpp>
+#include <vrm/core/experimental/resource/behavior.hpp>
 #include <vrm/core/experimental/resource/shared.hpp>
-#include <vrm/core/experimental/resource/weak.hpp>
+#include <vrm/core/experimental/resource/unique.hpp>
 #include <vrm/core/experimental/resource/utils.hpp>
+#include <vrm/core/experimental/resource/weak.hpp>
 
 // TODO:
 #include <vrm/core/experimental/resource/access.hpp>

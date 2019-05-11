@@ -74,42 +74,40 @@ void empty()
     }
 }
 
-void t1()
-{
+void t1(){
 #define MT ::std::make_tuple
 
-    {
-        auto s = first_n_args<3>(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(MT(0, 1, 2) == s);
-    }
-    {
-        auto s = last_n_args<3>(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(MT(4, 5, 6) == s);
-    }
-    {
-        auto s = all_args_from<3>(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(MT(3, 4, 5, 6) == s);
-    }
-    {
-        auto s = all_args_after<3>(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(MT(4, 5, 6) == s);
-    }
-    {
-        auto s = all_args_until<3>(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(MT(0, 1, 2, 3) == s);
-    }
-    {
-        auto s = all_args_before<3>(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(MT(0, 1, 2) == s);
-    }
-    {
-        auto s = first_arg(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(0 == s);
-    }
-    {
-        auto s = last_arg(0, 1, 2, 3, 4, 5, 6);
-        TEST_ASSERT(6 == s);
-    }
+    {auto s = first_n_args<3>(0, 1, 2, 3, 4, 5, 6);
+TEST_ASSERT(MT(0, 1, 2) == s);
+}
+{
+    auto s = last_n_args<3>(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(MT(4, 5, 6) == s);
+}
+{
+    auto s = all_args_from<3>(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(MT(3, 4, 5, 6) == s);
+}
+{
+    auto s = all_args_after<3>(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(MT(4, 5, 6) == s);
+}
+{
+    auto s = all_args_until<3>(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(MT(0, 1, 2, 3) == s);
+}
+{
+    auto s = all_args_before<3>(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(MT(0, 1, 2) == s);
+}
+{
+    auto s = first_arg(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(0 == s);
+}
+{
+    auto s = last_arg(0, 1, 2, 3, 4, 5, 6);
+    TEST_ASSERT(6 == s);
+}
 
 #undef MT
 }

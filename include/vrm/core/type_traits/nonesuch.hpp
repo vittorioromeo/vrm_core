@@ -16,4 +16,4 @@ namespace vrm::core
         nonesuch(const nonesuch&) = delete;
         void operator=(const nonesuch&) = delete;
     };
-}
+} // namespace vrm::core

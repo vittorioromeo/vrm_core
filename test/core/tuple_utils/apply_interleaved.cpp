@@ -23,26 +23,17 @@ struct noncopy
 
 using namespace vrm::core;
 
-auto first = [](auto&& x, auto&&...) -> const auto &
+auto first = [](auto&& x, auto&&...) -> const auto&
 {
     return x;
 };
-auto second = [](auto&&, auto&& x, auto&&...) -> const auto &
+auto second = [](auto&&, auto&& x, auto&&...) -> const auto&
 {
     return x;
 };
-auto count = [](auto&&... xs)
-{
-    return sizeof...(xs);
-};
-auto binary_append_fst = [](auto a, auto b, auto&&...)
-{
-    return a + b;
-};
-auto binary_append_snd = [](auto, auto, auto a, auto b)
-{
-    return a + b;
-};
+auto count = [](auto&&... xs) { return sizeof...(xs); };
+auto binary_append_fst = [](auto a, auto b, auto&&...) { return a + b; };
+auto binary_append_snd = [](auto, auto, auto a, auto b) { return a + b; };
 
 
 void noncopy_test()

@@ -42,11 +42,11 @@ namespace vrm::core
                 return test<decltype(xs)...>(is_valid_dummy{});
             }
         };
-    }
+    } // namespace impl
 
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto is_valid(T && )
+    VRM_CORE_ALWAYS_INLINE constexpr auto is_valid(T&&)
     {
         return impl::is_valid_wrapper<T>{};
     }
-}
+} // namespace vrm::core

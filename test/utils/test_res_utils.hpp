@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource.hpp>
 #include "./test_utils.hpp"
+#include <vrm/core/experimental/resource.hpp>
 
 namespace test
 {
@@ -74,6 +74,6 @@ namespace test
         created = killed = 0;
         f();
     }
-}
+} // namespace test
 
 #define RUN_T(x) run(#x, &x)

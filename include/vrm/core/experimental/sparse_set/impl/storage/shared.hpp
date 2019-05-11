@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases.hpp>
 #include <vrm/core/casts.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resizable_buffer.hpp>
+#include <vrm/core/type_aliases.hpp>
 
 namespace vrm::core
 {
@@ -122,6 +122,6 @@ namespace vrm::core
                     nullify_and_decrement(s, s.back());
                 }
             };
-        }
-    }
-}
+        } // namespace sparse_set_storage
+    }     // namespace impl
+} // namespace vrm::core

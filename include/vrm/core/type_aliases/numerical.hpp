@@ -31,4 +31,4 @@ namespace vrm::core
     using ui16 = ::std::uint16_t;
     using ui32 = ::std::uint32_t;
     using ui64 = ::std::uint64_t;
-}
+} // namespace vrm::core

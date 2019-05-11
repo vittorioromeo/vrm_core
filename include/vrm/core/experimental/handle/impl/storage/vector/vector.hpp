@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vector>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/strategy/storage.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -72,6 +72,6 @@ namespace vrm::core
                 void clear() noexcept;
                 void reserve(sz_t n);
             };
-        }
-    }
-}
+        } // namespace storage
+    }     // namespace handle
+} // namespace vrm::core

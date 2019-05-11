@@ -16,8 +16,8 @@ namespace vrm::core
     class resizable_buffer;
 
     template <typename T, typename TAllocator>
-    void swap(resizable_buffer<T, TAllocator> & lhs,
-        resizable_buffer<T, TAllocator> & rhs) // .
+    void swap(resizable_buffer<T, TAllocator>& lhs,
+        resizable_buffer<T, TAllocator>& rhs) // .
         noexcept(noexcept(lhs.swap(rhs)));
 
     template <typename T, typename TAllocator>
@@ -76,4 +76,4 @@ namespace vrm::core
         /// @details Occurs if the buffer was not initialized or was moved.
         auto null() const noexcept;
     };
-}
+} // namespace vrm::core

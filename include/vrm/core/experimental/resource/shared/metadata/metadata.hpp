@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert/assert.hpp>
+#include <vrm/core/config.hpp>
 
 namespace vrm::core
 {
@@ -53,6 +53,6 @@ namespace vrm::core
 
                 auto has_any_ref() const noexcept;
             };
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core
