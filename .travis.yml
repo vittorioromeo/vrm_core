@@ -11,7 +11,7 @@ addons:
     apt:
         sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-trusty
+            - llvm-toolchain-r-test
 
 before_install:
     - sudo apt-get update -q
