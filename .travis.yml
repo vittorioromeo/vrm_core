@@ -1,37 +1,50 @@
-sudo: require
 language: cpp
-compiler:
-    - gcc
-    - clang
-dist: trusty
-cache: apt
+
+dist: xenial
 os: linux
+sudo: false
 
-addons:
-    apt:
-        sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-r-test
+matrix:
+  fast_finish: true
+  include:
+    - env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && GENERATOR='Unix Makefiles' && CONFIG=Debug"
+      addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
 
-before_install:
-    - sudo apt-get update -q
-    - sudo apt-get install clang-6.0 gcc-7 g++-7 -y
-    - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-    - mkdir ${DEPS_DIR} ; cd ${DEPS_DIR}
-    - |
-      CMAKE_URL="http://www.cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.tar.gz"
-      mkdir -p cmake && travis_retry wget --quiet --no-check-certificate  -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    - env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && GENERATOR='Unix Makefiles' && CONFIG=Debug"
+      addons: { apt: { packages: ["g++-8"], sources: ["ubuntu-toolchain-r-test"] } }
+
+    - env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && GENERATOR='Unix Makefiles' && CONFIG=Debug"
+      addons: { apt: { packages: ["clang-7", "libc++-7-dev", "libc++abi-7-dev"], sources: ["llvm-toolchain-xenial-7"] } }
+
+    - env: MATRIX_EVAL="CC=clang-8 && CXX=clang++-8 && GENERATOR='Unix Makefiles' && CONFIG=Debug"
+      addons: { apt: { packages: ["clang-8", "libc++-8-dev", "libc++abi-8-dev"], sources: ["llvm-toolchain-xenial-8"] } }
+
+    - env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && GENERATOR='Unix Makefiles' && CONFIG=Release"
+      addons: { apt: { packages: ["g++-7"], sources: ["ubuntu-toolchain-r-test"] } }
+
+    - env: MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && GENERATOR='Unix Makefiles' && CONFIG=Release"
+      addons: { apt: { packages: ["g++-8"], sources: ["ubuntu-toolchain-r-test"] } }
+
+    - env: MATRIX_EVAL="CC=clang-7 && CXX=clang++-7 && GENERATOR='Unix Makefiles' && CONFIG=Release"
+      addons: { apt: { packages: ["clang-7", "libc++-7-dev", "libc++abi-7-dev"], sources: ["llvm-toolchain-xenial-7"] } }
+
+    - env: MATRIX_EVAL="CC=clang-8 && CXX=clang++-8 && GENERATOR='Unix Makefiles' && CONFIG=Release"
+      addons: { apt: { packages: ["clang-8", "libc++-8-dev", "libc++abi-8-dev"], sources: ["llvm-toolchain-xenial-8"] } }
+
+install:
+  - eval "${MATRIX_EVAL}"
+  - $CC --version
+  - $CXX --version
+  - cmake --version
 
 before_script:
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-7" CC="gcc-7"; fi
-    - if [ "$CXX" = "clang++" ]; then export CXX="clang++-6.0" CC="clang-6.0"; fi
-    - cd ${TRAVIS_BUILD_DIR}
-    - mkdir build && cd build
-    - cmake -DCMAKE_CXX_STANDARD=14 ..
+  - eval "${MATRIX_EVAL}"
+  - mkdir build
+  - cd build
+  - export VERBOSE=1
+  - cmake -G"${GENERATOR}" -DCMAKE_CXX_COMPILER=${CXX} -DCMAKE_C_COMPILER=${CC} -DCMAKE_BUILD_TYPE=${CONFIG} ..
 
 script:
-    - cd ${TRAVIS_BUILD_DIR}
-    - cd build
-    - cmake --build .
-    - cmake --build . --target check
+  - export VERBOSE=1
+  - cmake --build . 
+  - cmake --build . --config ${CONFIG} --target check
