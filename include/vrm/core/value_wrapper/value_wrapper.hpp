@@ -28,8 +28,8 @@ namespace vrm::core
         using type = T;
 
         template <typename TFwd>
-        VRM_CORE_ALWAYS_INLINE constexpr value_wrapper(TFwd&& x) noexcept(
-            std::is_nothrow_constructible<T, TFwd&&>{})
+        VRM_CORE_ALWAYS_INLINE explicit constexpr value_wrapper(
+            TFwd&& x) noexcept(std::is_nothrow_constructible<T, TFwd&&>{})
             : _value(FWD(x))
         {
         }
@@ -68,18 +68,21 @@ namespace vrm::core
             return std::move(_value);
         }
 
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr operator T&() & noexcept
-        {
-            return _value;
-        }
-
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr operator const T&() const
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr /* implicit */
+            operator T&() &
             noexcept
         {
             return _value;
         }
 
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr operator T &&() &&
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr /* implicit */
+        operator const T&() const noexcept
+        {
+            return _value;
+        }
+
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr /* implicit */
+            operator T &&() &&
             noexcept(std::is_nothrow_move_constructible<T>{})
         {
             return std::move(_value);

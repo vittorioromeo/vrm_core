@@ -10,57 +10,53 @@
 #include <vrm/core/perfect_wrapper.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
-namespace vrm::core
+namespace vrm::core::impl
 {
-    namespace impl
+    template <typename T>
+    class fwd_capture_wrapper : public perfect_wrapper<T>
     {
-        template <typename T>
-        class fwd_capture_wrapper : public perfect_wrapper<T>
+    private:
+        using base_type = perfect_wrapper<T>;
+
+    public:
+        template <typename TFwd>
+        explicit constexpr fwd_capture_wrapper(TFwd&& x) noexcept(
+            std::is_nothrow_constructible<base_type, TFwd&&>{})
+            : base_type(FWD(x))
         {
-        private:
-            using base_type = perfect_wrapper<T>;
-
-        public:
-            template <typename TFwd>
-            constexpr fwd_capture_wrapper(TFwd&& x) noexcept(
-                std::is_nothrow_constructible<base_type, TFwd&&>{})
-                : base_type(FWD(x))
-            {
-            }
-
-            /// @brief Gets the wrapped perfectly-captured object by forwarding
-            /// it into the return value.
-            /// @details Returns `std::forward<T>(this->get())`. In practice:
-            /// * If the wrapped object is a value, it gets moved out (instead
-            /// of returning a reference to it like `get()` would).
-            /// * If the wrapped object is a reference, a reference gets
-            /// returned.
-            /// This happens because `T` is a reference type.
-            constexpr T fwd_get() noexcept(
-                std::is_nothrow_constructible<T, T&&>{})
-            {
-                // Note: `FWD` is not applicable here.
-                return std::forward<T>(this->get());
-            }
-
-            constexpr T fwd_get() const = delete;
-        };
-
-        template <typename T>
-        constexpr auto fwd_capture(T&& x) noexcept(
-            noexcept(fwd_capture_wrapper<T>(FWD(x))))
-        {
-            return fwd_capture_wrapper<T>(FWD(x));
         }
 
-        template <typename T>
-        constexpr auto fwd_copy_capture(T&& x) noexcept(
-            noexcept(fwd_capture_wrapper<T>(x)))
+        /// @brief Gets the wrapped perfectly-captured object by forwarding
+        /// it into the return value.
+        /// @details Returns `std::forward<T>(this->get())`. In practice:
+        /// * If the wrapped object is a value, it gets moved out (instead
+        /// of returning a reference to it like `get()` would).
+        /// * If the wrapped object is a reference, a reference gets
+        /// returned.
+        /// This happens because `T` is a reference type.
+        constexpr T fwd_get() noexcept(std::is_nothrow_constructible<T, T&&>{})
         {
-            return fwd_capture_wrapper<T>(x);
+            // Note: `FWD` is not applicable here.
+            return std::forward<T>(this->get());
         }
-    } // namespace impl
-} // namespace vrm::core
+
+        constexpr T fwd_get() const = delete;
+    };
+
+    template <typename T>
+    constexpr auto fwd_capture(T&& x) noexcept(
+        noexcept(fwd_capture_wrapper<T>(FWD(x))))
+    {
+        return fwd_capture_wrapper<T>(FWD(x));
+    }
+
+    template <typename T>
+    constexpr auto fwd_copy_capture(T&& x) noexcept(
+        noexcept(fwd_capture_wrapper<T>(x)))
+    {
+        return fwd_capture_wrapper<T>(x);
+    }
+} // namespace vrm::core::impl
 
 #define VRM_CORE_FWD_CAPTURE(...) \
     ::vrm::core::impl::fwd_capture(FWD(__VA_ARGS__))

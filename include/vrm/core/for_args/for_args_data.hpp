@@ -33,9 +33,6 @@ namespace vrm::core
             static constexpr sz_t index{TI};
         };
 
-        template <sz_t TI>
-        constexpr sz_t for_args_data_type<TI>::index;
-
         template <typename, typename>
         struct for_args_data_helper;
 
@@ -43,7 +40,6 @@ namespace vrm::core
         struct for_args_data_helper<std::index_sequence<Bs...>,
             std::index_sequence<Cs...>>
         {
-            using swallow = bool[];
 
 #define VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY() \
     f(for_args_data_type<TI>{}, std::get<TArity + Cs>(FWD(xs))...)
@@ -59,11 +55,8 @@ namespace vrm::core
 
 #undef VRM_CORE_IMPL_IMPL_FORNARGS_EXECN_BODY
 
-#define VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY()                       \
-    (void)swallow                                                     \
-    {                                                                 \
-        (exec_n<Bs, (Bs * sizeof...(Cs))>(f, FWD(xs)), true)..., true \
-    }
+#define VRM_CORE_IMPL_IMPL_FORNARGS_EXEC_BODY() \
+    (exec_n<Bs, (Bs * sizeof...(Cs))>(f, FWD(xs)), ...)
 
             template <typename TF, typename TTpl, typename... Ts>
             VRM_CORE_ALWAYS_INLINE static constexpr void

@@ -36,17 +36,19 @@ struct chestnut
     }
 };
 
-auto has_peel(is_valid([](auto&& x) -> decltype(x.peel()) {}));
+auto has_peel(is_valid([](auto&& x) -> decltype(x.peel(), void()) {}));
 
-auto has_eat_banana(is_valid([](auto&& x) -> decltype(x.eat_banana()) {}));
+auto has_eat_banana(
+    is_valid([](auto&& x) -> decltype(x.eat_banana(), void()) {}));
 
-auto has_eat_apple(is_valid([](auto&& x) -> decltype(x.eat_apple()) {}));
+auto has_eat_apple(
+    is_valid([](auto&& x) -> decltype(x.eat_apple(), void()) {}));
 
-auto has_x(is_valid([](auto&& x) -> decltype(x.x) {}));
+auto has_x(is_valid([](auto&& x) -> decltype(x.x, void()) {}));
 
-auto has_y(is_valid([](auto&& x) -> decltype(x.y) {}));
+auto has_y(is_valid([](auto&& x) -> decltype(x.y, void()) {}));
 
-auto has_z(is_valid([](auto&& x) -> decltype(x.z) {}));
+auto has_z(is_valid([](auto&& x) -> decltype(x.z, void()) {}));
 
 
 template <typename T>

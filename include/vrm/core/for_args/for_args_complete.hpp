@@ -141,7 +141,8 @@ namespace vrm::core
             }
 
             template <sz_t TI = 0>
-            VRM_CORE_ALWAYS_INLINE constexpr auto get() const noexcept
+            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto get() const
+                noexcept
             {
                 return unwrap<TI>(last_return_type{});
             }
@@ -222,7 +223,8 @@ namespace vrm::core
 
         public:
             template <typename TFFwd>
-            VRM_CORE_ALWAYS_INLINE static_for_result(TFFwd&& f) noexcept
+            explicit VRM_CORE_ALWAYS_INLINE static_for_result(
+                TFFwd&& f) noexcept
                 : TFunctionToCall(FWD(f))
             {
             }
@@ -269,7 +271,7 @@ namespace vrm::core
             {
                 static_for_result* _this;
 
-                VRM_CORE_ALWAYS_INLINE constexpr binder(
+                VRM_CORE_ALWAYS_INLINE explicit constexpr binder(
                     static_for_result* t) noexcept
                     : _this(t)
                 {
@@ -341,7 +343,7 @@ namespace vrm::core
             {
                 static_for_result* _this;
 
-                VRM_CORE_ALWAYS_INLINE constexpr else_branch(
+                VRM_CORE_ALWAYS_INLINE explicit constexpr else_branch(
                     static_for_result* t) noexcept
                     : _this(t)
                 {

@@ -24,13 +24,12 @@ namespace vrm::core
             ignore_manipulator() = default;
 
             template <typename TStr>
-            ignore_manipulator(TStr&& str);
-
+            explicit ignore_manipulator(TStr&& str);
 
             template <typename TStr>
             auto& operator=(TStr&& str);
 
-            operator const T&() const noexcept;
+            explicit operator const T&() const noexcept;
 
             auto begin() const noexcept;
             auto end() const noexcept;

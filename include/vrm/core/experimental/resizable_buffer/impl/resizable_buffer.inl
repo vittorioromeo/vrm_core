@@ -9,7 +9,6 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resizable_buffer/impl/resizable_buffer.hpp>
-#include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
 namespace vrm::core
 {

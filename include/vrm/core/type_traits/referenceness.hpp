@@ -17,7 +17,7 @@ namespace vrm::core
                 std::conditional_t<std::is_lvalue_reference_v<TSource>,
                     std::add_lvalue_reference_t<T>,
                     std::add_rvalue_reference_t<T>>>;
-    }
+    } // namespace impl
 
     /// @brief Removes reference from `T`, then applies `TSource`'s
     /// "referenceness" to it.

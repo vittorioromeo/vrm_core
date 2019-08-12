@@ -16,7 +16,7 @@ namespace vrm::core
         VRM_CORE_ALWAYS_INLINE auto VRM_CORE_CONST_FN is_strong_typedef_impl()
         {
             return is_valid(
-                [](auto x) -> typename decltype(x)::strong_typedef_tag{});
+                [](auto x) -> typename decltype(x)::strong_typedef_tag{ return {}; });
         }
     } // namespace impl
 

@@ -8,25 +8,22 @@
 #include <tuple>
 #include <vrm/core/fwd_capture/single.hpp>
 
-namespace vrm::core
+namespace vrm::core::impl
 {
-    namespace impl
+    template <typename... Ts>
+    constexpr auto fwd_capture_pack(Ts&&... xs) noexcept(
+        noexcept(std::make_tuple(VRM_CORE_FWD_CAPTURE(xs)...)))
     {
-        template <typename... Ts>
-        constexpr auto fwd_capture_pack(Ts&&... xs) noexcept(
-            noexcept(std::make_tuple(VRM_CORE_FWD_CAPTURE(xs)...)))
-        {
-            return std::make_tuple(VRM_CORE_FWD_CAPTURE(xs)...);
-        }
+        return std::make_tuple(VRM_CORE_FWD_CAPTURE(xs)...);
+    }
 
-        template <typename... Ts>
-        constexpr auto fwd_copy_capture_pack(Ts&&... xs) noexcept(
-            noexcept(std::make_tuple(VRM_CORE_FWD_COPY_CAPTURE(xs)...)))
-        {
-            return std::make_tuple(VRM_CORE_FWD_COPY_CAPTURE(xs)...);
-        }
-    } // namespace impl
-} // namespace vrm::core
+    template <typename... Ts>
+    constexpr auto fwd_copy_capture_pack(Ts&&... xs) noexcept(
+        noexcept(std::make_tuple(VRM_CORE_FWD_COPY_CAPTURE(xs)...)))
+    {
+        return std::make_tuple(VRM_CORE_FWD_COPY_CAPTURE(xs)...);
+    }
+} // namespace vrm::core::impl
 
 #define VRM_CORE_FWD_CAPTURE_PACK(...) \
     vrm::core::impl::fwd_capture_pack(FWD(__VA_ARGS__)...)

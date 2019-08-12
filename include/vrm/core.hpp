@@ -28,7 +28,6 @@
 #include <vrm/core/fwd_capture.hpp>
 #include <vrm/core/is_valid.hpp>
 #include <vrm/core/literals.hpp>
-#include <vrm/core/make_array.hpp>
 #include <vrm/core/ostream_utils.hpp>
 #include <vrm/core/overload.hpp>
 #include <vrm/core/perfect_wrapper.hpp>

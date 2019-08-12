@@ -20,7 +20,7 @@ namespace vrm::core
             TF _f;
 
             template <typename T>
-            ignore_first_arg(T&& f) noexcept : _f{f}
+            explicit ignore_first_arg(T&& f) noexcept : _f{f}
             {
             }
 

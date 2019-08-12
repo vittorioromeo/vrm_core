@@ -8,4 +8,4 @@
 namespace vrm::core::detection
 {
     constexpr auto debug() noexcept;
-}
+} // namespace vrm::core::detection

@@ -25,9 +25,6 @@ namespace vrm::core
             static constexpr sz_t index{TI};
         };
 
-        template <sz_t TI>
-        constexpr sz_t for_tuple_data_type<TI>::index;
-
         template <sz_t TS, typename... Ts>
         struct for_tuple_data_helper
         {
@@ -79,34 +76,31 @@ namespace vrm::core
             Ts...>::exec(FWD(f), FWD(ts)...))
 } // namespace vrm::core
 
-namespace vrm::core
+namespace vrm::core::impl
 {
-    namespace impl
+    template <typename TF>
+    class for_tuple_caller
     {
-        template <typename TF>
-        class for_tuple_caller
+    private:
+        TF _f;
+
+    public:
+        template <typename TFFwd>
+        VRM_CORE_ALWAYS_INLINE explicit constexpr for_tuple_caller(
+            TFFwd&& f) noexcept
+            : _f{FWD(f)}
         {
-        private:
-            TF _f;
+        }
 
-        public:
-            template <typename TFFwd>
-            VRM_CORE_ALWAYS_INLINE constexpr for_tuple_caller(
-                TFFwd&& f) noexcept
-                : _f{FWD(f)}
-            {
-            }
-
-            template <typename TIgnore, typename... Ts>
-            VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
-            operator()(TIgnore&&, Ts&&... xs)               // .
-                noexcept(noexcept((std::declval<TF>()(FWD(xs)...))))
-            {
-                return _f(FWD(xs)...);
-            }
-        };
-    } // namespace impl
-} // namespace vrm::core
+        template <typename TIgnore, typename... Ts>
+        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) // .
+        operator()(TIgnore&&, Ts&&... xs)               // .
+            noexcept(noexcept((std::declval<TF>()(FWD(xs)...))))
+        {
+            return _f(FWD(xs)...);
+        }
+    };
+} // namespace vrm::core::impl
 
 namespace vrm::core
 {

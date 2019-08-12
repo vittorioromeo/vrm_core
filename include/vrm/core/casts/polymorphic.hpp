@@ -9,7 +9,6 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/ostream_utils.hpp>
-#include <vrm/core/ostream_utils/nullptr_printer.hpp>
 #include <vrm/core/type_traits.hpp>
 #include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/type_traits/forward_like.hpp>
@@ -21,7 +20,7 @@ namespace vrm::core
     {
         template <typename TOut, typename T>
         VRM_CORE_ALWAYS_INLINE constexpr void assert_correct_polymorphic(
-            T* ptr, std::true_type) noexcept
+            T* ptr, std::true_type /* base class is polymorphic */) noexcept
         {
             VRM_CORE_ASSERT_OP(dynamic_cast<TOut>(ptr), ==, ptr);
 
@@ -31,7 +30,7 @@ namespace vrm::core
 
         template <typename TCasted, typename T>
         VRM_CORE_ALWAYS_INLINE constexpr void assert_correct_polymorphic(
-            T*, std::false_type) noexcept
+            T*, std::false_type /* base class is not polymorphic */) noexcept
         {
         }
 

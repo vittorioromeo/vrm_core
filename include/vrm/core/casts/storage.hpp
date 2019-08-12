@@ -8,7 +8,6 @@
 #include <type_traits>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/config.hpp>
-#include <vrm/core/ostream_utils/nullptr_printer.hpp>
 #include <vrm/core/type_traits/common.hpp>
 #include <vrm/core/type_traits/forward_like.hpp>
 #include <vrm/core/type_traits/qualifiers.hpp>
