@@ -137,13 +137,13 @@ namespace vrm::core
 
         void destroy_and_deallocate(size_type n)
         {
-            for_buffers([this, &n](auto& b) { b.destroy_and_deallocate(n); });
+            for_buffers([&n](auto& b) { b.destroy_and_deallocate(n); });
         }
 
 
         void grow(size_type old_capacity, size_type new_capacity)
         {
-            for_buffers([this, &old_capacity, &new_capacity](
+            for_buffers([&old_capacity, &new_capacity](
                             auto& b) { b.grow(old_capacity, new_capacity); });
         }
 
