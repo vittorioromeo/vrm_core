@@ -11,12 +11,6 @@
 #include <sstream>
 #include <string>
 
-namespace std
-{
-    // TODO: temp windows fix
-    std::ostream& operator<<(std::ostream& os, std::nullptr_t) { return os; }
-}
-
 namespace vrm::core::impl::assert
 {
     template <typename TLhs, typename TRhs>
