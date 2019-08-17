@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/experimental/delegate/base_delegate.hpp>
 #include <vrm/core/experimental/delegate/impl/delegate.hpp>
 
@@ -20,5 +20,5 @@ namespace vrm::core
         {
             this->emplace_function(FWD(f));
         }
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

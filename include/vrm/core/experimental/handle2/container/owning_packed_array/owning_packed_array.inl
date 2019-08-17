@@ -6,10 +6,10 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle2/settings.hpp>
-#include <vrm/core/experimental/handle2/context.hpp>
 #include <vrm/core/experimental/handle2/container/owning_packed_array/owning_packed_array.hpp>
+#include <vrm/core/experimental/handle2/context.hpp>
+#include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -43,9 +43,8 @@ namespace vrm::core
                 // Invalidate metadata for handle `h`.
                 // Swap the last valid target with the destroyed one to maintain
                 // array packedness.
-                this->destroy_handle(h,
-                    [this](auto invalid_index, auto valid_index)
-                    {
+                this->destroy_handle(
+                    h, [this](auto invalid_index, auto valid_index) {
                         using std::swap;
                         swap(_targets[invalid_index], _targets[valid_index]);
                     });
@@ -56,6 +55,6 @@ namespace vrm::core
             {
                 this->clear_metadata();
             }
-        }
-    }
-}
+        } // namespace container
+    }     // namespace handle2
+} // namespace vrm::core

@@ -37,7 +37,8 @@ namespace vrm::core
         struct control_flow
         {
             template <sz_t TI = 0>
-            VRM_CORE_ALWAYS_INLINE constexpr auto get() const noexcept
+            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto get() const
+                noexcept
             {
                 return decltype(std::get<TI>(TReturn{})){};
             }

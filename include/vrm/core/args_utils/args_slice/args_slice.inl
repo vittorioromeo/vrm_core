@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/args_utils/args_slice/args_slice.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/tuple_utils/ref_tuple.hpp>
 #include <vrm/core/args_utils/nth_arg.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/ref_tuple.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -21,10 +21,10 @@ namespace vrm::core
         {
             return make_ref_tuple(nth_arg<TIBegin + TIs>(FWD(xs)...)...);
         }
-    }
+    } // namespace impl
 
     template <sz_t TIBegin, sz_t TIEnd, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto args_slice(Ts && ... xs) noexcept
+    VRM_CORE_ALWAYS_INLINE constexpr auto args_slice(Ts&&... xs) noexcept
     {
         // Assert range validity.
         static_assert(TIEnd >= TIBegin);
@@ -33,4 +33,4 @@ namespace vrm::core
         return impl::build_args_slice<TIBegin>(
             std::make_index_sequence<TIEnd - TIBegin>(), FWD(xs)...);
     }
-}
+} // namespace vrm::core

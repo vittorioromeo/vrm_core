@@ -111,7 +111,7 @@ namespace vrm::core
 
             void reserve(sz_t x);
             void clear() noexcept;
-            auto empty() const noexcept;
+            [[nodiscard]] auto empty() const noexcept;
         };
     } // namespace impl
 } // namespace vrm::core

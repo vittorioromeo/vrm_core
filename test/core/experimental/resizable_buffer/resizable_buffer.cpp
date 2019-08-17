@@ -71,7 +71,7 @@ public:
         return N;
     }
 
-    ::sz_t used() const
+    [[nodiscard]] ::sz_t used() const
     {
         return ::sz_t(ptr_ - buf_);
     }

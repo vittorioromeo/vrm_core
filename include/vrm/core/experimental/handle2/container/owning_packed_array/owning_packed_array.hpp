@@ -53,7 +53,7 @@ namespace vrm::core
                     auto target_idx(this->metadata_at(x)._target_idx);
                     return _targets[target_idx];
                 }
-                const auto& target(sz_t x) const
+                [[nodiscard]] const auto& target(sz_t x) const
                 {
                     auto target_idx(this->metadata_at(x)._target_idx);
                     return _targets[target_idx];
@@ -70,7 +70,7 @@ namespace vrm::core
                 {
                     return _targets;
                 }
-                const auto& targets() const noexcept
+                [[nodiscard]] const auto& targets() const noexcept
                 {
                     return _targets;
                 }
@@ -80,7 +80,7 @@ namespace vrm::core
                     VRM_CORE_ASSERT(this->valid(h));
                     return target(this->data(h));
                 }
-                const auto& access(const handle_type& h) const
+                [[nodiscard]] const auto& access(const handle_type& h) const
                 {
                     VRM_CORE_ASSERT(this->valid(h));
                     return target(this->data(h));

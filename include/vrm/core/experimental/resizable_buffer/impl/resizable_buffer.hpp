@@ -67,13 +67,13 @@ namespace vrm::core
         auto copy(size_type n);
 
         auto data() noexcept;
-        auto data() const noexcept;
+        [[nodiscard]] auto data() const noexcept;
 
         auto& operator[](size_type idx) noexcept;
         const auto& operator[](size_type idx) const noexcept;
 
         /// @brief Returns `true` if the internal storage points to `nullptr'.
         /// @details Occurs if the buffer was not initialized or was moved.
-        auto null() const noexcept;
+        [[nodiscard]] auto null() const noexcept;
     };
 } // namespace vrm::core

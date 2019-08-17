@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resource/base.hpp>
 #include <vrm/core/experimental/resource/unique/unique.hpp>
 
@@ -52,13 +52,15 @@ namespace vrm::core
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE unique<TBehavior>::unique(
-                const handle_type& handle) noexcept : base_type{handle}
+                const handle_type& handle) noexcept
+                : base_type{handle}
             {
             }
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE unique<TBehavior>::unique(
-                unique&& rhs) noexcept : base_type{rhs.release()}
+                unique&& rhs) noexcept
+                : base_type{rhs.release()}
             {
             }
 
@@ -111,6 +113,6 @@ namespace vrm::core
             {
                 lhs.swap(rhs);
             }
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

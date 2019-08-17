@@ -67,7 +67,8 @@ namespace vrm::core
             auto& access(const handle_type& h) noexcept;
 
             /// @brief Retrieves the target from an handle. (const version)
-            const auto& access(const handle_type& h) const noexcept;
+            [[nodiscard]] const auto& access(const handle_type& h) const
+                noexcept;
         };
     } // namespace handle
 } // namespace vrm::core

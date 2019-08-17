@@ -83,7 +83,8 @@ namespace vrm::core
         }
 
         template <sz_t TN>
-        VRM_CORE_ALWAYS_INLINE const auto& nth_buffer() const& noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto&
+        nth_buffer() const& noexcept
         {
             static_assert(buffer_count > TN);
             return std::get<TN>(_buffers);
@@ -191,7 +192,8 @@ namespace vrm::core
         }
 
         template <sz_t... TIs>
-        auto data_builder(std::index_sequence<TIs...>) const noexcept
+        [[nodiscard]] auto data_builder(std::index_sequence<TIs...>) const
+            noexcept
         {
             return data_ptr_tuple{std::get<TIs>(_buffers).data()...};
         }
@@ -202,7 +204,7 @@ namespace vrm::core
             return data_builder(buffer_indices{});
         }
 
-        auto data() const noexcept
+        [[nodiscard]] auto data() const noexcept
         {
             return data_builder(buffer_indices{});
         }
@@ -223,7 +225,7 @@ namespace vrm::core
         /// @details Occurs if the buffer was not initialized or was moved.
         /// Checks only one of the buffers, assuming all of them are always
         /// initialized/moved at once.
-        auto null() const noexcept
+        [[nodiscard]] auto null() const noexcept
         {
             return nth_buffer<0>().null();
         }

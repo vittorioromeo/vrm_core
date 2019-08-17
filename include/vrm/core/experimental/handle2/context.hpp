@@ -28,7 +28,7 @@ namespace vrm::core
             {
                 return static_cast<TDerived&>(*this);
             }
-            const auto& derived() const noexcept
+            [[nodiscard]] const auto& derived() const noexcept
             {
                 return static_cast<const TDerived&>(*this);
             }
@@ -38,22 +38,23 @@ namespace vrm::core
             {
                 return derived().counter(hd);
             }
-            const auto& counter(const handle_data_type& hd) const
+            [[nodiscard]] const auto& counter(const handle_data_type& hd) const
             {
                 return derived().counter(hd);
             }
 
-            const auto& data(const handle_type& h) const noexcept
+            [[nodiscard]] const auto& data(const handle_type& h) const noexcept
             {
                 return h._data;
             }
-            const auto& local_counter(const handle_type& h) const noexcept
+            [[nodiscard]] const auto& local_counter(const handle_type& h) const
+                noexcept
             {
                 return h._counter;
             }
 
         public:
-            auto valid(const handle_type& h) const
+            [[nodiscard]] auto valid(const handle_type& h) const
             {
                 return counter(data(h)) == local_counter(h);
             }

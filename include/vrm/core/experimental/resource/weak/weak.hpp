@@ -72,18 +72,18 @@ namespace vrm::core
 
                 /// @brief Returns the number of shared resources managing the
                 /// stored handle.
-                auto use_count() const noexcept;
+                [[nodiscard]] auto use_count() const noexcept;
 
                 /// @brief Returns `true` if the managed object has already been
                 /// deleted.
                 /// @details Equivalent to `use_count() == 0`.
-                auto expired() const noexcept;
+                [[nodiscard]] auto expired() const noexcept;
 
                 /// @brief Creates a shared resource that shares ownership of
                 /// the managed object.
                 /// @details If the stored handle is null, a null shared
                 /// resource is returned.
-                auto lock() const noexcept;
+                [[nodiscard]] auto lock() const noexcept;
 
                 template <typename>
                 friend void swap(weak& lhs, weak& rhs) noexcept;

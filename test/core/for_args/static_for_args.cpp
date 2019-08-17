@@ -16,7 +16,7 @@ void test_empty_for()
     });
 
     using empty_for_t = decltype(empty_for);
-    static_assert(empty_for_t::arity == 1, "");
+    static_assert(empty_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -61,7 +61,7 @@ void test_unary_for()
     });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -115,7 +115,7 @@ void test_unary_for_break()
     });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -188,7 +188,7 @@ void test_unary_for_skip()
     });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -323,8 +323,8 @@ void test_unary_for_accumulate_binary()
         int_v<3>, int_v<10>, // .
         int_v<4>, int_v<10>);
 
-    static_assert(decltype(unwrap<0>(r)){} == int_v<1 + 2 + 3 + 4>, "");
-    static_assert(decltype(unwrap<1>(r)){} == int_v<10 + 10 + 10 + 10>, "");
+    static_assert(decltype(unwrap<0>(r)){} == int_v<1 + 2 + 3 + 4> );
+    static_assert(decltype(unwrap<1>(r)){} == int_v<10 + 10 + 10 + 10> );
 }
 
 TEST_MAIN()

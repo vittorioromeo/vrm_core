@@ -30,7 +30,8 @@ namespace vrm::core
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE base<TBehavior>::base(
-                const handle_type& handle) noexcept : _handle{handle}
+                const handle_type& handle) noexcept
+                : _handle{handle}
             {
             }
 
@@ -80,6 +81,6 @@ namespace vrm::core
             {
                 return !is_null_handle();
             }
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

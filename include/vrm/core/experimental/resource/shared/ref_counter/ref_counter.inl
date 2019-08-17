@@ -5,10 +5,10 @@
 
 #pragma once
 
+#include "./ref_counter.hpp"
+#include <vrm/core/assert/assert.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/assert/assert.hpp>
-#include "./ref_counter.hpp"
 
 namespace vrm::core
 {
@@ -89,7 +89,8 @@ namespace vrm::core
             }
 
             VRM_CORE_ALWAYS_INLINE shared_ref_counter::shared_ref_counter(
-                shared_ref_counter&& rhs) noexcept : _metadata{rhs._metadata}
+                shared_ref_counter&& rhs) noexcept
+                : _metadata{rhs._metadata}
             {
                 rhs._metadata = nullptr;
             }
@@ -155,6 +156,6 @@ namespace vrm::core
                 decrement_weak();
                 deallocate_if_required(FWD(deleter));
             }
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

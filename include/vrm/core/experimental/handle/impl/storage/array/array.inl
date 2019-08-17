@@ -6,11 +6,11 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage/array/array.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -94,6 +94,6 @@ namespace vrm::core
             void hs_array<TSettings, TCount>::reserve(sz_t) noexcept
             {
             }
-        }
-    }
-}
+        } // namespace storage
+    }     // namespace handle
+} // namespace vrm::core

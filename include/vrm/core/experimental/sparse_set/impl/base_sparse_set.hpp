@@ -69,7 +69,7 @@ namespace vrm::core
             void clear() noexcept;
 
             /// @brief Returns `true` if the set is empty.
-            bool empty() const noexcept;
+            [[nodiscard]] bool empty() const noexcept;
 
             /// @brief Removes the last element of the set.
             /// @details Assumes the set is not empty.
@@ -88,7 +88,7 @@ namespace vrm::core
 
             /// @brief Returns the number of elements that can be stored in the
             /// set.
-            auto capacity() const noexcept;
+            [[nodiscard]] auto capacity() const noexcept;
 
             // Iterator support.
             auto begin() noexcept;
@@ -98,7 +98,7 @@ namespace vrm::core
 
             /// @brief Returns the `nth` value in the dense collection.
             /// @details Assumes `i` is a valid index.
-            auto at(sz_t i) const noexcept;
+            [[nodiscard]] auto at(sz_t i) const noexcept;
 
             /// @brief Reserves memory for `n` elements if the underlying
             /// storage type supports it.

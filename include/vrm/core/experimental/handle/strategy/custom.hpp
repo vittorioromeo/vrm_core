@@ -44,7 +44,8 @@ namespace vrm::core
                 {
                     return _target_getter(mr);
                 }
-                const auto& target(const metadata_ref_type& mr) const
+                [[nodiscard]] const auto& target(
+                    const metadata_ref_type& mr) const
                 {
                     return _target_getter(mr);
                 }
@@ -53,7 +54,8 @@ namespace vrm::core
                 {
                     return _counter_getter(mr);
                 }
-                const auto& counter(const metadata_ref_type& mr) const
+                [[nodiscard]] const auto& counter(
+                    const metadata_ref_type& mr) const
                 {
                     return _counter_getter(mr);
                 }
@@ -87,7 +89,8 @@ namespace vrm::core
                 {
                 }
 
-                auto valid_handle(const handle_type& h) const noexcept
+                [[nodiscard]] auto valid_handle(const handle_type& h) const
+                    noexcept
                 {
                     // Compare local handle instance counter with storage
                     // counter.
@@ -153,7 +156,7 @@ namespace vrm::core
                 {
                     return _custom_getters.target(h._metadata_ref);
                 }
-                const auto& access(const handle_type& h) const
+                [[nodiscard]] const auto& access(const handle_type& h) const
                 {
                     return _custom_getters.target(h._metadata_ref);
                 }

@@ -76,15 +76,15 @@ namespace vrm::core
             multi_vector(multi_vector&&) = default;
             multi_vector& operator=(multi_vector&&) = default;
 
-            const auto& size() const noexcept
+            [[nodiscard]] const auto& size() const noexcept
             {
                 return _size;
             }
-            const auto& capacity() const noexcept
+            [[nodiscard]] const auto& capacity() const noexcept
             {
                 return _capacity;
             }
-            auto empty() const noexcept
+            [[nodiscard]] auto empty() const noexcept
             {
                 return _size == 0;
             }
@@ -193,7 +193,7 @@ namespace vrm::core
                 return (*this)[_size - 1];
             }
 
-            auto back() const noexcept
+            [[nodiscard]] auto back() const noexcept
             {
                 return (*this)[_size - 1];
             }

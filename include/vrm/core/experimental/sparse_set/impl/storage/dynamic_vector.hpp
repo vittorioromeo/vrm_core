@@ -75,17 +75,20 @@ namespace vrm::core
                     return _buffers.template nth_buffer<1>();
                 }
 
-                VRM_CORE_ALWAYS_INLINE const auto& dense() const noexcept
+                [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& dense() const
+                    noexcept
                 {
                     return _buffers.template nth_buffer<0>();
                 }
 
-                VRM_CORE_ALWAYS_INLINE const auto& sparse() const noexcept
+                [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& sparse() const
+                    noexcept
                 {
                     return _buffers.template nth_buffer<1>();
                 }
 
-                VRM_CORE_ALWAYS_INLINE auto last_element_index() const noexcept
+                [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto
+                last_element_index() const noexcept
                 {
                     return _size - 1;
                 }
@@ -185,7 +188,7 @@ namespace vrm::core
                     _size = 0;
                 }
 
-                bool has(T x) const noexcept
+                [[nodiscard]] bool has(T x) const noexcept
                 {
                     // If `x` cannot be stored, then it's not in the set.
                     if(x >= _capacity)
@@ -196,7 +199,7 @@ namespace vrm::core
                     return sparse()[x] != null_idx;
                 }
 
-                auto capacity() const noexcept
+                [[nodiscard]] auto capacity() const noexcept
                 {
                     return _capacity;
                 }
@@ -221,7 +224,7 @@ namespace vrm::core
                     return utils{}.unchecked_erase(*this, x);
                 }
 
-                bool empty() const noexcept
+                [[nodiscard]] bool empty() const noexcept
                 {
                     return _size == 0;
                 }
@@ -231,7 +234,7 @@ namespace vrm::core
                     utils{}.pop_back_impl(*this);
                 }
 
-                auto back() const noexcept
+                [[nodiscard]] auto back() const noexcept
                 {
                     VRM_CORE_ASSERT_OP(size(), >, 0);
 
@@ -251,7 +254,7 @@ namespace vrm::core
                     }
                 }
 
-                auto size() const noexcept
+                [[nodiscard]] auto size() const noexcept
                 {
                     return _size;
                 }
@@ -261,7 +264,7 @@ namespace vrm::core
                     return dense().data();
                 }
 
-                auto begin() const noexcept
+                [[nodiscard]] auto begin() const noexcept
                 {
                     return static_cast<const T*>(dense().data());
                 }
@@ -271,12 +274,12 @@ namespace vrm::core
                     return dense().data() + _size;
                 }
 
-                auto end() const noexcept
+                [[nodiscard]] auto end() const noexcept
                 {
                     return static_cast<const T*>(dense().data() + _size);
                 }
 
-                auto at(sz_t i) const noexcept
+                [[nodiscard]] auto at(sz_t i) const noexcept
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
                     return dense()[i];

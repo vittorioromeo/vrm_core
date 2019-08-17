@@ -23,12 +23,12 @@ namespace vrm::core
                 shared_metadata* _metadata{nullptr};
 
                 auto& access_metadata() noexcept;
-                const auto& access_metadata() const noexcept;
+                [[nodiscard]] const auto& access_metadata() const noexcept;
 
-                auto weak_count() const noexcept;
-                auto total_count() const noexcept;
+                [[nodiscard]] auto weak_count() const noexcept;
+                [[nodiscard]] auto total_count() const noexcept;
 
-                auto has_any_ref() const noexcept;
+                [[nodiscard]] auto has_any_ref() const noexcept;
 
                 void increment_owner() noexcept;
                 void decrement_owner() noexcept;
@@ -50,10 +50,10 @@ namespace vrm::core
                 shared_ref_counter(shared_ref_counter&& rhs) noexcept;
                 auto& operator=(shared_ref_counter&& rhs) noexcept;
 
-                bool is_null() const noexcept;
+                [[nodiscard]] bool is_null() const noexcept;
 
-                auto owner_count() const noexcept;
-                auto use_count() const noexcept;
+                [[nodiscard]] auto owner_count() const noexcept;
+                [[nodiscard]] auto use_count() const noexcept;
 
                 void acquire_from_null();
                 void acquire_existing() noexcept;

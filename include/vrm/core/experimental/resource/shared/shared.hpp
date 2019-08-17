@@ -104,7 +104,7 @@ namespace vrm::core
                 /// @brief Returns `true` if `*this` is the only instance
                 /// managing the stored handle.
                 /// @details Equivalent to `use_count() == 1`.
-                bool unique() const noexcept;
+                [[nodiscard]] bool unique() const noexcept;
 
                 /// @brief Returns `true` if both `lhs` and `rhs` store the same
                 /// handle.

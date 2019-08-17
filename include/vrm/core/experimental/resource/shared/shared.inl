@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
-#include <vrm/core/assert.hpp>
-#include <vrm/core/experimental/resource/fwd.hpp>
 #include "./metadata.hpp"
-#include "./ref_counter.hpp"
 #include "./policies.hpp"
+#include "./ref_counter.hpp"
 #include "./shared.hpp"
+#include <vrm/core/assert.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/experimental/resource/fwd.hpp>
 
 namespace vrm::core
 {
@@ -36,8 +36,8 @@ namespace vrm::core
             }
 
             template <typename TBehavior, typename TLockPolicy>
-                VRM_CORE_ALWAYS_INLINE auto shared<TBehavior,
-                    TLockPolicy>::access_ref_counter() &&
+                VRM_CORE_ALWAYS_INLINE auto
+                shared<TBehavior, TLockPolicy>::access_ref_counter() &&
                 noexcept
             {
                 return std::move(_ref_counter);
@@ -115,7 +115,8 @@ namespace vrm::core
 
             template <typename TBehavior, typename TLockPolicy>
             shared<TBehavior, TLockPolicy>::shared(
-                const handle_type& handle) noexcept : base_type{handle}
+                const handle_type& handle) noexcept
+                : base_type{handle}
             {
                 // If `handle` is not null, we need to allocate metadata.
                 acquire_from_null_if_required();
@@ -123,8 +124,8 @@ namespace vrm::core
 
             template <typename TBehavior, typename TLockPolicy>
             shared<TBehavior, TLockPolicy>::shared(
-                const weak_type& rhs) noexcept : base_type{rhs._handle},
-                                                 _ref_counter{rhs._ref_counter}
+                const weak_type& rhs) noexcept
+                : base_type{rhs._handle}, _ref_counter{rhs._ref_counter}
             {
                 // If `handle` is not null, we need to increment the shared
                 // ownership counter.
@@ -133,8 +134,8 @@ namespace vrm::core
 
             template <typename TBehavior, typename TLockPolicy>
             shared<TBehavior, TLockPolicy>::shared(shared&& rhs) noexcept
-                : base_type{rhs._handle},
-                  _ref_counter{std::move(rhs.access_ref_counter())}
+                : base_type{rhs._handle}, _ref_counter{std::move(
+                                              rhs.access_ref_counter())}
             {
                 rhs.nullify_and_assert();
             }
@@ -168,10 +169,8 @@ namespace vrm::core
                 // deinitialized.
                 // The `ref_counter` internal metadata pointer is set to
                 // `nullptr`.
-                access_ref_counter().lose_ownership([this]
-                    {
-                        base_type::deinit();
-                    });
+                access_ref_counter().lose_ownership(
+                    [this] { base_type::deinit(); });
 
                 // Sets the current handle to null, and asserts that
                 // `ref_counter`
@@ -272,6 +271,6 @@ namespace vrm::core
             {
                 lhs.swap(rhs);
             }
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

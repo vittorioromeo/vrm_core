@@ -122,7 +122,7 @@ namespace testing
                 return static_cast<T&>(*this);
             }
 
-            const auto& get() const noexcept
+            [[nodiscard]] const auto& get() const noexcept
             {
                 return static_cast<const T&>(*this);
             }

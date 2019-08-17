@@ -6,10 +6,10 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle2/settings.hpp>
 #include <vrm/core/experimental/handle2/context.hpp>
 #include <vrm/core/experimental/handle2/manager/packed_array/packed_array.hpp>
+#include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 namespace vrm::core
 {
@@ -79,6 +79,6 @@ namespace vrm::core
                 // Reset next valid metadata index.
                 _next_ref = 0;
             }
-        }
-    }
-}
+        } // namespace manager
+    }     // namespace handle2
+} // namespace vrm::core

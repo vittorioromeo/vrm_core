@@ -21,7 +21,7 @@ constexpr int test_cexpr()
 
 TEST_MAIN()
 {
-    static_assert(true, "");
+    static_assert(true );
     static_assert(true);
 
     using namespace vrm::core;

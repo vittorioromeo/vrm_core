@@ -21,16 +21,14 @@ namespace vrm::core
 
             template <typename TBehavior, typename TLockPolicy>
             weak<TBehavior, TLockPolicy>::weak(const weak& rhs) noexcept
-                : _handle{rhs._handle},
-                  _ref_counter{rhs._ref_counter}
+                : _handle{rhs._handle}, _ref_counter{rhs._ref_counter}
             {
                 _ref_counter.increment_weak();
             }
 
             template <typename TBehavior, typename TLockPolicy>
             weak<TBehavior, TLockPolicy>::weak(const shared_type& rhs) noexcept
-                : _handle{rhs._handle},
-                  _ref_counter{rhs._ref_counter}
+                : _handle{rhs._handle}, _ref_counter{rhs._ref_counter}
             {
                 _ref_counter.increment_weak();
             }
@@ -91,10 +89,8 @@ namespace vrm::core
             template <typename TBehavior, typename TLockPolicy>
             void weak<TBehavior, TLockPolicy>::reset() noexcept
             {
-                _ref_counter.lose_weak([this]
-                    {
-                        behavior_type::deinit(_handle);
-                    });
+                _ref_counter.lose_weak(
+                    [this] { behavior_type::deinit(_handle); });
 
                 _handle = behavior_type::null_handle();
                 _ref_counter = ref_counter_type{};
@@ -127,9 +123,9 @@ namespace vrm::core
 
                 return shared_type{*this};
             }
-        }
+        } // namespace impl
 
         // TODO: swap, comparison ops
         // TODO: docs
-    }
-}
+    } // namespace resource
+} // namespace vrm::core

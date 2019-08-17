@@ -59,29 +59,29 @@ struct type_
 
 TEST_MAIN()
 {
-    static_assert(has_peel(banana{}), "");
-    static_assert(has_eat_banana(banana{}), "");
-    static_assert(!has_eat_apple(banana{}), "");
+    static_assert(has_peel(banana{}) );
+    static_assert(has_eat_banana(banana{}) );
+    static_assert(!has_eat_apple(banana{}) );
 
-    static_assert(has_peel(apple{}), "");
-    static_assert(!has_eat_banana(apple{}), "");
-    static_assert(has_eat_apple(apple{}), "");
+    static_assert(has_peel(apple{}) );
+    static_assert(!has_eat_banana(apple{}) );
+    static_assert(has_eat_apple(apple{}) );
 
-    static_assert(has_peel(chestnut{}), "");
-    static_assert(!has_eat_banana(chestnut{}), "");
-    static_assert(!has_eat_apple(chestnut{}), "");
+    static_assert(has_peel(chestnut{}) );
+    static_assert(!has_eat_banana(chestnut{}) );
+    static_assert(!has_eat_apple(chestnut{}) );
 
-    static_assert(has_x(banana{}), "");
-    static_assert(!has_y(banana{}), "");
-    static_assert(!has_z(banana{}), "");
+    static_assert(has_x(banana{}) );
+    static_assert(!has_y(banana{}) );
+    static_assert(!has_z(banana{}) );
 
-    static_assert(!has_x(apple{}), "");
-    static_assert(has_y(apple{}), "");
-    static_assert(!has_z(apple{}), "");
+    static_assert(!has_x(apple{}) );
+    static_assert(has_y(apple{}) );
+    static_assert(!has_z(apple{}) );
 
-    static_assert(!has_x(chestnut{}), "");
-    static_assert(!has_y(chestnut{}), "");
-    static_assert(has_z(chestnut{}), "");
+    static_assert(!has_x(chestnut{}) );
+    static_assert(!has_y(chestnut{}) );
+    static_assert(has_z(chestnut{}) );
 
     for_args(
         [](auto t) {

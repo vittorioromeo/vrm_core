@@ -47,11 +47,11 @@ namespace vrm::core
                 void increment_weak() noexcept;
                 void decrement_weak() noexcept;
 
-                auto owner_count() const noexcept;
-                auto weak_count() const noexcept;
-                auto total_count() const noexcept;
+                [[nodiscard]] auto owner_count() const noexcept;
+                [[nodiscard]] auto weak_count() const noexcept;
+                [[nodiscard]] auto total_count() const noexcept;
 
-                auto has_any_ref() const noexcept;
+                [[nodiscard]] auto has_any_ref() const noexcept;
             };
         } // namespace impl
     }     // namespace resource

@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/delegate/signature_helper.hpp>
 #include <vrm/core/experimental/delegate/impl/base_delegate.hpp>
+#include <vrm/core/experimental/delegate/signature_helper.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
 namespace vrm::core
 {
@@ -53,11 +53,8 @@ namespace vrm::core
             std::vector<fn_return_type> result;
             result.reserve(self._functions.size());
 
-            call_and_use_result_impl(FWD(self),
-                [&result](auto&& x)
-                {
-                    result.emplace_back(FWD(x));
-                },
+            call_and_use_result_impl(
+                FWD(self), [&result](auto&& x) { result.emplace_back(FWD(x)); },
                 FWD(xs)...);
 
             return result;
@@ -76,7 +73,7 @@ namespace vrm::core
                                                                             \
     template <typename TSettings>                                           \
     template <typename... Ts>                                               \
-    auto base_delegate<TSettings>::operator()(Ts && ... xs)                 \
+    auto base_delegate<TSettings>::operator()(Ts&&... xs)                   \
         qualifier noexcept(noexcept(call_impl(this_type{}, FWD(xs)...)))    \
     {                                                                       \
         return call_impl(*this, FWD(xs)...);                                \
@@ -114,5 +111,5 @@ namespace vrm::core
         {
             return _functions.empty();
         }
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

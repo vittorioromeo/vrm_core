@@ -45,7 +45,7 @@ namespace vrm::core
                 base() noexcept;
                 explicit base(const handle_type& handle) noexcept;
 
-                auto is_null_handle() const noexcept;
+                [[nodiscard]] auto is_null_handle() const noexcept;
 
                 void deinit() noexcept(is_nothrow_deinit_t<TBehavior>{});
                 void nullify() noexcept;
@@ -54,7 +54,7 @@ namespace vrm::core
                 void swap(base& rhs) noexcept;
 
             public:
-                auto get() const noexcept;
+                [[nodiscard]] auto get() const noexcept;
                 explicit operator bool() const noexcept;
             };
         } // namespace impl

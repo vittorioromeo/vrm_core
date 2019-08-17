@@ -50,7 +50,8 @@ namespace vrm::core
                 storage_type _storage;
 
             public:
-                auto valid_handle(const handle_type& h) const noexcept
+                [[nodiscard]] auto valid_handle(const handle_type& h) const
+                    noexcept
                 {
                     // Compare local handle instance counter with storage
                     // counter.
@@ -89,7 +90,7 @@ namespace vrm::core
                     return _storage.metadata_from_handle(h)._target;
                 }
 
-                const auto& access(const handle_type& h) const
+                [[nodiscard]] const auto& access(const handle_type& h) const
                 {
                     return _storage.metadata_from_handle(h)._target;
                 }

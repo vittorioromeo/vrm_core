@@ -6,7 +6,7 @@ struct base
     virtual ~base()
     {
     }
-    virtual int x() const
+    [[nodiscard]] virtual int x() const
     {
         return 0;
     }
@@ -14,7 +14,7 @@ struct base
 
 struct derived final : base
 {
-    int x() const override
+    [[nodiscard]] int x() const override
     {
         return 1;
     }

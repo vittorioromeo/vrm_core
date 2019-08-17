@@ -10,7 +10,7 @@ int main()
     using r0_type = repeated_tuple<5, int>;
 
     static_assert(
-        std::is_same<r0_type, std::tuple<int, int, int, int, int>>{}, "");
+        std::is_same<r0_type, std::tuple<int, int, int, int, int>>{} );
 
     auto r1 = make_repeated_tuple<6>(10.f);
 

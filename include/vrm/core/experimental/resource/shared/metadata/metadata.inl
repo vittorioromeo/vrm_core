@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert/assert.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resource/shared/metadata.hpp>
 
 namespace vrm::core
@@ -18,8 +18,7 @@ namespace vrm::core
             VRM_CORE_ALWAYS_INLINE shared_metadata::shared_metadata(
                 shared_counter_type owner_count,
                 shared_counter_type weak_count) noexcept
-                : _owner_count{owner_count},
-                  _weak_count{weak_count}
+                : _owner_count{owner_count}, _weak_count{weak_count}
             {
             }
 
@@ -50,28 +49,28 @@ namespace vrm::core
             }
 
             VRM_CORE_ALWAYS_INLINE auto // .
-                shared_metadata::owner_count() const noexcept
+            shared_metadata::owner_count() const noexcept
             {
                 return _owner_count;
             }
 
             VRM_CORE_ALWAYS_INLINE auto // .
-                shared_metadata::weak_count() const noexcept
+            shared_metadata::weak_count() const noexcept
             {
                 return _weak_count;
             }
 
             VRM_CORE_ALWAYS_INLINE auto // .
-                shared_metadata::total_count() const noexcept
+            shared_metadata::total_count() const noexcept
             {
                 return owner_count() + weak_count();
             }
 
             VRM_CORE_ALWAYS_INLINE auto // .
-                shared_metadata::has_any_ref() const noexcept
+            shared_metadata::has_any_ref() const noexcept
             {
                 return total_count() > 0;
             }
-        }
-    }
-}
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

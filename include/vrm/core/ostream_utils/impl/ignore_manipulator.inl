@@ -15,8 +15,7 @@ namespace vrm::core
     {
         template <typename T>
         template <typename TStr>
-        ignore_manipulator<T>::ignore_manipulator(TStr&& str)
-            : _str(FWD(str))
+        ignore_manipulator<T>::ignore_manipulator(TStr&& str) : _str(FWD(str))
         {
         }
 
@@ -45,19 +44,19 @@ namespace vrm::core
         {
             return std::end(_str);
         }
-    }
+    } // namespace impl
 
     template <typename T>
-    auto make_ignore_manipulator(T && x)
+    auto make_ignore_manipulator(T&& x)
     {
         return impl::ignore_manipulator<decltype(x)>(FWD(x));
     }
 
     template <typename T>
-    auto operator<<(std::ostream & o, const T& im)
-        ->std::enable_if_t<impl::is_ignore_manipulator<T>{}, std::ostream&>
+    auto operator<<(std::ostream& o, const T& im)
+        -> std::enable_if_t<impl::is_ignore_manipulator<T>{}, std::ostream&>
     {
         for(const auto& c : im) o.put(c);
         return o;
     }
-}
+} // namespace vrm::core

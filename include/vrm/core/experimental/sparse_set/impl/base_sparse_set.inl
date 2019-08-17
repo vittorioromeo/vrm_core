@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <vrm/core/experimental/sparse_set/impl/base_sparse_set.hpp>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/experimental/sparse_set/impl/base_sparse_set.hpp>
 #include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
@@ -133,5 +133,5 @@ namespace vrm::core
             using std::swap;
             swap(_impl, rhs._impl);
         }
-    }
-}
+    } // namespace impl
+} // namespace vrm::core

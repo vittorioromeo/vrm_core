@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
 #include <vrm/core/experimental/handle/manager/manager.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros.hpp>
 
 namespace vrm::core
 {
@@ -80,5 +80,5 @@ namespace vrm::core
             VRM_CORE_ASSERT(valid_handle(h));
             return _strategy.access(h);
         }
-    }
-}
+    } // namespace handle
+} // namespace vrm::core
