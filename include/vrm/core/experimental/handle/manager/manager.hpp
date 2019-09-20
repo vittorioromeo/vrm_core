@@ -11,67 +11,63 @@
 #include <vrm/core/experimental/handle/impl/storage.hpp>
 #include <vrm/core/utility_macros.hpp>
 
-namespace vrm::core
+namespace vrm::core::handle
 {
-    namespace handle
+    /// @brief Context that allows the management of handles.
+    template <typename TStrategy>
+    class manager
     {
-        /// @brief Context that allows the management of handles.
-        template <typename TStrategy>
-        class manager
+    public:
+        using strategy_type = TStrategy;
+        using target_type = typename strategy_type::target_type;
+        using counter_type = typename strategy_type::counter_type;
+        using metadata_ref_type = typename strategy_type::metadata_ref_type;
+        using handle_type = typename strategy_type::handle_type;
+
+    private:
+        strategy_type _strategy;
+
+    public:
+        template <typename... Ts>
+        manager(Ts &&... xs) : _strategy(FWD(xs)...)
         {
-        public:
-            using strategy_type = TStrategy;
-            using target_type = typename strategy_type::target_type;
-            using counter_type = typename strategy_type::counter_type;
-            using metadata_ref_type = typename strategy_type::metadata_ref_type;
-            using handle_type = typename strategy_type::handle_type;
+        }
 
-        private:
-            strategy_type _strategy;
+        /// @brief Returns `true` if `h` is a valid handle.
+        /// @details `h` is invalid if the object it points to was removed
+        /// or replaced.
+        VRM_CORE_ALWAYS_INLINE auto valid_handle(const handle_type &h) const
+            noexcept;
 
-        public:
-            template <typename... Ts>
-            manager(Ts&&... xs) : _strategy(FWD(xs)...)
-            {
-            }
+        void invalidate(const handle_type &h);
 
-            /// @brief Returns `true` if `h` is a valid handle.
-            /// @details `h` is invalid if the object it points to was removed
-            /// or replaced.
-            VRM_CORE_ALWAYS_INLINE auto valid_handle(const handle_type& h) const
-                noexcept;
+        /// @brief Creates and returns an handle pointing to `target`.
+        auto create(const target_type &target) // .
+            noexcept(noexcept(_strategy.create(target)));
 
-            void invalidate(const handle_type& h);
+        /// @brief Destroys `h`'s target and invalidates `h`.
+        /// @details Requires a `f` cleanup function that will be called on
+        /// `h`'s target before invalidating `h`.
+        template <typename TF>
+        void destroy(const handle_type &h, TF &&f) // .
+            noexcept(noexcept((_strategy.destroy(h, f))));
 
-            /// @brief Creates and returns an handle pointing to `target`.
-            auto create(const target_type& target) // .
-                noexcept(noexcept(_strategy.create(target)));
+        /// @brief Clears all handles.
+        void clear() // .
+            noexcept(noexcept(_strategy.clear()));
 
-            /// @brief Destroys `h`'s target and invalidates `h`.
-            /// @details Requires a `f` cleanup function that will be called on
-            /// `h`'s target before invalidating `h`.
-            template <typename TF>
-            void destroy(const handle_type& h, TF&& f) // .
-                noexcept(noexcept((_strategy.destroy(h, f))));
+        /// @brief Reserves memory for `n` handles.
+        /// @details Has no effect on fixed storage types.
+        void reserve(sz_t n) // .
+            noexcept(noexcept(_strategy.reserve(sz_t{})));
 
-            /// @brief Clears all handles.
-            void clear() // .
-                noexcept(noexcept(_strategy.clear()));
+        /// @brief Retrieves the target from an handle.
+        auto &access(const handle_type &h) noexcept;
 
-            /// @brief Reserves memory for `n` handles.
-            /// @details Has no effect on fixed storage types.
-            void reserve(sz_t n) // .
-                noexcept(noexcept(_strategy.reserve(sz_t{})));
-
-            /// @brief Retrieves the target from an handle.
-            auto& access(const handle_type& h) noexcept;
-
-            /// @brief Retrieves the target from an handle. (const version)
-            [[nodiscard]] const auto& access(const handle_type& h) const
-                noexcept;
-        };
-    } // namespace handle
-} // namespace vrm::core
+        /// @brief Retrieves the target from an handle. (const version)
+        [[nodiscard]] const auto &access(const handle_type &h) const noexcept;
+    };
+} // namespace vrm::core::handle
 
 // TODO: generalize: make storage optional, use function object to retrieve
 // counters and targets

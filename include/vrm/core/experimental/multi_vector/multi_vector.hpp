@@ -13,200 +13,195 @@
 #include <vrm/core/tuple_utils.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
-namespace vrm::core
+namespace vrm::core::impl
 {
-    namespace impl
+    template <typename TMultiBuffer>
+    class VRM_CORE_CLASS_API multi_vector
     {
-        template <typename TMultiBuffer>
-        class VRM_CORE_CLASS_API multi_vector
+    public:
+        using size_type = sz_t;
+        using multi_buffer_type = TMultiBuffer;
+
+        static constexpr sz_t buffer_count{multi_buffer_type::buffer_count};
+
+        static constexpr auto initial_capacity()
         {
-        public:
-            using size_type = sz_t;
-            using multi_buffer_type = TMultiBuffer;
+            return sz_t(0);
+        }
 
-            static constexpr sz_t buffer_count{multi_buffer_type::buffer_count};
+        using value_tuple = typename multi_buffer_type::value_tuple;
 
-            static constexpr auto initial_capacity()
+        using value_reference_tuple =
+            typename multi_buffer_type::value_reference_tuple;
+
+        using const_value_reference_tuple =
+            typename multi_buffer_type::const_value_reference_tuple;
+
+    private:
+        multi_buffer_type _multi_buffer;
+        size_type _capacity{0};
+        size_type _size{0};
+
+        void grow_if_necessary(size_type desired_size)
+        {
+            if(unlikely(desired_size > _capacity))
             {
-                return sz_t(0);
+                reserve((_capacity + 10) * 2);
             }
+        }
 
-            using value_tuple = typename multi_buffer_type::value_tuple;
+        template <sz_t TN>
+        using nth_buffer_type =
+            typename multi_buffer_type::template nth_buffer_type<TN>;
 
-            using value_reference_tuple =
-                typename multi_buffer_type::value_reference_tuple;
+        template <sz_t TN>
+        using nth_buffer_value_type =
+            typename multi_buffer_type::template nth_buffer_value_type<TN>;
 
-            using const_value_reference_tuple =
-                typename multi_buffer_type::const_value_reference_tuple;
+    public:
+        multi_vector() = default;
 
-        private:
-            multi_buffer_type _multi_buffer;
-            size_type _capacity{0};
-            size_type _size{0};
+        ~multi_vector()
+        {
+            _multi_buffer.destroy(0, _size);
+            _multi_buffer.deallocate(_capacity);
+        }
 
-            void grow_if_necessary(size_type desired_size)
-            {
-                if(unlikely(desired_size > _capacity))
-                {
-                    reserve((_capacity + 10) * 2);
-                }
-            }
+        // TODO: implement
+        multi_vector(const multi_vector &) = default;
+        multi_vector &operator=(const multi_vector &) = default;
 
-            template <sz_t TN>
-            using nth_buffer_type =
-                typename multi_buffer_type::template nth_buffer_type<TN>;
+        multi_vector(multi_vector &&) = default;
+        multi_vector &operator=(multi_vector &&) = default;
 
-            template <sz_t TN>
-            using nth_buffer_value_type =
-                typename multi_buffer_type::template nth_buffer_value_type<TN>;
+        [[nodiscard]] const auto &size() const noexcept
+        {
+            return _size;
+        }
+        [[nodiscard]] const auto &capacity() const noexcept
+        {
+            return _capacity;
+        }
+        [[nodiscard]] auto empty() const noexcept
+        {
+            return _size == 0;
+        }
 
-        public:
-            multi_vector() = default;
+        void reserve(size_type new_capacity)
+        {
+            VRM_CORE_ASSERT_OP(new_capacity, >, _capacity);
 
-            ~multi_vector()
-            {
-                _multi_buffer.destroy(0, _size);
-                _multi_buffer.deallocate(_capacity);
-            }
+            _multi_buffer.grow(_capacity, new_capacity);
+            _capacity = new_capacity;
+        }
 
-            // TODO: implement
-            multi_vector(const multi_vector&) = default;
-            multi_vector& operator=(const multi_vector&) = default;
+        void resize(size_type new_size)
+        {
+            VRM_CORE_ASSERT_OP(new_size, >, _size);
+            grow_if_necessary(new_size);
 
-            multi_vector(multi_vector&&) = default;
-            multi_vector& operator=(multi_vector&&) = default;
+            for(size_type i(_size); i < new_size; ++i)
+                _multi_buffer.construct_at(i);
 
-            [[nodiscard]] const auto& size() const noexcept
-            {
-                return _size;
-            }
-            [[nodiscard]] const auto& capacity() const noexcept
-            {
-                return _capacity;
-            }
-            [[nodiscard]] auto empty() const noexcept
-            {
-                return _size == 0;
-            }
+            _size = new_size;
+        }
 
-            void reserve(size_type new_capacity)
-            {
-                VRM_CORE_ASSERT_OP(new_capacity, >, _capacity);
+        void clear()
+        {
+            _multi_buffer.destroy(0, _size);
+            _size = 0;
+        }
 
-                _multi_buffer.grow(_capacity, new_capacity);
-                _capacity = new_capacity;
-            }
+        // TODO:
+        // void insert() {}
+        // void emplace() {}
+        // void erase() {}
 
-            void resize(size_type new_size)
-            {
-                VRM_CORE_ASSERT_OP(new_size, >, _size);
-                grow_if_necessary(new_size);
+        // TODO:
+        template <typename... Ts>
+        void unsafe_emplace_back(Ts &&... xs) // TODO: noexcept(noexcept(...))
+        {
+            static_assert(sizeof...(xs) == buffer_count);
 
-                for(size_type i(_size); i < new_size; ++i)
-                    _multi_buffer.construct_at(i);
+            VRM_CORE_ASSERT_OP(_capacity, >, _size);
+            auto ref_tuple(_multi_buffer[_size]);
 
-                _size = new_size;
-            }
+            for_args_data(
+                [&ref_tuple](auto data, auto &&r) {
+                    using type = nth_buffer_value_type<decltype(data)::index>;
 
-            void clear()
-            {
-                _multi_buffer.destroy(0, _size);
-                _size = 0;
-            }
+                    using type_ref = std::add_lvalue_reference_t<type>;
 
-            // TODO:
-            // void insert() {}
-            // void emplace() {}
-            // void erase() {}
+                    auto address(&(std::get<type_ref>(ref_tuple)));
 
-            // TODO:
-            template <typename... Ts>
-            void unsafe_emplace_back(
-                Ts&&... xs) // TODO: noexcept(noexcept(...))
-            {
-                static_assert(sizeof...(xs) == buffer_count);
+                    auto placement_new([&](auto &&... args) {
+                        new(address) type(FWD(args)...);
+                    });
 
-                VRM_CORE_ASSERT_OP(_capacity, >, _size);
-                auto ref_tuple(_multi_buffer[_size]);
+                    std::apply(placement_new, r);
+                },
+                FWD(xs)...);
 
-                for_args_data(
-                    [&ref_tuple](auto data, auto&& r) {
-                        using type =
-                            nth_buffer_value_type<decltype(data)::index>;
+            ++_size;
+        }
 
-                        using type_ref = std::add_lvalue_reference_t<type>;
+        template <typename... Ts>
+        void unsafe_push_back(Ts &&... xs)
+        {
+            unsafe_emplace_back(std::make_tuple(FWD(xs))...);
+        }
 
-                        auto address(&(std::get<type_ref>(ref_tuple)));
+        template <typename... Ts>
+        void emplace_back(Ts &&... xs)
+        {
+            grow_if_necessary(_size + 1);
+            unsafe_emplace_back(FWD(xs)...);
+        }
 
-                        auto placement_new([&](auto&&... args) {
-                            new(address) type(FWD(args)...);
-                        });
+        template <typename... Ts>
+        void push_back(Ts &&... xs)
+        {
+            emplace_back(std::make_tuple(FWD(xs))...);
+        }
 
-                        std::apply(placement_new, r);
-                    },
-                    FWD(xs)...);
-
-                ++_size;
-            }
-
-            template <typename... Ts>
-            void unsafe_push_back(Ts&&... xs)
-            {
-                unsafe_emplace_back(std::make_tuple(FWD(xs))...);
-            }
-
-            template <typename... Ts>
-            void emplace_back(Ts&&... xs)
-            {
-                grow_if_necessary(_size + 1);
-                unsafe_emplace_back(FWD(xs)...);
-            }
-
-            template <typename... Ts>
-            void push_back(Ts&&... xs)
-            {
-                emplace_back(std::make_tuple(FWD(xs))...);
-            }
-
-            void pop_back()
-            {
-                VRM_CORE_ASSERT_OP(_size, >, 0);
-                _multi_buffer.destroy_at(_size - 1);
-                --_size;
-            }
+        void pop_back()
+        {
+            VRM_CORE_ASSERT_OP(_size, >, 0);
+            _multi_buffer.destroy_at(_size - 1);
+            --_size;
+        }
 
 
-            auto operator[](size_type pos) noexcept
-            {
-                VRM_CORE_ASSERT_OP(_size, >, pos);
-                return _multi_buffer[pos];
-            }
+        auto operator[](size_type pos) noexcept
+        {
+            VRM_CORE_ASSERT_OP(_size, >, pos);
+            return _multi_buffer[pos];
+        }
 
-            auto operator[](size_type pos) const noexcept
-            {
-                VRM_CORE_ASSERT_OP(_size, >, pos);
-                return _multi_buffer[pos];
-            }
+        auto operator[](size_type pos) const noexcept
+        {
+            VRM_CORE_ASSERT_OP(_size, >, pos);
+            return _multi_buffer[pos];
+        }
 
-            auto back() noexcept
-            {
-                return (*this)[_size - 1];
-            }
+        auto back() noexcept
+        {
+            return (*this)[_size - 1];
+        }
 
-            [[nodiscard]] auto back() const noexcept
-            {
-                return (*this)[_size - 1];
-            }
+        [[nodiscard]] auto back() const noexcept
+        {
+            return (*this)[_size - 1];
+        }
 
-            // template <typename T>
-            // auto& get(size_type pos) noexcept
-            //{
-            // VRM_CORE_ASSERT_OP(_size, >, pos);
-            // return _multi_buffer
-            //}
-        };
-    } // namespace impl
-} // namespace vrm::core
+        // template <typename T>
+        // auto& get(size_type pos) noexcept
+        //{
+        // VRM_CORE_ASSERT_OP(_size, >, pos);
+        // return _multi_buffer
+        //}
+    };
+} // namespace vrm::core::impl
 
 // TODO:
 // * split to inl

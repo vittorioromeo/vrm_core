@@ -12,287 +12,279 @@
 #include <vrm/core/experimental/resizable_buffer.hpp>
 #include <vrm/core/type_aliases.hpp>
 
-namespace vrm::core
+namespace vrm::core::impl::sparse_set_storage
 {
-    namespace impl
+    template <                    // .
+        typename T,               // .
+        typename TDenseAllocator, // .
+        typename TSparseAllocator // .
+        >
+    class dynamic_vector
     {
-        namespace sparse_set_storage
+        friend class sparse_set_storage::utils;
+
+    public:
+        using value_type = T;
+        using sparse_type = sz_t;
+        using dense_allocator_type = TDenseAllocator;
+        using sparse_allocator_type = TSparseAllocator;
+
+        static constexpr sparse_type null_idx =
+            std::numeric_limits<sparse_type>::max();
+
+    private:
+        multi_resizable_buffer<                                  // .
+            resizable_buffer<value_type, dense_allocator_type>,  // .
+            resizable_buffer<sparse_type, sparse_allocator_type> // .
+            >
+            _buffers;
+
+        sparse_type _size;
+        sz_t _capacity{0};
+
+        void grow_by(sz_t amount)
         {
-            template <                    // .
-                typename T,               // .
-                typename TDenseAllocator, // .
-                typename TSparseAllocator // .
-                >
-            class dynamic_vector
+            auto new_capacity(_capacity + amount);
+            _buffers.grow(_capacity, new_capacity);
+
+            for(sz_t i(_capacity); i < new_capacity; ++i)
             {
-                friend class sparse_set_storage::utils;
+                sparse()[i] = null_idx;
+            }
 
-            public:
-                using value_type = T;
-                using sparse_type = sz_t;
-                using dense_allocator_type = TDenseAllocator;
-                using sparse_allocator_type = TSparseAllocator;
+            _capacity = new_capacity;
+        }
 
-                static constexpr sparse_type null_idx =
-                    std::numeric_limits<sparse_type>::max();
+        void grow_to(sz_t new_capacity)
+        {
+            VRM_CORE_ASSERT_OP(new_capacity, >=, _capacity);
+            grow_by(new_capacity - _capacity);
+        }
 
-            private:
-                multi_resizable_buffer<                                  // .
-                    resizable_buffer<value_type, dense_allocator_type>,  // .
-                    resizable_buffer<sparse_type, sparse_allocator_type> // .
-                    >
-                    _buffers;
+        VRM_CORE_ALWAYS_INLINE auto &dense() noexcept
+        {
+            return _buffers.template nth_buffer<0>();
+        }
 
-                sparse_type _size;
-                sz_t _capacity{0};
+        VRM_CORE_ALWAYS_INLINE auto &sparse() noexcept
+        {
+            return _buffers.template nth_buffer<1>();
+        }
 
-                void grow_by(sz_t amount)
-                {
-                    auto new_capacity(_capacity + amount);
-                    _buffers.grow(_capacity, new_capacity);
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto &dense() const noexcept
+        {
+            return _buffers.template nth_buffer<0>();
+        }
 
-                    for(sz_t i(_capacity); i < new_capacity; ++i)
-                    {
-                        sparse()[i] = null_idx;
-                    }
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto &sparse() const noexcept
+        {
+            return _buffers.template nth_buffer<1>();
+        }
 
-                    _capacity = new_capacity;
-                }
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto last_element_index() const
+            noexcept
+        {
+            return _size - 1;
+        }
 
-                void grow_to(sz_t new_capacity)
-                {
-                    VRM_CORE_ASSERT_OP(new_capacity, >=, _capacity);
-                    grow_by(new_capacity - _capacity);
-                }
+        void grow_if_required(T x)
+        {
+            // Since we need to access `sparse[x]`, growing only for
+            // size is not sufficient. We also have to check `x`.
+            VRM_CORE_ASSERT_OP(size(), <=, _capacity);
+            if(likely(x < _capacity))
+            {
+                return;
+            }
 
-                VRM_CORE_ALWAYS_INLINE auto& dense() noexcept
-                {
-                    return _buffers.template nth_buffer<0>();
-                }
+            // TODO: review growth policy
+            auto target(std::max(to_sz_t(x), to_sz_t(_capacity)));
+            grow_by(target + 32);
 
-                VRM_CORE_ALWAYS_INLINE auto& sparse() noexcept
-                {
-                    return _buffers.template nth_buffer<1>();
-                }
+            VRM_CORE_ASSERT_OP(_capacity, >, x);
+        }
 
-                [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& dense() const
-                    noexcept
-                {
-                    return _buffers.template nth_buffer<0>();
-                }
+        void set_last_element(T x) noexcept
+        {
+            dense()[_size] = x;
+            sparse()[x] = _size;
+            ++_size;
+        }
 
-                [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& sparse() const
-                    noexcept
-                {
-                    return _buffers.template nth_buffer<1>();
-                }
+        bool is_null(sparse_type x) noexcept
+        {
+            return x == null_idx;
+        }
 
-                [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto
-                last_element_index() const noexcept
-                {
-                    return _size - 1;
-                }
+        void nullify(T x) noexcept
+        {
+            sparse()[x] = null_idx;
+        }
 
-                void grow_if_required(T x)
-                {
-                    // Since we need to access `sparse[x]`, growing only for
-                    // size is not sufficient. We also have to check `x`.
-                    VRM_CORE_ASSERT_OP(size(), <=, _capacity);
-                    if(likely(x < _capacity))
-                    {
-                        return;
-                    }
+        void decrement_size() noexcept
+        {
+            --_size;
+        }
 
-                    // TODO: review growth policy
-                    auto target(std::max(to_sz_t(x), to_sz_t(_capacity)));
-                    grow_by(target + 32);
+        auto &value_from_sparse(sparse_type x) noexcept
+        {
+            return dense()[x];
+        }
 
-                    VRM_CORE_ASSERT_OP(_capacity, >, x);
-                }
+    public:
+        dynamic_vector()
+        {
+            grow_by(64);
+            _size = 0;
+        }
 
-                void set_last_element(T x) noexcept
-                {
-                    dense()[_size] = x;
-                    sparse()[x] = _size;
-                    ++_size;
-                }
+        ~dynamic_vector()
+        {
+            if(!_buffers.null())
+            {
+                _buffers.destroy_and_deallocate(_capacity);
+            }
+        }
 
-                bool is_null(sparse_type x) noexcept
-                {
-                    return x == null_idx;
-                }
+        dynamic_vector(const dynamic_vector &rhs)
+            : _buffers{rhs._buffers.copy(rhs._size)}, _size{rhs._size},
+              _capacity{rhs._capacity}
+        {
+        }
 
-                void nullify(T x) noexcept
-                {
-                    sparse()[x] = null_idx;
-                }
+        dynamic_vector &operator=(const dynamic_vector &rhs)
+        {
+            _buffers = rhs._buffers.copy(rhs._size);
+            _size = rhs._size;
+            _capacity = rhs._capacity;
 
-                void decrement_size() noexcept
-                {
-                    --_size;
-                }
+            return *this;
+        }
 
-                auto& value_from_sparse(sparse_type x) noexcept
-                {
-                    return dense()[x];
-                }
+        dynamic_vector(dynamic_vector &&) = default;
+        dynamic_vector &operator=(dynamic_vector &&) = default;
 
-            public:
-                dynamic_vector()
-                {
-                    grow_by(64);
-                    _size = 0;
-                }
+        void reserve(sz_t n)
+        {
+            // Exit early if there is no need to reserve.
+            if(unlikely(_capacity >= n))
+            {
+                return;
+            }
 
-                ~dynamic_vector()
-                {
-                    if(!_buffers.null())
-                    {
-                        _buffers.destroy_and_deallocate(_capacity);
-                    }
-                }
+            grow_to(n);
+        }
 
-                dynamic_vector(const dynamic_vector& rhs)
-                    : _buffers{rhs._buffers.copy(rhs._size)}, _size{rhs._size},
-                      _capacity{rhs._capacity}
-                {
-                }
+        void clear() noexcept
+        {
+            for_each([this](auto x) { sparse()[x] = null_idx; });
 
-                dynamic_vector& operator=(const dynamic_vector& rhs)
-                {
-                    _buffers = rhs._buffers.copy(rhs._size);
-                    _size = rhs._size;
-                    _capacity = rhs._capacity;
+            _size = 0;
+        }
 
-                    return *this;
-                }
+        [[nodiscard]] bool has(T x) const noexcept
+        {
+            // If `x` cannot be stored, then it's not in the set.
+            if(x >= _capacity)
+            {
+                return false;
+            }
 
-                dynamic_vector(dynamic_vector&&) = default;
-                dynamic_vector& operator=(dynamic_vector&&) = default;
+            return sparse()[x] != null_idx;
+        }
 
-                void reserve(sz_t n)
-                {
-                    // Exit early if there is no need to reserve.
-                    if(unlikely(_capacity >= n))
-                    {
-                        return;
-                    }
+        [[nodiscard]] auto capacity() const noexcept
+        {
+            return _capacity;
+        }
 
-                    grow_to(n);
-                }
+        bool add(T x)
+        {
+            return utils{}.add_impl(*this, x);
+        }
 
-                void clear() noexcept
-                {
-                    for_each([this](auto x) { sparse()[x] = null_idx; });
+        bool erase(T x) noexcept
+        {
+            return utils{}.erase_impl(*this, x);
+        }
 
-                    _size = 0;
-                }
+        void unchecked_add(T x)
+        {
+            return utils{}.unchecked_add(*this, x);
+        }
 
-                [[nodiscard]] bool has(T x) const noexcept
-                {
-                    // If `x` cannot be stored, then it's not in the set.
-                    if(x >= _capacity)
-                    {
-                        return false;
-                    }
+        void unchecked_erase(T x) noexcept
+        {
+            return utils{}.unchecked_erase(*this, x);
+        }
 
-                    return sparse()[x] != null_idx;
-                }
+        [[nodiscard]] bool empty() const noexcept
+        {
+            return _size == 0;
+        }
 
-                [[nodiscard]] auto capacity() const noexcept
-                {
-                    return _capacity;
-                }
+        void pop_back() noexcept
+        {
+            utils{}.pop_back_impl(*this);
+        }
 
-                bool add(T x)
-                {
-                    return utils{}.add_impl(*this, x);
-                }
+        [[nodiscard]] auto back() const noexcept
+        {
+            VRM_CORE_ASSERT_OP(size(), >, 0);
 
-                bool erase(T x) noexcept
-                {
-                    return utils{}.erase_impl(*this, x);
-                }
+            VRM_CORE_ASSERT(has(dense()[last_element_index()]));
+            return dense()[last_element_index()];
+        }
 
-                void unchecked_add(T x)
-                {
-                    return utils{}.unchecked_add(*this, x);
-                }
+        template <typename TF>
+        void for_each(TF &&f) const noexcept
+        {
+            VRM_CORE_ASSERT_OP(size(), <=, _capacity);
 
-                void unchecked_erase(T x) noexcept
-                {
-                    return utils{}.unchecked_erase(*this, x);
-                }
+            for(decltype(_size) i(0); i < _size; ++i)
+            {
+                VRM_CORE_ASSERT(has(dense()[i]));
+                f(dense()[i]);
+            }
+        }
 
-                [[nodiscard]] bool empty() const noexcept
-                {
-                    return _size == 0;
-                }
+        [[nodiscard]] auto size() const noexcept
+        {
+            return _size;
+        }
 
-                void pop_back() noexcept
-                {
-                    utils{}.pop_back_impl(*this);
-                }
+        auto begin() noexcept
+        {
+            return dense().data();
+        }
 
-                [[nodiscard]] auto back() const noexcept
-                {
-                    VRM_CORE_ASSERT_OP(size(), >, 0);
+        [[nodiscard]] auto begin() const noexcept
+        {
+            return static_cast<const T*>(dense().data());
+        }
 
-                    VRM_CORE_ASSERT(has(dense()[last_element_index()]));
-                    return dense()[last_element_index()];
-                }
+        auto end() noexcept
+        {
+            return dense().data() + _size;
+        }
 
-                template <typename TF>
-                void for_each(TF&& f) const noexcept
-                {
-                    VRM_CORE_ASSERT_OP(size(), <=, _capacity);
+        [[nodiscard]] auto end() const noexcept
+        {
+            return static_cast<const T*>(dense().data() + _size);
+        }
 
-                    for(decltype(_size) i(0); i < _size; ++i)
-                    {
-                        VRM_CORE_ASSERT(has(dense()[i]));
-                        f(dense()[i]);
-                    }
-                }
+        [[nodiscard]] auto at(sz_t i) const noexcept
+        {
+            VRM_CORE_ASSERT_OP(i, <, size());
+            return dense()[i];
+        }
 
-                [[nodiscard]] auto size() const noexcept
-                {
-                    return _size;
-                }
-
-                auto begin() noexcept
-                {
-                    return dense().data();
-                }
-
-                [[nodiscard]] auto begin() const noexcept
-                {
-                    return static_cast<const T*>(dense().data());
-                }
-
-                auto end() noexcept
-                {
-                    return dense().data() + _size;
-                }
-
-                [[nodiscard]] auto end() const noexcept
-                {
-                    return static_cast<const T*>(dense().data() + _size);
-                }
-
-                [[nodiscard]] auto at(sz_t i) const noexcept
-                {
-                    VRM_CORE_ASSERT_OP(i, <, size());
-                    return dense()[i];
-                }
-
-                void swap(dynamic_vector& rhs) noexcept
-                {
-                    using std::swap;
-                    swap(_buffers, rhs._buffers);
-                    swap(_size, rhs._size);
-                    swap(_capacity, rhs._capacity);
-                }
-            };
-        } // namespace sparse_set_storage
-    }     // namespace impl
-} // namespace vrm::core
+        void swap(dynamic_vector &rhs) noexcept
+        {
+            using std::swap;
+            swap(_buffers, rhs._buffers);
+            swap(_size, rhs._size);
+            swap(_capacity, rhs._capacity);
+        }
+    };
+} // namespace vrm::core::impl::sparse_set_storage

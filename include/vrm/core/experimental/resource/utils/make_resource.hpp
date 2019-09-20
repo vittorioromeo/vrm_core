@@ -10,55 +10,51 @@
 #include <vrm/core/experimental/resource/unique.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
-namespace vrm::core
+namespace vrm::core::resource
 {
-    namespace resource
+    namespace impl
     {
-        namespace impl
+        template <template <typename> class TResource, typename TBehavior>
+        class resource_maker
         {
-            template <template <typename> class TResource, typename TBehavior>
-            class resource_maker
+        public:
+            using behavior_type = TBehavior;
+            using resource_type = TResource<behavior_type>;
+
+        private:
+            template <typename... Ts>
+            decltype(auto) init_resource(Ts &&... xs) noexcept(noexcept(true))
             {
-            public:
-                using behavior_type = TBehavior;
-                using resource_type = TResource<behavior_type>;
+                return behavior_type::init(FWD(xs)...);
+            }
 
-            private:
-                template <typename... Ts>
-                decltype(auto) init_resource(Ts&&... xs) noexcept(
-                    noexcept(true))
-                {
-                    return behavior_type::init(FWD(xs)...);
-                }
+        public:
+            template <typename... Ts>
+            auto operator()(Ts &&... xs) noexcept(noexcept(true))
+            {
+                return resource_type{init_resource(FWD(xs)...)};
+            }
+        };
+    } // namespace impl
 
-            public:
-                template <typename... Ts>
-                auto operator()(Ts&&... xs) noexcept(noexcept(true))
-                {
-                    return resource_type{init_resource(FWD(xs)...)};
-                }
-            };
-        } // namespace impl
+    template <template <typename> class TResource, typename TBehavior,
+        typename... Ts>
+    auto make_resource(Ts &&... xs) noexcept(noexcept(true))
+    {
+        return impl::resource_maker<TResource, TBehavior>{}(FWD(xs)...);
+    }
 
-        template <template <typename> class TResource, typename TBehavior,
-            typename... Ts>
-        auto make_resource(Ts&&... xs) noexcept(noexcept(true))
-        {
-            return impl::resource_maker<TResource, TBehavior>{}(FWD(xs)...);
-        }
+    template <typename TBehavior, typename... Ts>
+    auto make_unique_resource(Ts &&... xs) noexcept(noexcept(true))
+    {
+        return make_resource<resource::unique, TBehavior>(FWD(xs)...);
+    }
 
-        template <typename TBehavior, typename... Ts>
-        auto make_unique_resource(Ts&&... xs) noexcept(noexcept(true))
-        {
-            return make_resource<resource::unique, TBehavior>(FWD(xs)...);
-        }
-
-        template <typename TBehavior, typename... Ts>
-        auto make_shared_resource(Ts&&... xs) noexcept(noexcept(true))
-        {
-            return make_resource<resource::shared, TBehavior>(FWD(xs)...);
-        }
-    } // namespace resource
-} // namespace vrm::core
+    template <typename TBehavior, typename... Ts>
+    auto make_shared_resource(Ts &&... xs) noexcept(noexcept(true))
+    {
+        return make_resource<resource::shared, TBehavior>(FWD(xs)...);
+    }
+} // namespace vrm::core::resource
 
 // TODO: test, docs, split into inl

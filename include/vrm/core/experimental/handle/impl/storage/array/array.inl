@@ -12,88 +12,79 @@
 #include <vrm/core/experimental/handle/impl/storage/array/array.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
-namespace vrm::core
+namespace vrm::core::handle::storage
 {
-    namespace handle
+    template <typename TSettings, sz_t TCount>
+    auto &hs_array<TSettings, TCount>::metadata_from_handle(
+        const handle_type &h) noexcept
     {
-        namespace storage
+        return *(h._metadata_ref);
+    }
+
+    template <typename TSettings, sz_t TCount>
+    const auto &hs_array<TSettings, TCount>::metadata_from_handle(
+        const handle_type &h) const noexcept
+    {
+        return *(h._metadata_ref);
+    }
+
+    template <typename TSettings, sz_t TCount>
+    auto hs_array<TSettings, TCount>::create(const target_type &target) noexcept
+    {
+        // Out of the array.
+        VRM_CORE_ASSERT_OP(_next_ref, !=, _metadata.data() + count);
+
+        // Get ptr and increment next ptr.
+        auto m_ref(_next_ref++);
+
+        // Set it to desired target.
+        m_ref->_target = target;
+
+        // Return handle.
+        return handle_type{m_ref, m_ref->_counter};
+    }
+
+    template <typename TSettings, sz_t TCount>
+    void hs_array<TSettings, TCount>::invalidate(const handle_type &h) noexcept
+    {
+        auto &m(metadata_from_handle(h));
+        ++(m._counter);
+    }
+
+    template <typename TSettings, sz_t TCount>
+    template <typename TF>
+    void hs_array<TSettings, TCount>::destroy(const handle_type &h, TF &&f)
+    {
+        // Get corresponding metadata and invalidate it.
+        auto &m(metadata_from_handle(h));
+        invalidate(h);
+
+        // Get last metadata.
+        auto last_m_ref(_next_ref - 1);
+
+        // Call target cleanup function. (TODO: ?)
+        f(m._target);
+
+        // Swap indices and `pop_back` (TODO:)
+        using std::swap;
+        swap(m._target, last_m_ref->_target);
+        --_next_ref;
+    }
+
+    template <typename TSettings, sz_t TCount>
+    void hs_array<TSettings, TCount>::clear() noexcept
+    {
+        // Invalidate all existing handles.
+        for(auto &m : _metadata)
         {
-            template <typename TSettings, sz_t TCount>
-            auto& hs_array<TSettings, TCount>::metadata_from_handle(
-                const handle_type& h) noexcept
-            {
-                return *(h._metadata_ref);
-            }
+            ++(m._counter);
+        }
 
-            template <typename TSettings, sz_t TCount>
-            const auto& hs_array<TSettings, TCount>::metadata_from_handle(
-                const handle_type& h) const noexcept
-            {
-                return *(h._metadata_ref);
-            }
+        _next_ref = _metadata.data();
+    }
 
-            template <typename TSettings, sz_t TCount>
-            auto hs_array<TSettings, TCount>::create(
-                const target_type& target) noexcept
-            {
-                // Out of the array.
-                VRM_CORE_ASSERT_OP(_next_ref, !=, _metadata.data() + count);
-
-                // Get ptr and increment next ptr.
-                auto m_ref(_next_ref++);
-
-                // Set it to desired target.
-                m_ref->_target = target;
-
-                // Return handle.
-                return handle_type{m_ref, m_ref->_counter};
-            }
-
-            template <typename TSettings, sz_t TCount>
-            void hs_array<TSettings, TCount>::invalidate(
-                const handle_type& h) noexcept
-            {
-                auto& m(metadata_from_handle(h));
-                ++(m._counter);
-            }
-
-            template <typename TSettings, sz_t TCount>
-            template <typename TF>
-            void hs_array<TSettings, TCount>::destroy(
-                const handle_type& h, TF&& f)
-            {
-                // Get corresponding metadata and invalidate it.
-                auto& m(metadata_from_handle(h));
-                invalidate(h);
-
-                // Get last metadata.
-                auto last_m_ref(_next_ref - 1);
-
-                // Call target cleanup function. (TODO: ?)
-                f(m._target);
-
-                // Swap indices and `pop_back` (TODO:)
-                using std::swap;
-                swap(m._target, last_m_ref->_target);
-                --_next_ref;
-            }
-
-            template <typename TSettings, sz_t TCount>
-            void hs_array<TSettings, TCount>::clear() noexcept
-            {
-                // Invalidate all existing handles.
-                for(auto& m : _metadata)
-                {
-                    ++(m._counter);
-                }
-
-                _next_ref = _metadata.data();
-            }
-
-            template <typename TSettings, sz_t TCount>
-            void hs_array<TSettings, TCount>::reserve(sz_t) noexcept
-            {
-            }
-        } // namespace storage
-    }     // namespace handle
-} // namespace vrm::core
+    template <typename TSettings, sz_t TCount>
+    void hs_array<TSettings, TCount>::reserve(sz_t) noexcept
+    {
+    }
+} // namespace vrm::core::handle::storage

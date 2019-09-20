@@ -7,23 +7,17 @@
 
 #include <vrm/core/config.hpp>
 
-namespace vrm::core
+namespace vrm::core::resource::impl
 {
-    namespace resource
+    // Thread-safety policies.
+    namespace shared_lock_policy
     {
-        namespace impl
+        /// @brief Non-thread-safe policy. No additional performance
+        /// overhead.
+        struct none
         {
-            // Thread-safety policies.
-            namespace shared_lock_policy
-            {
-                /// @brief Non-thread-safe policy. No additional performance
-                /// overhead.
-                struct none
-                {
-                };
+        };
 
-                // TODO: other policies!
-            } // namespace shared_lock_policy
-        }     // namespace impl
-    }         // namespace resource
-} // namespace vrm::core
+        // TODO: other policies!
+    } // namespace shared_lock_policy
+} // namespace vrm::core::resource::impl

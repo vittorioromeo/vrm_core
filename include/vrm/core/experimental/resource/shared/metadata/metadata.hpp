@@ -8,51 +8,45 @@
 #include <vrm/core/assert/assert.hpp>
 #include <vrm/core/config.hpp>
 
-namespace vrm::core
+namespace vrm::core::resource::impl
 {
-    namespace resource
+    // TODO: templatize with policy, use atomics for lock-policy
+
+    /// @brief Type used to count references.
+    using shared_counter_type = unsigned int;
+
+    /// @brief Metadata necessary to keep track of owning shared
+    /// references and weak references.
+    /// @details This instance gets allocated once per resource, and
+    /// deallocated when the resource is deinitialized.
+    class shared_metadata
     {
-        // TODO: templatize with policy, use atomics for lock-policy
+    private:
+        shared_counter_type _owner_count;
+        shared_counter_type _weak_count;
 
-        namespace impl
-        {
-            /// @brief Type used to count references.
-            using shared_counter_type = unsigned int;
+    public:
+        shared_metadata(shared_counter_type owner_count,
+            shared_counter_type weak_count) noexcept;
 
-            /// @brief Metadata necessary to keep track of owning shared
-            /// references and weak references.
-            /// @details This instance gets allocated once per resource, and
-            /// deallocated when the resource is deinitialized.
-            class shared_metadata
-            {
-            private:
-                shared_counter_type _owner_count;
-                shared_counter_type _weak_count;
+        // Prevent copies.
+        shared_metadata(const shared_metadata &) = delete;
+        shared_metadata &operator=(const shared_metadata &) = delete;
 
-            public:
-                shared_metadata(shared_counter_type owner_count,
-                    shared_counter_type weak_count) noexcept;
+        // Prevent moves.
+        shared_metadata(shared_metadata &&) = delete;
+        shared_metadata &operator=(shared_metadata &&) = delete;
 
-                // Prevent copies.
-                shared_metadata(const shared_metadata&) = delete;
-                shared_metadata& operator=(const shared_metadata&) = delete;
+        void increment_owner() noexcept;
+        void decrement_owner() noexcept;
 
-                // Prevent moves.
-                shared_metadata(shared_metadata&&) = delete;
-                shared_metadata& operator=(shared_metadata&&) = delete;
+        void increment_weak() noexcept;
+        void decrement_weak() noexcept;
 
-                void increment_owner() noexcept;
-                void decrement_owner() noexcept;
+        [[nodiscard]] auto owner_count() const noexcept;
+        [[nodiscard]] auto weak_count() const noexcept;
+        [[nodiscard]] auto total_count() const noexcept;
 
-                void increment_weak() noexcept;
-                void decrement_weak() noexcept;
-
-                [[nodiscard]] auto owner_count() const noexcept;
-                [[nodiscard]] auto weak_count() const noexcept;
-                [[nodiscard]] auto total_count() const noexcept;
-
-                [[nodiscard]] auto has_any_ref() const noexcept;
-            };
-        } // namespace impl
-    }     // namespace resource
-} // namespace vrm::core
+        [[nodiscard]] auto has_any_ref() const noexcept;
+    };
+} // namespace vrm::core::resource::impl

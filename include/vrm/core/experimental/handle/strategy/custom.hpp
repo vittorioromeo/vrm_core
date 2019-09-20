@@ -11,156 +11,143 @@
 #include <vrm/core/experimental/handle/impl/storage.hpp>
 #include <vrm/core/utility_macros.hpp>
 
-namespace vrm::core
+namespace vrm::core::handle::strategy
 {
-    namespace handle
+    template <                     // .
+        typename TMetadataRefType, // .
+        typename TTargetGetter,    // .
+        typename TCounterGetter    // .
+        >
+    class custom_getters
     {
-        namespace strategy
+    public:
+        using metadata_ref_type = TMetadataRefType;
+        using target_getter_type = TTargetGetter;
+        using counter_getter_type = TCounterGetter;
+
+    private:
+        target_getter_type _target_getter;
+        counter_getter_type _counter_getter;
+
+    public:
+        template <typename TFwdTG, typename TFwdCG>
+        custom_getters(TFwdTG &&tg, TFwdCG &&cg)
+            : _target_getter{FWD(tg)}, _counter_getter{FWD(cg)}
         {
-            template <                     // .
-                typename TMetadataRefType, // .
-                typename TTargetGetter,    // .
-                typename TCounterGetter    // .
-                >
-            class custom_getters
-            {
-            public:
-                using metadata_ref_type = TMetadataRefType;
-                using target_getter_type = TTargetGetter;
-                using counter_getter_type = TCounterGetter;
+        }
 
-            private:
-                target_getter_type _target_getter;
-                counter_getter_type _counter_getter;
+        auto &target(const metadata_ref_type &mr)
+        {
+            return _target_getter(mr);
+        }
+        [[nodiscard]] const auto &target(const metadata_ref_type &mr) const
+        {
+            return _target_getter(mr);
+        }
 
-            public:
-                template <typename TFwdTG, typename TFwdCG>
-                custom_getters(TFwdTG&& tg, TFwdCG&& cg)
-                    : _target_getter{FWD(tg)}, _counter_getter{FWD(cg)}
-                {
-                }
+        auto &counter(const metadata_ref_type &mr)
+        {
+            return _counter_getter(mr);
+        }
+        [[nodiscard]] const auto &counter(const metadata_ref_type &mr) const
+        {
+            return _counter_getter(mr);
+        }
+    };
 
-                auto& target(const metadata_ref_type& mr)
-                {
-                    return _target_getter(mr);
-                }
-                [[nodiscard]] const auto& target(
-                    const metadata_ref_type& mr) const
-                {
-                    return _target_getter(mr);
-                }
+    template <                  // .
+        typename TSettings,     // .
+        typename TMetadataRef,  // .
+        typename TCustomGetters // .
+        >
+    class custom
+    {
+    public:
+        using settings_type = TSettings;
+        using metadata_ref_type = TMetadataRef;
+        using custom_getters_type = TCustomGetters;
+        using target_type = typename settings_type::target_type;
+        using counter_type = typename settings_type::counter_type;
 
-                auto& counter(const metadata_ref_type& mr)
-                {
-                    return _counter_getter(mr);
-                }
-                [[nodiscard]] const auto& counter(
-                    const metadata_ref_type& mr) const
-                {
-                    return _counter_getter(mr);
-                }
-            };
+        using handle_type =
+            typename settings_type::template handle_type<metadata_ref_type>;
 
-            template <                  // .
-                typename TSettings,     // .
-                typename TMetadataRef,  // .
-                typename TCustomGetters // .
-                >
-            class custom
-            {
-            public:
-                using settings_type = TSettings;
-                using metadata_ref_type = TMetadataRef;
-                using custom_getters_type = TCustomGetters;
-                using target_type = typename settings_type::target_type;
-                using counter_type = typename settings_type::counter_type;
+    private:
+        custom_getters_type _custom_getters;
+        metadata_ref_type _next_ref{0};
 
-                using handle_type =
-                    typename settings_type::template handle_type<
-                        metadata_ref_type>;
+    public:
+        template <typename... Ts>
+        custom(Ts &&... xs) : _custom_getters(FWD(xs)...)
+        {
+        }
 
-            private:
-                custom_getters_type _custom_getters;
-                metadata_ref_type _next_ref{0};
+        [[nodiscard]] auto valid_handle(const handle_type &h) const noexcept
+        {
+            // Compare local handle instance counter with storage
+            // counter.
+            return h._counter == _custom_getters.counter(h._metadata_ref);
+        }
 
-            public:
-                template <typename... Ts>
-                custom(Ts&&... xs) : _custom_getters(FWD(xs)...)
-                {
-                }
+        auto invalidate(const handle_type &h) noexcept
+        {
+            auto &c(_custom_getters.counter(h._metadata_ref));
+            ++c;
+        }
 
-                [[nodiscard]] auto valid_handle(const handle_type& h) const
-                    noexcept
-                {
-                    // Compare local handle instance counter with storage
-                    // counter.
-                    return h._counter ==
-                           _custom_getters.counter(h._metadata_ref);
-                }
+        auto create(const target_type &target)
+        {
+            // Get index and increment next index.
+            auto m_ref(_next_ref++);
 
-                auto invalidate(const handle_type& h) noexcept
-                {
-                    auto& c(_custom_getters.counter(h._metadata_ref));
-                    ++c;
-                }
+            // Set it to desired target.
+            // auto& m(_metadata[m_ref]);
+            auto &m_target(_custom_getters.target(m_ref));
+            m_target = target;
 
-                auto create(const target_type& target)
-                {
-                    // Get index and increment next index.
-                    auto m_ref(_next_ref++);
+            // Return handle.
+            return handle_type{m_ref, _custom_getters.counter(m_ref)};
+        }
 
-                    // Set it to desired target.
-                    // auto& m(_metadata[m_ref]);
-                    auto& m_target(_custom_getters.target(m_ref));
-                    m_target = target;
+        template <typename TF>
+        void destroy(const handle_type &h, TF &&f)
+        {
+            // Get corresponding metadata and invalidate it.
+            // auto& m(metadata_from_handle(h));
+            auto &metadata_target(_custom_getters.target(h._metadata_ref));
 
-                    // Return handle.
-                    return handle_type{m_ref, _custom_getters.counter(m_ref)};
-                }
+            auto &metadata_counter(_custom_getters.counter(h._metadata_ref));
 
-                template <typename TF>
-                void destroy(const handle_type& h, TF&& f)
-                {
-                    // Get corresponding metadata and invalidate it.
-                    // auto& m(metadata_from_handle(h));
-                    auto& metadata_target(
-                        _custom_getters.target(h._metadata_ref));
+            ++(metadata_counter);
 
-                    auto& metadata_counter(
-                        _custom_getters.counter(h._metadata_ref));
+            // Get last metadata.
+            auto &last_m_target(_custom_getters.target(_next_ref - 1));
 
-                    ++(metadata_counter);
+            // Call target cleanup function. (TODO: ?)
+            f(metadata_target);
 
-                    // Get last metadata.
-                    auto& last_m_target(_custom_getters.target(_next_ref - 1));
+            // Swap indices and `pop_back` (TODO:)
+            using std::swap;
+            swap(metadata_target, last_m_target);
+            --_next_ref;
+        }
 
-                    // Call target cleanup function. (TODO: ?)
-                    f(metadata_target);
+        void clear()
+        {
+            _next_ref = 0;
+        }
 
-                    // Swap indices and `pop_back` (TODO:)
-                    using std::swap;
-                    swap(metadata_target, last_m_target);
-                    --_next_ref;
-                }
+        void reserve(sz_t)
+        {
+        }
 
-                void clear()
-                {
-                    _next_ref = 0;
-                }
-
-                void reserve(sz_t)
-                {
-                }
-
-                auto& access(const handle_type& h)
-                {
-                    return _custom_getters.target(h._metadata_ref);
-                }
-                [[nodiscard]] const auto& access(const handle_type& h) const
-                {
-                    return _custom_getters.target(h._metadata_ref);
-                }
-            };
-        } // namespace strategy
-    }     // namespace handle
-} // namespace vrm::core
+        auto &access(const handle_type &h)
+        {
+            return _custom_getters.target(h._metadata_ref);
+        }
+        [[nodiscard]] const auto &access(const handle_type &h) const
+        {
+            return _custom_getters.target(h._metadata_ref);
+        }
+    };
+} // namespace vrm::core::handle::strategy
