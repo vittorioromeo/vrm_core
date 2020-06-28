@@ -1,6 +1,6 @@
 # vrm_core
 
-> **General-purpose C++14 utility library.**
+> **General-purpose C++17 utility library.**
 
 [![build][badge.build]][build]
 [![stability][badge.stability]][stability]
