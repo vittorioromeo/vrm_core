@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -9,11 +9,12 @@
 #include <vrm/core/casts/impl/overflow_check.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
+
 #include <vrm/pp/cat.hpp>
 
 #define VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER(type, name)                  \
     template <typename T>                                                      \
-    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto VRM_PP_CAT(to_, name)( \
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr type VRM_PP_CAT(to_, name)( \
         T x) noexcept                                                          \
     {                                                                          \
         return to_num<type>(x);                                                \

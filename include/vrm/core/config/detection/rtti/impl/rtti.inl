@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -10,7 +10,7 @@
 
 namespace vrm::core::detection
 {
-    inline constexpr auto rtti() noexcept
+    [[nodiscard]] inline constexpr bool rtti() noexcept
     {
 #if defined(VRM_CORE_RTTI_ENABLED)
         return true;

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -10,7 +10,8 @@
 
 namespace vrm::core::detection
 {
-    inline constexpr auto current_operating_system() noexcept
+    [[nodiscard]] inline constexpr operating_system
+    current_operating_system() noexcept
     {
 #if defined(VRM_CORE_OS_LINUX)
         return operating_system::os_linux;
@@ -27,19 +28,19 @@ namespace vrm::core::detection
 #endif
     }
 
-    inline constexpr auto on_unix() noexcept
+    [[nodiscard]] inline constexpr bool on_unix() noexcept
     {
         return current_operating_system() == operating_system::os_linux ||
                current_operating_system() == operating_system::os_android ||
                current_operating_system() == operating_system::os_freebsd;
     }
 
-    inline constexpr auto on_windows() noexcept
+    [[nodiscard]] inline constexpr bool on_windows() noexcept
     {
         return current_operating_system() == operating_system::os_windows;
     }
 
-    inline constexpr auto on_mac() noexcept
+    [[nodiscard]] inline constexpr bool on_mac() noexcept
     {
         return current_operating_system() == operating_system::os_mac;
     }

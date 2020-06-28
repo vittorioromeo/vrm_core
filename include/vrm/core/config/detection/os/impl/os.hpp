@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -17,9 +17,10 @@ namespace vrm::core::detection
         os_unknown
     };
 
-    constexpr auto current_operating_system() noexcept;
+    [[nodiscard]] constexpr operating_system
+    current_operating_system() noexcept;
 
-    constexpr auto on_unix() noexcept;
-    constexpr auto on_windows() noexcept;
-    constexpr auto on_mac() noexcept;
+    [[nodiscard]] constexpr bool on_unix() noexcept;
+    [[nodiscard]] constexpr bool on_windows() noexcept;
+    [[nodiscard]] constexpr bool on_mac() noexcept;
 } // namespace vrm::core::detection

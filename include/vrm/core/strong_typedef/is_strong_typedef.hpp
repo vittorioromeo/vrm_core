@@ -5,9 +5,10 @@
 
 #pragma once
 
-#include <type_traits>
 #include <vrm/core/config/attributes.hpp>
 #include <vrm/core/is_valid.hpp>
+
+#include <type_traits>
 
 namespace vrm::core
 {

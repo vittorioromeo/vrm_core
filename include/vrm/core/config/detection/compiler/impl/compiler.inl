@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -10,14 +10,14 @@
 
 namespace vrm::core::detection
 {
-    inline constexpr auto current_compiler() noexcept
+    [[nodiscard]] inline constexpr compiler current_compiler() noexcept
     {
 #if defined(VRM_CORE_COMPILER_CLANG)
         return compiler::clang;
 #elif defined(VRM_CORE_COMPILER_GCC)
         return compiler::gcc;
-#elif defined(VRM_CORE_COMPILER_MSCV)
-        return compiler::mscv;
+#elif defined(VRM_CORE_COMPILER_MSVC)
+        return compiler::msvc;
 #else
         return compiler::unknown;
 #endif

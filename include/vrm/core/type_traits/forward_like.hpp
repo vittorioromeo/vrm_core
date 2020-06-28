@@ -5,9 +5,10 @@
 
 #pragma once
 
-#include <type_traits>
 #include <vrm/core/config/attributes.hpp>
 #include <vrm/core/type_traits/referenceness.hpp>
+
+#include <type_traits>
 
 namespace vrm::core
 {

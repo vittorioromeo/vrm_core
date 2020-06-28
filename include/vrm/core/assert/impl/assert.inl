@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,6 +7,7 @@
 
 #if !VRM_CORE_IMPL_ASSERT_DISABLED
 
+// TODO: optimize includes by using `<cstdio>`
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -18,10 +19,15 @@ namespace vrm::core::impl::assert
         const char* lhs, const char* op, const char* rhs, const char* msg,
         const TLhs& lhs_res, const TRhs& rhs_res)
     {
-        const auto c_str_empty([](auto c_str) { return c_str && !c_str[0]; });
+        const auto c_str_empty = [](auto c_str) { return c_str && !c_str[0]; };
 
         std::cout << "ASSERTION FAILED\n";
-        if(!c_str_empty(msg)) std::cout << "Message: " << msg << '\n';
+
+        if(!c_str_empty(msg))
+        {
+            std::cout << "Message: " << msg << '\n';
+        }
+
         std::cout << '\n';
 
         std::cout << "[file: " << file << "]\n"

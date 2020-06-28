@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -22,7 +22,7 @@ namespace vrm::core::impl::assert
     };
 
     /// @brief Returns a reference to the thread-local assertion state.
-    state& get_state() noexcept;
+    [[nodiscard]] state& get_state() noexcept;
 
     /// @brief Fires an assertion failure.
     template <typename TLhs, typename TRhs>

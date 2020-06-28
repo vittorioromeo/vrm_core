@@ -1,20 +1,25 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <cassert>
 #include <vrm/core/utility_macros/likely_unlikely.hpp>
+
 #include <vrm/pp/sep_to_str.hpp>
 #include <vrm/pp/utils.hpp>
+
+#include <cassert>
 
 /// @macro Implementation of generic assertion.
 #define VRM_CORE_IMPL_ASSERT(lhs, op, rhs, msg)                                \
     do                                                                         \
     {                                                                          \
-        if(::vrm::core::likely(lhs op rhs)) break;                             \
+        if(::vrm::core::likely(lhs op rhs))                                    \
+        {                                                                      \
+            break;                                                             \
+        }                                                                      \
                                                                                \
         const auto lhs_res(lhs);                                               \
         const auto rhs_res(rhs);                                               \

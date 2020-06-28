@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -11,9 +11,9 @@ namespace vrm::core::detection
     {
         clang,
         gcc,
-        mscv,
+        msvc,
         unknown
     };
 
-    constexpr auto current_compiler() noexcept;
+    [[nodiscard]] constexpr compiler current_compiler() noexcept;
 } // namespace vrm::core::detection

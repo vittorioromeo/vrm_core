@@ -7,5 +7,5 @@
 
 namespace vrm::core::detection
 {
-    constexpr auto debug() noexcept;
+    constexpr bool debug() noexcept;
 } // namespace vrm::core::detection

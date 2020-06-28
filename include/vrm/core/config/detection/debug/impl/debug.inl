@@ -10,7 +10,7 @@
 
 namespace vrm::core::detection
 {
-    inline constexpr auto debug() noexcept
+    [[nodiscard]] inline constexpr bool debug() noexcept
     {
 #if defined(VRM_CORE_DEBUG)
         return true;

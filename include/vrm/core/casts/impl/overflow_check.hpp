@@ -1,18 +1,19 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <cfenv>
-#include <cstdint>
-#include <limits>
-#include <type_traits>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/integral_constant.hpp>
 #include <vrm/core/type_traits.hpp>
+
+#include <cfenv>
+#include <cstdint>
+#include <limits>
+#include <type_traits>
 
 namespace vrm::core::impl
 {

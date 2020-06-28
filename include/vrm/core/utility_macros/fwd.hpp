@@ -5,6 +5,7 @@
 
 #pragma once
 
+// TODO: remove dependency on this header, reimplement `forward`
 #include <utility>
 
 #define VRM_CORE_FWD(...) ::std::forward<decltype(__VA_ARGS__)>(__VA_ARGS__)

@@ -1,21 +1,22 @@
-// Copyright (c) 2015-2019 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <type_traits>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/casts/arithmetic.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_traits.hpp>
 
+#include <type_traits>
+
 namespace vrm::core
 {
     /// @brief Converts an enum to a type convertible to its underlying type.
     template <typename TOut, typename TIn>
-    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto from_enum(
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr TOut from_enum(
         const TIn& x) noexcept
     {
         static_assert(std::is_enum_v<TIn>);
@@ -36,7 +37,7 @@ namespace vrm::core
     template <typename TOut, typename TIn>
     [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(
         const TIn& x) noexcept
-        -> std::enable_if_t<number_convertible_to_enum<TOut, TIn>{}, TOut>
+        ->std::enable_if_t<number_convertible_to_enum<TOut, TIn>{}, TOut>
     {
         return static_cast<TOut>(to_num<std::underlying_type_t<TOut>>(x));
     }
@@ -46,7 +47,7 @@ namespace vrm::core
     template <typename TOut, typename TIn>
     [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto to_enum(
         const TIn& x) noexcept
-        -> std::enable_if_t<are_both_enums<TOut, TIn>{}, TOut>
+        ->std::enable_if_t<are_both_enums<TOut, TIn>{}, TOut>
     {
         static_assert(are_underlying_types_convertible<TOut, TIn>{});
 
