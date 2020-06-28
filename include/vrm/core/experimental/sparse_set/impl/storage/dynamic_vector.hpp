@@ -61,28 +61,28 @@ namespace vrm::core::impl::sparse_set_storage
             grow_by(new_capacity - _capacity);
         }
 
-        VRM_CORE_ALWAYS_INLINE auto &dense() noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto& dense() noexcept
         {
             return _buffers.template nth_buffer<0>();
         }
 
-        VRM_CORE_ALWAYS_INLINE auto &sparse() noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto& sparse() noexcept
         {
             return _buffers.template nth_buffer<1>();
         }
 
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto &dense() const noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& dense() const noexcept
         {
             return _buffers.template nth_buffer<0>();
         }
 
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto &sparse() const noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& sparse() const noexcept
         {
             return _buffers.template nth_buffer<1>();
         }
 
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto last_element_index() const
-            noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE auto
+        last_element_index() const noexcept
         {
             return _size - 1;
         }
@@ -111,7 +111,7 @@ namespace vrm::core::impl::sparse_set_storage
             ++_size;
         }
 
-        bool is_null(sparse_type x) noexcept
+        [[nodiscard]] bool is_null(sparse_type x) noexcept
         {
             return x == null_idx;
         }
@@ -126,7 +126,7 @@ namespace vrm::core::impl::sparse_set_storage
             --_size;
         }
 
-        auto &value_from_sparse(sparse_type x) noexcept
+        [[nodiscard]] auto& value_from_sparse(sparse_type x) noexcept
         {
             return dense()[x];
         }
@@ -146,13 +146,13 @@ namespace vrm::core::impl::sparse_set_storage
             }
         }
 
-        dynamic_vector(const dynamic_vector &rhs)
+        dynamic_vector(const dynamic_vector& rhs)
             : _buffers{rhs._buffers.copy(rhs._size)}, _size{rhs._size},
               _capacity{rhs._capacity}
         {
         }
 
-        dynamic_vector &operator=(const dynamic_vector &rhs)
+        dynamic_vector& operator=(const dynamic_vector& rhs)
         {
             _buffers = rhs._buffers.copy(rhs._size);
             _size = rhs._size;
@@ -161,8 +161,8 @@ namespace vrm::core::impl::sparse_set_storage
             return *this;
         }
 
-        dynamic_vector(dynamic_vector &&) = default;
-        dynamic_vector &operator=(dynamic_vector &&) = default;
+        dynamic_vector(dynamic_vector&&) = default;
+        dynamic_vector& operator=(dynamic_vector&&) = default;
 
         void reserve(sz_t n)
         {
@@ -237,7 +237,7 @@ namespace vrm::core::impl::sparse_set_storage
         }
 
         template <typename TF>
-        void for_each(TF &&f) const noexcept
+        void for_each(TF&& f) const noexcept
         {
             VRM_CORE_ASSERT_OP(size(), <=, _capacity);
 
@@ -279,7 +279,7 @@ namespace vrm::core::impl::sparse_set_storage
             return dense()[i];
         }
 
-        void swap(dynamic_vector &rhs) noexcept
+        void swap(dynamic_vector& rhs) noexcept
         {
             using std::swap;
             swap(_buffers, rhs._buffers);

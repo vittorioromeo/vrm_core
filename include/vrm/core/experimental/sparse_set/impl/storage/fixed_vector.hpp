@@ -119,7 +119,7 @@ namespace vrm::core::impl::sparse_set_storage
             // Only growth call in the storage.
             _buffers.grow(0, TCapacity);
 
-            // Initialize sprase array to `nullptr`.
+            // Initialize sparse array to `nullptr`.
             for(decltype(TCapacity) i(0); i < TCapacity; ++i)
             {
                 sparse()[i] = nullptr;
@@ -163,7 +163,7 @@ namespace vrm::core::impl::sparse_set_storage
             // Clear all used set elements.
             for_each([this](auto x) { sparse()[x] = nullptr; });
 
-            // Re-initalize end pointer.
+            // Re-initialize end pointer.
             _end = dense().data();
         }
 

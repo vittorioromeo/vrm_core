@@ -13,13 +13,13 @@
 
 namespace vrm::core::console::impl
 {
-    constexpr const char* code_prefix{"\033["};
-    constexpr const char* code_postfix{"m"};
-    constexpr const char* code_clear{"\033[1;1H\033[2J"};
+    inline constexpr const char* code_prefix{"\033["};
+    inline constexpr const char* code_postfix{"m"};
+    inline constexpr const char* code_clear{"\033[1;1H\033[2J"};
 
-    VRM_CORE_ALWAYS_INLINE const auto& style_code_ids() noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto& style_code_ids() noexcept
     {
-        static std::array ids{
+        constexpr static std::array ids{
             0,  // 0 = style::none
             1,  // 1 = style::bold
             2,  // 2 = style::dim
@@ -38,9 +38,10 @@ namespace vrm::core::console::impl
         return ids;
     }
 
-    VRM_CORE_ALWAYS_INLINE const auto& color_fg_code_ids() noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto&
+    color_fg_code_ids() noexcept
     {
-        static std::array ids{
+        constexpr static std::array ids{
             39, // 0 = color::none
             30, // 1 = color::black
             31, // 2 = color::red
@@ -63,9 +64,10 @@ namespace vrm::core::console::impl
         return ids;
     }
 
-    VRM_CORE_ALWAYS_INLINE const auto& color_bg_code_ids() noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto&
+    color_bg_code_ids() noexcept
     {
-        static std::array ids{
+        constexpr static std::array ids{
             49,  // 0 = color::none
             40,  // 1 = color::black
             41,  // 2 = color::red

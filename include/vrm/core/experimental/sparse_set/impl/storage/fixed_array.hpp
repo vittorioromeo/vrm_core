@@ -35,7 +35,7 @@ namespace vrm::core
                 std::array<sparse_type, TCapacity> _sparse;
                 sparse_type _end;
 
-                auto& dense() noexcept
+                [[nodiscard]] auto& dense() noexcept
                 {
                     return _dense;
                 }
@@ -45,7 +45,7 @@ namespace vrm::core
                     return _dense;
                 }
 
-                auto& sparse() noexcept
+                [[nodiscard]] auto& sparse() noexcept
                 {
                     return _sparse;
                 }
@@ -72,7 +72,7 @@ namespace vrm::core
                     ++_end;
                 }
 
-                bool is_null(sparse_type x) noexcept
+                [[nodiscard]] bool is_null(sparse_type x) noexcept
                 {
                     return x == nullptr;
                 }
@@ -87,7 +87,7 @@ namespace vrm::core
                     --_end;
                 }
 
-                auto& value_from_sparse(sparse_type x) noexcept
+                [[nodiscard]] auto& value_from_sparse(sparse_type x) noexcept
                 {
                     return *x;
                 }
@@ -192,7 +192,7 @@ namespace vrm::core
                     return to_sz_t(end() - begin());
                 }
 
-                auto begin() noexcept
+                [[nodiscard]] auto begin() noexcept
                 {
                     return _dense.data();
                 }
@@ -202,7 +202,7 @@ namespace vrm::core
                     return _dense.data();
                 }
 
-                auto end() noexcept
+                [[nodiscard]] auto end() noexcept
                 {
                     return _end;
                 }
