@@ -1,6 +1,6 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/type_traits/remove_rvalue_reference.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits/remove_rvalue_reference.hpp>
 
 using namespace vrm::core;
 

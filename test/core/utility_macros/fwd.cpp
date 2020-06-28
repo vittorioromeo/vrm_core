@@ -2,10 +2,10 @@
 #include <vrm/core/utility_macros/fwd.hpp>
 
 template <typename... Ts>
-void TEST_CONST func(Ts&&... xs)
+void func(Ts&&... xs)
 {
-    (void)std::initializer_list<int>{(int)VRM_CORE_FWD(xs)...};
-    (void)std::initializer_list<int>{(int)FWD(xs)...};
+    (void)(VRM_CORE_FWD(xs), ...);
+    (void)(FWD(xs), ...);
 }
 
 TEST_MAIN()

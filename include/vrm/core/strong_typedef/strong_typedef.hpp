@@ -1,24 +1,17 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-#include <vrm/core/assert/static_assert_macros.hpp>
-
-VRM_CORE_NAMESPACE
+namespace vrm::core::impl
 {
-    namespace impl
+    /// @brief Empty implementation `struct` used to "mark" strong typedefs.
+    struct strong_typedef_marker
     {
-        /// @brief Empty implementation `struct` used to "mark" strong typedefs.
-        struct strong_typedef_marker
-        {
-        };
-    }
-}
-VRM_CORE_NAMESPACE_END
+    };
+} // namespace vrm::core::impl
 
 #define VRM_CORE_STRONG_TYPEDEF(underlying, name)                             \
     class name final                                                          \
@@ -51,53 +44,54 @@ VRM_CORE_NAMESPACE_END
             return *this;                                                     \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr operator const underlying&() const   \
-            noexcept                                                          \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr                        \
+        operator const underlying&() const noexcept                           \
         {                                                                     \
             return _value;                                                    \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr operator underlying&() noexcept      \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr                        \
+        operator underlying&() noexcept                                       \
         {                                                                     \
             return _value;                                                    \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator==(           \
-            const name& rhs) noexcept                                         \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)         \
+        operator==(const name& rhs) noexcept                                  \
         {                                                                     \
             return _value == rhs._value;                                      \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator!=(           \
-            const name& rhs) noexcept                                         \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)         \
+        operator!=(const name& rhs) noexcept                                  \
         {                                                                     \
             return _value != rhs._value;                                      \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator<(            \
-            const name& rhs) noexcept                                         \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)         \
+        operator<(const name& rhs) noexcept                                   \
         {                                                                     \
             return _value < rhs._value;                                       \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator>(            \
-            const name& rhs) noexcept                                         \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)         \
+        operator>(const name& rhs) noexcept                                   \
         {                                                                     \
             return _value > rhs._value;                                       \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator<=(           \
-            const name& rhs) noexcept                                         \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)         \
+        operator<=(const name& rhs) noexcept                                  \
         {                                                                     \
             return _value <= rhs._value;                                      \
         }                                                                     \
                                                                               \
-        VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) operator>=(           \
-            const name& rhs) noexcept                                         \
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto)         \
+        operator>=(const name& rhs) noexcept                                  \
         {                                                                     \
             return _value >= rhs._value;                                      \
         }                                                                     \
     };                                                                        \
                                                                               \
-    VRM_CORE_STATIC_ASSERT_NM(std::is_literal_type<name>{});                  \
-    VRM_CORE_STATIC_ASSERT_NM(std::is_literal_type<underlying>{})
+    static_assert(std::is_literal_type<name>{});                              \
+    static_assert(std::is_literal_type<underlying>{})

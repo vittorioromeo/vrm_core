@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,10 +7,10 @@
 
 #include <iosfwd>
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/type_aliases.hpp>
+#include <vrm/core/utility_macros.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -24,13 +24,12 @@ VRM_CORE_NAMESPACE
             ignore_manipulator() = default;
 
             template <typename TStr>
-            ignore_manipulator(TStr&& str);
-
+            explicit ignore_manipulator(TStr&& str);
 
             template <typename TStr>
             auto& operator=(TStr&& str);
 
-            operator const T&() const noexcept;
+            explicit operator const T&() const noexcept;
 
             auto begin() const noexcept;
             auto end() const noexcept;
@@ -45,13 +44,12 @@ VRM_CORE_NAMESPACE
         struct is_ignore_manipulator<ignore_manipulator<T>> : std::true_type
         {
         };
-    }
+    } // namespace impl
 
     template <typename T>
-    auto make_ignore_manipulator(T && x);
+    auto make_ignore_manipulator(T&& x);
 
     template <typename T>
-    auto operator<<(std::ostream & o, const T& im)
-        ->std::enable_if_t<impl::is_ignore_manipulator<T>{}, std::ostream&>;
-}
-VRM_CORE_NAMESPACE_END
+    auto operator<<(std::ostream& o, const T& im)
+        -> std::enable_if_t<impl::is_ignore_manipulator<T>{}, std::ostream&>;
+} // namespace vrm::core

@@ -26,7 +26,7 @@ struct example : handle2::context<ex_set, example>
     {
         return items[x];
     }
-    const auto& target(sz_t x) const
+    [[nodiscard]] const auto& target(sz_t x) const
     {
         return items[x];
     }
@@ -35,7 +35,7 @@ struct example : handle2::context<ex_set, example>
     {
         return counters[x];
     }
-    const auto& counter(sz_t x) const
+    [[nodiscard]] const auto& counter(sz_t x) const
     {
         return counters[x];
     }
@@ -50,7 +50,7 @@ struct example : handle2::context<ex_set, example>
         VRM_CORE_ASSERT(valid(h));
         return target(data(h));
     }
-    const auto& access(const handle_type& h) const
+    [[nodiscard]] const auto& access(const handle_type& h) const
     {
         VRM_CORE_ASSERT(valid(h));
         return target(data(h));

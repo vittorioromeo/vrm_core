@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -28,11 +28,9 @@
 #include <vrm/core/fwd_capture.hpp>
 #include <vrm/core/is_valid.hpp>
 #include <vrm/core/literals.hpp>
-#include <vrm/core/make_array.hpp>
 #include <vrm/core/ostream_utils.hpp>
 #include <vrm/core/overload.hpp>
 #include <vrm/core/perfect_wrapper.hpp>
-#include <vrm/core/static_if.hpp>
 #include <vrm/core/strong_typedef.hpp>
 #include <vrm/core/tuple_utils.hpp>
 #include <vrm/core/type_aliases.hpp>

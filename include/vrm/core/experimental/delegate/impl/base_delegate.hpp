@@ -1,16 +1,16 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/experimental/delegate/signature_helper.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
 // TODO:
 // * unordered_fixed_delegate<TFnSignature, TSize>
@@ -22,7 +22,7 @@
 // * ordered_fixed_unsubscribable_delegate<TFnSignature, TSize>
 // * ordered_unsubscribable_delegate<TFnSignature, TAllocator>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -96,7 +96,7 @@ VRM_CORE_NAMESPACE
             this_type{}, result_handler, FWD(xs)...)));                   \
                                                                           \
     template <typename... Ts>                                             \
-    auto operator()(Ts && ... xs)                                         \
+    auto operator()(Ts&&... xs)                                           \
         qualifier noexcept(noexcept(call_impl(this_type{}, FWD(xs)...))); \
                                                                           \
     template <typename... Ts>                                             \
@@ -111,8 +111,7 @@ VRM_CORE_NAMESPACE
 
             void reserve(sz_t x);
             void clear() noexcept;
-            auto empty() const noexcept;
+            [[nodiscard]] auto empty() const noexcept;
         };
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace impl
+} // namespace vrm::core

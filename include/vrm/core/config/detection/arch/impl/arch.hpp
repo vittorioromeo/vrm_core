@@ -1,24 +1,18 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-
-VRM_CORE_NAMESPACE
+namespace vrm::core::detection
 {
-    namespace detection
+    enum class architecture
     {
-        enum class architecture
-        {
-            x86,
-            x64,
-            unknown
-        };
+        x86,
+        x64,
+        unknown
+    };
 
-        constexpr auto current_architecture() noexcept;
-    }
-}
-VRM_CORE_NAMESPACE_END
+    [[nodiscard]] constexpr architecture current_architecture() noexcept;
+} // namespace vrm::core::detection

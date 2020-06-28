@@ -1,16 +1,16 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resource/base.hpp>
 #include <vrm/core/experimental/resource/unique/unique.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace resource
     {
@@ -52,13 +52,15 @@ VRM_CORE_NAMESPACE
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE unique<TBehavior>::unique(
-                const handle_type& handle) noexcept : base_type{handle}
+                const handle_type& handle) noexcept
+                : base_type{handle}
             {
             }
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE unique<TBehavior>::unique(
-                unique&& rhs) noexcept : base_type{rhs.release()}
+                unique&& rhs) noexcept
+                : base_type{rhs.release()}
             {
             }
 
@@ -111,7 +113,6 @@ VRM_CORE_NAMESPACE
             {
                 lhs.swap(rhs);
             }
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

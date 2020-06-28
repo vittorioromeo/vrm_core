@@ -1,13 +1,12 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace handle
     {
@@ -27,7 +26,6 @@ VRM_CORE_NAMESPACE
 
             template <typename T, typename TMetadataRef>
             using handle_type = typename T::template handle_type<TMetadataRef>;
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace impl
+    }     // namespace handle
+} // namespace vrm::core

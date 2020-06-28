@@ -46,8 +46,7 @@ void t0()
     TEST_ASSERT(ss.add(10) == true);
     TEST_ASSERT(ss.add(20) == true);
 
-    auto t_after_fill = [](const auto& x_ss)
-    {
+    auto t_after_fill = [](const auto& x_ss) {
         TEST_ASSERT(!x_ss.empty());
         TEST_ASSERT_OP(x_ss.size(), ==, 4);
 
@@ -132,8 +131,7 @@ void t1()
     TEST_ASSERT(ss.add(10) == true);
     TEST_ASSERT(ss.add(20) == true);
 
-    auto t_after_fill = [](const auto& x_ss)
-    {
+    auto t_after_fill = [](const auto& x_ss) {
         TEST_ASSERT(!x_ss.empty());
         TEST_ASSERT_OP(x_ss.size(), ==, 4);
 

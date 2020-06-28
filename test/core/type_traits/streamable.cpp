@@ -8,13 +8,13 @@ struct Foo
 {
 };
 
-VRM_CORE_STATIC_ASSERT_NM(ostreamable<int>);
-VRM_CORE_STATIC_ASSERT_NM(ostreamable<float>);
-VRM_CORE_STATIC_ASSERT_NM(istreamable<int>);
-VRM_CORE_STATIC_ASSERT_NM(istreamable<float>);
+static_assert(ostreamable<int>);
+static_assert(ostreamable<float>);
+static_assert(istreamable<int>);
+static_assert(istreamable<float>);
 
-VRM_CORE_STATIC_ASSERT_NM(!ostreamable<Foo>);
-VRM_CORE_STATIC_ASSERT_NM(!istreamable<Foo>);
+static_assert(!ostreamable<Foo>);
+static_assert(!istreamable<Foo>);
 
 struct Bar
 {
@@ -23,8 +23,8 @@ struct Bar
 std::ostream& operator<<(std::ostream& os, const Bar&);
 std::istream& operator>>(std::istream& is, Bar&);
 
-VRM_CORE_STATIC_ASSERT_NM(ostreamable<Bar>);
-VRM_CORE_STATIC_ASSERT_NM(istreamable<Bar>);
+static_assert(ostreamable<Bar>);
+static_assert(istreamable<Bar>);
 
 int main()
 {

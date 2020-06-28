@@ -1,11 +1,11 @@
 #include "../../../utils/test_utils.hpp"
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/resizable_buffer.hpp>
 #include <cassert>
 #include <cstddef>
 #include <functional>
 #include <new>
 #include <utility>
+#include <vrm/core/experimental/resizable_buffer.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
 using vrm::core::sz_t;
 
@@ -71,7 +71,7 @@ public:
         return N;
     }
 
-    ::sz_t used() const
+    [[nodiscard]] ::sz_t used() const
     {
         return ::sz_t(ptr_ - buf_);
     }

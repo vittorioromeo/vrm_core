@@ -1,4 +1,5 @@
 .vscode
+compile_commands.json
 callgrind.*
 CMakeLists.txt.user.*
 

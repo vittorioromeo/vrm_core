@@ -1,6 +1,6 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/type_traits/copy_if_rvalue.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits/copy_if_rvalue.hpp>
 
 using namespace vrm::core;
 
@@ -58,16 +58,16 @@ decltype(auto) id(T&& x)
     return FWD(x);
 }
 
-void TEST_CONST y()
+void y()
 {
     X v;
     const X cv;
     volatile X vv;
     const volatile X cvv;
 
-    SA_TYPE((std::move(v)), (X && ));
+    SA_TYPE((std::move(v)), (X &&));
     SA_SAME((decltype(v)), (X));
-    SA_TYPE((id(std::move(v))), (X && ));
+    SA_TYPE((id(std::move(v))), (X &&));
     SA_SAME((std::remove_reference_t<decltype(FWD(v))>), (X));
     SA_TYPE((copy_if_rvalue(std::move(v))), (X));
 
@@ -82,9 +82,9 @@ void TEST_CONST y()
     SA_TYPE((copy_if_rvalue(std::move(cv))), (const X));
 
 
-    SA_TYPE((std::move(vv)), (volatile X && ));
+    SA_TYPE((std::move(vv)), (volatile X &&));
     SA_SAME((decltype(vv)), (volatile X));
-    SA_TYPE((id(std::move(vv))), (volatile X && ));
+    SA_TYPE((id(std::move(vv))), (volatile X &&));
     SA_SAME((std::remove_reference_t<decltype(FWD(vv))>), (volatile X));
     SA_TYPE((copy_if_rvalue(std::move(vv))), (volatile X));
 

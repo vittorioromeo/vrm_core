@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/pp.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/config.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/tuple_utils/apply.hpp>
-#include <vrm/core/args_utils/nth_arg.hpp>
 #include <vrm/core/args_utils/args_slice.hpp>
 #include <vrm/core/args_utils/args_slice_aliases.hpp>
 #include <vrm/core/args_utils/impl/wrappers.hpp>
+#include <vrm/core/args_utils/nth_arg.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/apply.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros.hpp>
+#include <vrm/pp.hpp>
 
 /// @macro Given an arg-slicing function `fn`, computes the name of the
 /// `constexpr`-friendly `fn` wrapper.
@@ -33,8 +33,7 @@
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(name, fn)           \
     template <sz_t TN, typename TF, typename... Ts>                \
     VRM_CORE_ALWAYS_INLINE constexpr auto name(TF&& f, Ts&&... xs) \
-        VRM_CORE_RETURNS(                                          \
-            VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn))
+        VRM_CORE_RETURNS(VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_BODY(fn))
 
 /// @macro Defines an utility function to call another function with a slice of
 /// variadic arguments. The name of the wrapper is created by concatenating
@@ -42,7 +41,7 @@
 #define VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(fn) \
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER(VRM_PP_CAT(call_with_, fn), fn)
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     // Call the macros to define all call utility functions.
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(first_n_args)
@@ -51,8 +50,7 @@ VRM_CORE_NAMESPACE
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_after)
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_until)
     VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN(all_args_before)
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core
 
 #undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER_SN
 #undef VRM_CORE_IMPL_DEFINE_ARGS_SLICE_CALLER

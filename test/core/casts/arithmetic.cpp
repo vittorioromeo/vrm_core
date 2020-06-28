@@ -3,11 +3,14 @@
 
 bool assert_fired{false};
 
-#define FAKE_ASSERT(...)     \
-    if(!(__VA_ARGS__))       \
-    {                        \
-        assert_fired = true; \
-    }
+#define FAKE_ASSERT(...)         \
+    do                           \
+    {                            \
+        if(!(__VA_ARGS__))       \
+        {                        \
+            assert_fired = true; \
+        }                        \
+    } while(false)
 
 void ensure_assert()
 {
@@ -18,10 +21,10 @@ void ensure_assert()
 template <typename TOut, typename TIn>
 constexpr auto fake_to_num(const TIn& x) noexcept
 {
-    VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TOut>{},
+    static_assert(std::is_arithmetic<TOut>{},
         "`TOut` output type must be an arithmetic type.");
 
-    VRM_CORE_STATIC_ASSERT(std::is_arithmetic<TIn>{},
+    static_assert(std::is_arithmetic<TIn>{},
         "`TIn` input type must be an arithmetic type.");
 
     FAKE_ASSERT((!vrm::core::impl::will_overflow<TOut, TIn>(x)));
@@ -195,11 +198,11 @@ void integral_tests()
     test_val<char>((short)numeric_limits<char>::min() - 1, true);
     test_val<short>((int)numeric_limits<short>::max() + 1, true);
     test_val<short>((int)numeric_limits<short>::min() - 1, true);
-    test_val<int>((long)numeric_limits<int>::max() + 1, true);
-    test_val<int>((long)numeric_limits<int>::min() - 1, true);
 
 #pragma GCC diagnostic ignored "-Woverflow"
 #pragma GCC diagnostic push
+    test_val<int>((long)numeric_limits<int>::max() + 1, true);
+    test_val<int>((long)numeric_limits<int>::min() - 1, true);
     test_val<long>((long long)numeric_limits<long>::max() + 1, true);
     test_val<long>((long long)numeric_limits<long>::min() - 1, true);
     test_val<long long>(numeric_limits<long long>::max() + 1, true);

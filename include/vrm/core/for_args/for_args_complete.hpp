@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -8,13 +8,13 @@
 #include <tuple>
 #include <utility>
 
-#include <vrm/core/config.hpp>
+#include <vrm/core/args_utils.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/casts/polymorphic.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/tuple_utils/apply.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits.hpp>
-#include <vrm/core/static_if.hpp>
-#include <vrm/core/args_utils.hpp>
-#include <vrm/core/tuple_utils/apply.hpp>
 #include <vrm/core/utility_macros/fwd.hpp>
 
 // TODO: temp
@@ -25,7 +25,7 @@
 // executes choice function
 
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     struct no_return
     {
@@ -37,7 +37,8 @@ VRM_CORE_NAMESPACE
         struct control_flow
         {
             template <sz_t TI = 0>
-            VRM_CORE_ALWAYS_INLINE constexpr auto get() const noexcept
+            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto get() const
+                noexcept
             {
                 return decltype(std::get<TI>(TReturn{})){};
             }
@@ -105,13 +106,16 @@ VRM_CORE_NAMESPACE
         constexpr auto get_continue_count() noexcept
         {
             // If the return type is skip:
-            return static_if(is_skip<T>{})
+            if constexpr(is_skip<T>{})
+            {
                 // `true` branch -> return its inner value.
-                .then(impl::skip_value_returner{})
+                return impl::skip_value_returner{}(T{});
+            }
+            else
+            {
                 // `else` branch -> return `0`.
-                .else_(impl::zero_returner{})
-                // `wrap` is necessary to handle `void`.
-                (T{});
+                return impl::zero_returner{}(T{});
+            }
         }
 
         template <sz_t TIteration, sz_t TArgIndex, typename TLastReturn>
@@ -138,7 +142,8 @@ VRM_CORE_NAMESPACE
             }
 
             template <sz_t TI = 0>
-            VRM_CORE_ALWAYS_INLINE constexpr auto get() const noexcept
+            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto get() const
+                noexcept
             {
                 return unwrap<TI>(last_return_type{});
             }
@@ -199,7 +204,7 @@ VRM_CORE_NAMESPACE
         template <sz_t TArity, typename TFunctionToCall>
         struct static_for_result : TFunctionToCall
         {
-            VRM_CORE_STATIC_ASSERT_NM(TArity > 0);
+            static_assert(TArity > 0);
 
         public:
             static constexpr sz_t arity{TArity};
@@ -219,7 +224,8 @@ VRM_CORE_NAMESPACE
 
         public:
             template <typename TFFwd>
-            VRM_CORE_ALWAYS_INLINE static_for_result(TFFwd&& f) noexcept
+            explicit VRM_CORE_ALWAYS_INLINE static_for_result(
+                TFFwd&& f) noexcept
                 : TFunctionToCall(FWD(f))
             {
             }
@@ -266,8 +272,9 @@ VRM_CORE_NAMESPACE
             {
                 static_for_result* _this;
 
-                VRM_CORE_ALWAYS_INLINE constexpr binder(
-                    static_for_result* t) noexcept : _this(t)
+                VRM_CORE_ALWAYS_INLINE explicit constexpr binder(
+                    static_for_result* t) noexcept
+                    : _this(t)
                 {
                 }
 
@@ -290,8 +297,7 @@ VRM_CORE_NAMESPACE
             VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) get_impl_wrapper(
                 TDataType) noexcept
             {
-                return [this](auto&&... xs) -> decltype(auto)
-                {
+                return [this](auto&&... xs) -> decltype(auto) {
                     return this->impl_(TDataType{}, FWD(xs)...);
                 };
             }
@@ -311,7 +317,7 @@ VRM_CORE_NAMESPACE
             VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) impl_fn_call(
                 TDataType, Ts&&... xs)
             {
-                return call_with_arity(TDataType{}, std::forward<Ts>(xs)...);
+                return call_with_arity(TDataType{}, FWD(xs)...);
             }
 
             template <typename TRetT>
@@ -320,7 +326,8 @@ VRM_CORE_NAMESPACE
                 static_for_result* _this;
 
                 VRM_CORE_ALWAYS_INLINE constexpr then_branch(
-                    static_for_result* t) noexcept : _this(t)
+                    static_for_result* t) noexcept
+                    : _this(t)
                 {
                 }
 
@@ -337,8 +344,9 @@ VRM_CORE_NAMESPACE
             {
                 static_for_result* _this;
 
-                VRM_CORE_ALWAYS_INLINE constexpr else_branch(
-                    static_for_result* t) noexcept : _this(t)
+                VRM_CORE_ALWAYS_INLINE explicit constexpr else_branch(
+                    static_for_result* t) noexcept
+                    : _this(t)
                 {
                 }
 
@@ -347,16 +355,14 @@ VRM_CORE_NAMESPACE
                     Ts&&... xs)
                 {
                     constexpr auto has_args(sizeof...(xs) > TArity);
-                    return static_if(bool_v<has_args>)
-                        .then([&](auto&&... ys)
-                            {
-                                return _this->continue_<TRetT>(
-                                    TMetadata{}, FWD(ys)...);
-                            })
-                        .else_([](auto&&...)
-                            {
-                                return TRetT{};
-                            })(FWD(xs)...);
+                    if constexpr(bool_v<has_args>)
+                    {
+                        return _this->continue_<TRetT>(TMetadata{}, FWD(xs)...);
+                    }
+                    else
+                    {
+                        return TRetT{};
+                    }
                 }
             };
 
@@ -367,7 +373,7 @@ VRM_CORE_NAMESPACE
                 // Make sure that the count of loop arguments is divisible
                 // by
                 // `TArity`.
-                VRM_CORE_STATIC_ASSERT_NM(sizeof...(xs) % TArity == 0);
+                static_assert(sizeof...(xs) % TArity == 0);
 
                 // TODO: excess argument policy/strategy?
                 // * discard
@@ -383,14 +389,19 @@ VRM_CORE_NAMESPACE
 
                 // "Predict" what the current iteration will return.
                 using ret_t = adapt_return_type<decltype(
-                    impl_fn_call(curr_metadata{}, std::forward<Ts>(xs)...))>;
+                    impl_fn_call(curr_metadata{}, FWD(xs)...))>;
 
                 // Call the body of the `static_for`.
-                impl_fn_call(curr_metadata{}, std::forward<Ts>(xs)...);
+                impl_fn_call(curr_metadata{}, FWD(xs)...);
 
-                return static_if(is_break<ret_t>{})
-                    .then(then_branch<ret_t>{this})
-                    .else_(else_branch<ret_t, curr_metadata>{this})(FWD(xs)...);
+                if constexpr(is_break<ret_t>{})
+                {
+                    return then_branch<ret_t>{this}(FWD(xs)...);
+                }
+                else
+                {
+                    return else_branch<ret_t, curr_metadata>{this}(FWD(xs)...);
+                }
             }
 
             template <typename... Ts>
@@ -410,10 +421,10 @@ VRM_CORE_NAMESPACE
                 return impl_(first_metadata{}, FWD(xs)...);
             }
         };
-    }
+    } // namespace impl
 
     template <sz_t TArity = 1, typename TF>
-    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for(TF && f)
+    VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) static_for(TF&& f)
     {
         // Returns a callable "static for" wrapper with user-specified
         // arity.
@@ -423,7 +434,6 @@ VRM_CORE_NAMESPACE
     }
 
     using impl::unwrap;
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core
 
 // TODO: please cleanup and comment

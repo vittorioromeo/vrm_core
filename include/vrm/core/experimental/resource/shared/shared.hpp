@@ -1,18 +1,18 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config.hpp>
-#include <vrm/core/experimental/resource/fwd.hpp>
-#include <vrm/core/experimental/resource/base.hpp>
 #include "./metadata.hpp"
-#include "./ref_counter.hpp"
 #include "./policies.hpp"
+#include "./ref_counter.hpp"
+#include <vrm/core/config.hpp>
+#include <vrm/core/experimental/resource/base.hpp>
+#include <vrm/core/experimental/resource/fwd.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace resource
     {
@@ -104,7 +104,7 @@ VRM_CORE_NAMESPACE
                 /// @brief Returns `true` if `*this` is the only instance
                 /// managing the stored handle.
                 /// @details Equivalent to `use_count() == 1`.
-                bool unique() const noexcept;
+                [[nodiscard]] bool unique() const noexcept;
 
                 /// @brief Returns `true` if both `lhs` and `rhs` store the same
                 /// handle.
@@ -121,10 +121,9 @@ VRM_CORE_NAMESPACE
                 template <typename>
                 friend void swap(shared& lhs, shared& rhs) noexcept;
             };
-        }
+        } // namespace impl
 
         template <typename TBehavior>
         using shared = impl::shared<TBehavior, impl::shared_lock_policy::none>;
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace resource
+} // namespace vrm::core

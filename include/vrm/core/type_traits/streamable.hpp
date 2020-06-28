@@ -1,16 +1,17 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <iosfwd>
-#include <utility>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_traits/detection.hpp>
 
-VRM_CORE_NAMESPACE
+#include <iosfwd>
+#include <utility>
+
+namespace vrm::core
 {
     namespace impl
     {
@@ -21,7 +22,7 @@ VRM_CORE_NAMESPACE
         template <typename T>
         using istreamable_detector =
             decltype(std::declval<std::istream&>() >> std::declval<T&>());
-    }
+    } // namespace impl
 
     /// @brief Evaluates to `std::true_type` if `T` can be streamed to an
     /// `std::ostream`, to `std::false_type` otherwise.
@@ -32,5 +33,4 @@ VRM_CORE_NAMESPACE
     /// `std::istream`, to `std::false_type` otherwise.
     template <typename T>
     constexpr is_detected<impl::istreamable_detector, T> istreamable{};
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

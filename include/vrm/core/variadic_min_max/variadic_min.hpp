@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,26 +6,28 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <typename T>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(T a) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) variadic_min(
+        T&& a) noexcept
     {
-        return a;
-    }
-
-    template <typename T0, typename T1>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(T0 a, T1 b) noexcept
-    {
-        return a < b ? a : b;
+        return FWD(a);
     }
 
     template <typename T0, typename T1, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE constexpr auto variadic_min(
-        T0 a, T1 b, Ts... xs) noexcept
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr decltype(auto) variadic_min(
+        T0&& a, T1&& b, Ts&&... xs) noexcept
     {
-        return variadic_min(a, variadic_min(b, xs...));
+        if constexpr(sizeof...(Ts) == 0)
+        {
+            return a < b ? FWD(a) : FWD(b);
+        }
+        else
+        {
+            return variadic_min(FWD(a), variadic_min(FWD(b), FWD(xs)...));
+        }
     }
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

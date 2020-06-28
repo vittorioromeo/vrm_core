@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/experimental/resource/fwd.hpp>
 #include <vrm/core/experimental/resource/behavior.hpp>
+#include <vrm/core/experimental/resource/fwd.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace resource
     {
@@ -45,7 +45,7 @@ VRM_CORE_NAMESPACE
                 base() noexcept;
                 explicit base(const handle_type& handle) noexcept;
 
-                auto is_null_handle() const noexcept;
+                [[nodiscard]] auto is_null_handle() const noexcept;
 
                 void deinit() noexcept(is_nothrow_deinit_t<TBehavior>{});
                 void nullify() noexcept;
@@ -54,10 +54,9 @@ VRM_CORE_NAMESPACE
                 void swap(base& rhs) noexcept;
 
             public:
-                auto get() const noexcept;
+                [[nodiscard]] auto get() const noexcept;
                 explicit operator bool() const noexcept;
             };
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

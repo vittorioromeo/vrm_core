@@ -1,6 +1,6 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/config.hpp>
 #include <typeinfo>
+#include <vrm/core/config.hpp>
 #include <vrm/core/for_args.hpp>
 #include <vrm/core/tuple_utils/transpose.hpp>
 
@@ -33,8 +33,7 @@ void test0()
     SA_TYPE((std::get<0>(tt_f)), (int&));
 
     for_args(
-        [&](auto&& y)
-        {
+        [&](auto&& y) {
             TEST_ASSERT_OP(std::get<0>(t), ==, std::get<0>(y));
             TEST_ASSERT_OP(std::get<1>(t), ==, std::get<1>(y));
             TEST_ASSERT_OP(std::get<2>(t), ==, std::get<2>(y));
@@ -43,8 +42,7 @@ void test0()
         t, t_r);
 
     for_args(
-        [&](auto&& x)
-        {
+        [&](auto&& x) {
             TEST_ASSERT_OP(std::get<0>(t), ==, std::get<0>(x));
             TEST_ASSERT_OP(std::get<1>(t), ==, std::get<2>(x));
             TEST_ASSERT_OP(std::get<2>(t), ==, std::get<1>(x));
@@ -72,8 +70,7 @@ void test1()
     auto tt_f = to_forwarded_transposed_tuple<3>(t);
 
     for_args(
-        [&](auto&& x)
-        {
+        [&](auto&& x) {
             TEST_ASSERT_OP(std::get<0>(t), ==, std::get<0>(x));
             TEST_ASSERT_OP(std::get<1>(t), ==, std::get<1>(x));
             TEST_ASSERT_OP(std::get<2>(t), ==, std::get<2>(x));
@@ -84,8 +81,7 @@ void test1()
         t_r);
 
     for_args(
-        [&](auto&& x)
-        {
+        [&](auto&& x) {
             TEST_ASSERT_OP(std::get<0>(t), ==, std::get<0>(x));
             TEST_ASSERT_OP(std::get<1>(t), ==, std::get<3>(x));
             TEST_ASSERT_OP(std::get<2>(t), ==, std::get<1>(x));
@@ -96,7 +92,7 @@ void test1()
         tt, tt_r, tt_f);
 }
 
-void TEST_CONST test2()
+void test2()
 {
     auto t = std::make_tuple(0, 'a', 1, 'b');
     auto t_r = make_ref_tuple(0, 'a', 1, 'b');
@@ -154,7 +150,7 @@ void TEST_CONST test2()
     SA_TYPE((std::get<0>(std::move(ttn_f))), (int&&));
 }
 
-void TEST_CONST test3()
+void test3()
 {
     int i = 1;
     int i2 = 3;
@@ -192,7 +188,7 @@ void TEST_CONST test3()
     SA_TYPE((std::get<3>(std::move(tt_f))), (int*&));
 }
 
-void TEST_CONST test4()
+void test4()
 {
     auto t0(std::make_tuple(0, 1, 2));
     auto t1(std::make_tuple(3, 4, 5));

@@ -44,24 +44,21 @@ namespace test_impl
 {
     namespace impl
     {
-        template <typename...>
-        using void_t = void;
-
         template <typename T, typename = void>
         struct can_print_t : std::false_type
         {
         };
 
         template <typename T>
-        struct can_print_t<T, void_t<decltype(std::declval<std::ostream&>()
-                                              << std::declval<T>())>>
+        struct can_print_t<T, std::void_t<decltype(std::declval<std::ostream&>()
+                                                   << std::declval<T>())>>
             : std::true_type
         {
         };
 
         template <typename T>
         constexpr can_print_t<T> can_print{};
-    }
+    } // namespace impl
 
     namespace impl
     {
@@ -136,7 +133,7 @@ namespace test_impl
             f(error);
             impl::fail();
         }
-    }
+    } // namespace impl
 
     template <typename T>
     inline void test_expr(
@@ -161,7 +158,7 @@ namespace test_impl
                 s, expected, rhs_result, impl::can_print<TRhs>);
         });
     }
-}
+} // namespace test_impl
 
 #define TEST_ASSERT(expr)                                  \
     do                                                     \

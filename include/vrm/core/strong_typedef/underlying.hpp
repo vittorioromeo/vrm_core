@@ -1,16 +1,15 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/type_traits.hpp>
-#include <vrm/core/type_aliases.hpp>
-#include <vrm/core/config/names.hpp>
 #include <vrm/core/strong_typedef/is_strong_typedef.hpp>
+#include <vrm/core/type_aliases.hpp>
+#include <vrm/core/type_traits.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -28,7 +27,7 @@ VRM_CORE_NAMESPACE
         {
             using type = T;
         };
-    }
+    } // namespace impl
 
     /// @brief Returns `T` if `T` is not a strong typedef, `typename
     /// T::underlying_type` otherwise.
@@ -36,5 +35,4 @@ VRM_CORE_NAMESPACE
     using underlying_if_strong_typedef_type =
         typename impl::underyling_if_strong_typedef_dispatch<T,
             bool_<is_strong_typedef_v<T>>>::type;
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

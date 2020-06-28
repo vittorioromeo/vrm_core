@@ -47,8 +47,7 @@ bool VRM_CORE_PURE_FN all_null(const T& dt) noexcept
     bool result{true};
 
     for_tuple(
-        [&result](const auto& p)
-        {
+        [&result](const auto& p) {
             if(p != nullptr) result = false;
         },
         dt);
@@ -62,7 +61,8 @@ void run_test()
     cc = dd = copies = 0;
 
     multi_resizable_buffer<resizable_buffer<item>, resizable_buffer<item>,
-        resizable_buffer<int>, resizable_buffer<std::string>> rb;
+        resizable_buffer<int>, resizable_buffer<std::string>>
+        rb;
 
     TEST_ASSERT(all_null(rb.data()));
     TEST_ASSERT_OP(cc, ==, 0);
@@ -96,7 +96,8 @@ void run_test2()
     cc = dd = copies = 0;
 
     multi_resizable_buffer<resizable_buffer<item>, resizable_buffer<item>,
-        resizable_buffer<int>, resizable_buffer<std::string>> rb;
+        resizable_buffer<int>, resizable_buffer<std::string>>
+        rb;
 
     TEST_ASSERT(all_null(rb.data()));
     TEST_ASSERT_OP(cc, ==, 0);
@@ -138,7 +139,8 @@ void run_test3()
     cc = dd = copies = 0;
 
     multi_resizable_buffer<resizable_buffer<item>, resizable_buffer<item>,
-        resizable_buffer<int>, resizable_buffer<std::string>> rb;
+        resizable_buffer<int>, resizable_buffer<std::string>>
+        rb;
 
     TEST_ASSERT(all_null(rb.data()));
     TEST_ASSERT_OP(cc, ==, 0);

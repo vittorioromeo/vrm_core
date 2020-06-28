@@ -10,14 +10,13 @@ void test_empty_for()
 
     // Assume arity is 1, if not specified.
     // Assume `continue_t` is returned, if return type is `void`.
-    auto empty_for = static_for([&](auto metadata, auto)
-        {
-            iterations.emplace_back(metadata.iteration());
-            arg_indices.emplace_back(metadata.arg_index());
-        });
+    auto empty_for = static_for([&](auto metadata, auto) {
+        iterations.emplace_back(metadata.iteration());
+        arg_indices.emplace_back(metadata.arg_index());
+    });
 
     using empty_for_t = decltype(empty_for);
-    static_assert(empty_for_t::arity == 1, "");
+    static_assert(empty_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -55,15 +54,14 @@ void test_unary_for()
 {
     std::vector<sz_t> iterations, arg_indices;
 
-    auto unary_for = static_for([&](auto metadata, auto x)
-        {
-            iterations.emplace_back(metadata.iteration());
-            arg_indices.emplace_back(metadata.arg_index());
-            return metadata.continue_(x);
-        });
+    auto unary_for = static_for([&](auto metadata, auto x) {
+        iterations.emplace_back(metadata.iteration());
+        arg_indices.emplace_back(metadata.arg_index());
+        return metadata.continue_(x);
+    });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -101,25 +99,23 @@ void test_unary_for_break()
 {
     std::vector<sz_t> iterations, arg_indices;
 
-    auto unary_for = static_for([&](auto metadata, auto x)
-        {
-            iterations.emplace_back(metadata.iteration());
-            arg_indices.emplace_back(metadata.arg_index());
+    auto unary_for = static_for([&](auto metadata, auto x) {
+        iterations.emplace_back(metadata.iteration());
+        arg_indices.emplace_back(metadata.arg_index());
 
-            // Break when `3` is found, and return it.
-            return static_if(bool_v<(x == 3)>)
-                .then([](auto m, auto y)
-                    {
-                        return m.break_(y);
-                    })
-                .else_([](auto m, auto y)
-                    {
-                        return m.continue_(y);
-                    })(metadata, x);
-        });
+        // Break when `3` is found, and return it.
+        if constexpr(bool_v<(x == 3)>)
+        {
+            return metadata.break_(x);
+        }
+        else
+        {
+            return metadata.continue_(x);
+        }
+    });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -176,25 +172,23 @@ void test_unary_for_skip()
 {
     std::vector<sz_t> iterations, arg_indices;
 
-    auto unary_for = static_for([&](auto metadata, auto x)
-        {
-            iterations.emplace_back(metadata.iteration());
-            arg_indices.emplace_back(metadata.arg_index());
+    auto unary_for = static_for([&](auto metadata, auto x) {
+        iterations.emplace_back(metadata.iteration());
+        arg_indices.emplace_back(metadata.arg_index());
 
-            // Skip one argument when `-1` is found
-            return static_if(bool_v<(x == -1)>)
-                .then([](auto m, auto y)
-                    {
-                        return m.skip(sz_t_v<1>, y);
-                    })
-                .else_([](auto m, auto y)
-                    {
-                        return m.continue_(y);
-                    })(metadata, x);
-        });
+        // Skip one argument when `-1` is found
+        if constexpr(bool_v<(x == -1)>)
+        {
+            return metadata.skip(sz_t_v<1>, x);
+        }
+        else
+        {
+            return metadata.continue_(x);
+        }
+    });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1 );
 
     {
         iterations.clear();
@@ -231,41 +225,34 @@ void test_unary_for_accumulate()
 {
     std::vector<sz_t> iterations, arg_indices;
 
-    auto unary_for = static_for([&](auto metadata, auto x)
+    auto unary_for = static_for([&](auto metadata, auto x) {
+        iterations.emplace_back(metadata.iteration());
+        arg_indices.emplace_back(metadata.arg_index());
+
+        // Skip one argument when `-1` is found
+        if constexpr(metadata.has_no_return())
         {
-            iterations.emplace_back(metadata.iteration());
-            arg_indices.emplace_back(metadata.arg_index());
+            static_assert(!is_int_constant<decltype(unwrap(metadata))>{});
+            static_assert(
+                std::is_same_v<decltype(unwrap(metadata)), no_return>);
+            static_assert(is_int_constant<decltype(x)>{});
 
-            // Skip one argument when `-1` is found
-            return static_if(metadata.has_no_return())
-                .then([](auto m, auto y)
-                    {
-                        static_assert(
-                            !is_int_constant<decltype(unwrap(m))>{}, "");
+            // Base case.
+            return metadata.continue_(x);
+        }
+        else
+        {
+            static_assert(is_int_constant<decltype(unwrap(metadata))>{});
+            static_assert(is_int_constant<decltype(x)>{});
 
-                        static_assert(
-                            std::is_same<decltype(unwrap(m)), no_return>{}, "");
-
-                        static_assert(is_int_constant<decltype(y)>{}, "");
-
-                        // Base case.
-                        return m.continue_(y);
-                    })
-                .else_([](auto m, auto y)
-                    {
-                        static_assert(
-                            is_int_constant<decltype(unwrap(m))>{}, "");
-
-                        static_assert(is_int_constant<decltype(y)>{}, "");
-
-                        // "Recursive" case.
-                        // Sum with previous return type.
-                        return m.continue_(int_v<unwrap(m) + y>);
-                    })(metadata, x);
-        });
+            // "Recursive" case.
+            // Sum with previous return type.
+            return metadata.continue_(int_v<unwrap(metadata) + x>);
+        }
+    });
 
     using unary_for_t = decltype(unary_for);
-    static_assert(unary_for_t::arity == 1, "");
+    static_assert(unary_for_t::arity == 1);
 
     {
         iterations.clear();
@@ -288,20 +275,18 @@ void test_unary_for_accumulate()
     }
 }
 
-void TEST_CONST test_unary_for_accumulate2()
+void test_unary_for_accumulate2()
 {
-    auto static_accumulator = static_for([](auto mx, auto x)
+    auto static_accumulator = static_for([](auto mx, auto x) {
+        if constexpr(mx.has_no_return())
         {
-            return static_if(mx.has_no_return())
-                .then([](auto my, auto y)
-                    {
-                        return my.continue_(y);
-                    })
-                .else_([](auto my, auto y)
-                    {
-                        return my.continue_(int_v<unwrap(my) + y>);
-                    })(mx, x);
-        });
+            return mx.continue_(x);
+        }
+        else
+        {
+            return mx.continue_(int_v<unwrap(mx) + x>);
+        }
+    });
 
     SA_TYPE(                                                        // .
         (unwrap(static_accumulator(int_v<1>, int_v<1>, int_v<1>))), // .
@@ -314,26 +299,23 @@ void TEST_CONST test_unary_for_accumulate2()
     SA_TYPE(                                                // .
         (unwrap(static_accumulator(int_v<10>, int_v<20>))), // .
         (int_<10 + 20>));
-    
 }
 
-void TEST_CONST test_unary_for_accumulate_binary()
+void test_unary_for_accumulate_binary()
 {
-    auto static_b_acc = static_for<2>([](auto mx, auto x0, auto x1)
+    auto static_b_acc = static_for<2>([](auto mx, auto x0, auto x1) {
+        if constexpr(mx.has_no_return())
         {
-            return static_if(mx.has_no_return())
-                .then([](auto my, auto y0, auto y1)
-                    {
-                        return my.continue_with(y0, y1);
-                    })
-                .else_([](auto my, auto y0, auto y1)
-                    {
-                        auto l0 = unwrap<0>(my);
-                        auto l1 = unwrap<1>(my);
+            return mx.continue_with(x0, x1);
+        }
+        else
+        {
+            auto l0 = unwrap<0>(mx);
+            auto l1 = unwrap<1>(mx);
 
-                        return my.continue_with(int_v<l0 + y0>, int_v<l1 + y1>);
-                    })(mx, x0, x1);
-        });
+            return mx.continue_with(int_v<l0 + x0>, int_v<l1 + x1>);
+        }
+    });
 
     auto r = static_b_acc(   // .
         int_v<1>, int_v<10>, // .
@@ -341,8 +323,8 @@ void TEST_CONST test_unary_for_accumulate_binary()
         int_v<3>, int_v<10>, // .
         int_v<4>, int_v<10>);
 
-    static_assert(decltype(unwrap<0>(r)){} == int_v<1 + 2 + 3 + 4>, "");
-    static_assert(decltype(unwrap<1>(r)){} == int_v<10 + 10 + 10 + 10>, "");
+    static_assert(decltype(unwrap<0>(r)){} == int_v<1 + 2 + 3 + 4> );
+    static_assert(decltype(unwrap<1>(r)){} == int_v<10 + 10 + 10 + 10> );
 }
 
 TEST_MAIN()

@@ -1,12 +1,12 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/pp/utils.hpp>
 #include <vrm/core/config.hpp>
+#include <vrm/pp/utils.hpp>
 
 // `VRM_CORE_ASSERT_FORCE_OFF` and `VRM_CORE_ASSERT_FORCE_ON` macros force
 // enabling/disabling of assertions.

@@ -1,8 +1,8 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/ostream_utils.hpp>
-#include <sstream>
 #include <cstring>
 #include <iomanip>
+#include <sstream>
+#include <vrm/core/ostream_utils.hpp>
 
 int main()
 {

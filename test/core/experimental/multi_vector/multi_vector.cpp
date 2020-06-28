@@ -1,6 +1,6 @@
 #include "../../../utils/test_utils.hpp"
-#include <vrm/core/experimental/multi_vector.hpp>
 #include <vrm/core/casts/arithmetic.hpp>
+#include <vrm/core/experimental/multi_vector.hpp>
 
 volatile int cc = 0;
 volatile int dd = 0;
@@ -63,13 +63,13 @@ int main()
             TEST_ASSERT_OP(dd, ==, 0);
 
             static_assert(
-                std::is_same<decltype(mv[0]), mv_type::value_reference_tuple>{},
-                "");
+                std::is_same<decltype(mv[0]), mv_type::value_reference_tuple>{}
+                );
 
             static_assert(
                 std::is_same<decltype(static_cast<const mv_type&>(mv)[0]),
-                    mv_type::const_value_reference_tuple>{},
-                "");
+                    mv_type::const_value_reference_tuple>{}
+                );
 
             mv.reserve(100);
 
@@ -126,12 +126,12 @@ int main()
         TEST_ASSERT_OP(dd, ==, 0);
 
         static_assert(
-            std::is_same<decltype(mv[0]), mv_type::value_reference_tuple>{},
-            "");
+            std::is_same<decltype(mv[0]), mv_type::value_reference_tuple>{}
+            );
 
         static_assert(std::is_same<decltype(static_cast<const mv_type&>(mv)[0]),
-                          mv_type::const_value_reference_tuple>{},
-            "");
+                          mv_type::const_value_reference_tuple>{}
+            );
 
         mv.reserve(100);
 
@@ -235,12 +235,12 @@ int main()
         TEST_ASSERT_OP(dd, ==, 0);
 
         static_assert(
-            std::is_same<decltype(mv[0]), mv_type::value_reference_tuple>{},
-            "");
+            std::is_same<decltype(mv[0]), mv_type::value_reference_tuple>{}
+            );
 
         static_assert(std::is_same<decltype(static_cast<const mv_type&>(mv)[0]),
-                          mv_type::const_value_reference_tuple>{},
-            "");
+                          mv_type::const_value_reference_tuple>{}
+            );
 
         mv.emplace_back(
             std::make_tuple(1), std::make_tuple(1.f), std::make_tuple());

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,10 +7,9 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <vrm/core/config/names.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace console
     {
@@ -24,7 +23,7 @@ VRM_CORE_NAMESPACE
 
             /// @brief Number of colors.
             constexpr sz_t color_count{16};
-        }
+        } // namespace impl
 
         /// @brief Enum class representing all the possible styles.
         enum class style : impl::style_type
@@ -59,6 +58,5 @@ VRM_CORE_NAMESPACE
             light_cyan = 15,
             light_white = 16
         };
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace console
+} // namespace vrm::core

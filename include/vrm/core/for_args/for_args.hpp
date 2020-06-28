@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,10 +6,10 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/for_args/for_args_data.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -20,7 +20,7 @@ VRM_CORE_NAMESPACE
             TF _f;
 
             template <typename T>
-            ignore_first_arg(T&& f) noexcept : _f{f}
+            explicit ignore_first_arg(T&& f) noexcept : _f{f}
             {
             }
 
@@ -30,20 +30,16 @@ VRM_CORE_NAMESPACE
                 _f(FWD(xs)...);
             }
         };
-    }
+    } // namespace impl
 
     template <sz_t TArity = 1, typename TF, typename... Ts>
-    VRM_CORE_ALWAYS_INLINE                             // .
-        constexpr void for_args(TF && f, Ts && ... xs) // .
+    VRM_CORE_ALWAYS_INLINE // .
+        constexpr void
+        for_args(TF&& f, Ts&&... xs) // .
         noexcept(noexcept(for_args_data<TArity>(
             impl::ignore_first_arg<decltype(f)>{f}, FWD(xs)...)))
     {
         for_args_data<TArity>(
-            [&f](auto, auto&&... rest)
-            {
-                f(FWD(rest)...);
-            },
-            FWD(xs)...);
+            [&f](auto, auto&&... rest) { f(FWD(rest)...); }, FWD(xs)...);
     }
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

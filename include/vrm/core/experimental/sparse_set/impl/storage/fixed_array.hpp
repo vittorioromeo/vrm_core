@@ -1,18 +1,18 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <array>
-#include <vrm/core/config.hpp>
-#include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases.hpp>
-#include <vrm/core/casts.hpp>
 #include "./shared.hpp"
+#include <array>
+#include <vrm/core/assert.hpp>
+#include <vrm/core/casts.hpp>
+#include <vrm/core/config.hpp>
+#include <vrm/core/type_aliases.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -35,27 +35,27 @@ VRM_CORE_NAMESPACE
                 std::array<sparse_type, TCapacity> _sparse;
                 sparse_type _end;
 
-                auto& dense() noexcept
+                [[nodiscard]] auto& dense() noexcept
                 {
                     return _dense;
                 }
 
-                const auto& dense() const noexcept
+                [[nodiscard]] const auto& dense() const noexcept
                 {
                     return _dense;
                 }
 
-                auto& sparse() noexcept
+                [[nodiscard]] auto& sparse() noexcept
                 {
                     return _sparse;
                 }
 
-                const auto& sparse() const noexcept
+                [[nodiscard]] const auto& sparse() const noexcept
                 {
                     return _sparse;
                 }
 
-                auto last_element_ptr() const noexcept
+                [[nodiscard]] auto last_element_ptr() const noexcept
                 {
                     return _end - 1;
                 }
@@ -72,7 +72,7 @@ VRM_CORE_NAMESPACE
                     ++_end;
                 }
 
-                bool is_null(sparse_type x) noexcept
+                [[nodiscard]] bool is_null(sparse_type x) noexcept
                 {
                     return x == nullptr;
                 }
@@ -87,7 +87,7 @@ VRM_CORE_NAMESPACE
                     --_end;
                 }
 
-                auto& value_from_sparse(sparse_type x) noexcept
+                [[nodiscard]] auto& value_from_sparse(sparse_type x) noexcept
                 {
                     return *x;
                 }
@@ -116,21 +116,18 @@ VRM_CORE_NAMESPACE
 
                 void clear() noexcept
                 {
-                    for_each([this](auto x)
-                        {
-                            _sparse[x] = nullptr;
-                        });
+                    for_each([this](auto x) { _sparse[x] = nullptr; });
 
                     _end = _dense.data();
                 }
 
-                bool has(T x) const noexcept
+                [[nodiscard]] bool has(T x) const noexcept
                 {
                     VRM_CORE_ASSERT_OP(x, <, TCapacity);
                     return _sparse[x] != nullptr;
                 }
 
-                auto capacity() const noexcept
+                [[nodiscard]] auto capacity() const noexcept
                 {
                     return TCapacity;
                 }
@@ -160,7 +157,7 @@ VRM_CORE_NAMESPACE
                 }
 
 
-                bool empty() const noexcept
+                [[nodiscard]] bool empty() const noexcept
                 {
                     return _end == _dense.data();
                 }
@@ -170,7 +167,7 @@ VRM_CORE_NAMESPACE
                     utils{}.pop_back_impl(*this);
                 }
 
-                auto back() const noexcept
+                [[nodiscard]] auto back() const noexcept
                 {
                     VRM_CORE_ASSERT_OP(size(), >, 0);
 
@@ -190,32 +187,32 @@ VRM_CORE_NAMESPACE
                     }
                 }
 
-                auto size() const noexcept
+                [[nodiscard]] auto size() const noexcept
                 {
                     return to_sz_t(end() - begin());
                 }
 
-                auto begin() noexcept
+                [[nodiscard]] auto begin() noexcept
                 {
                     return _dense.data();
                 }
 
-                auto begin() const noexcept
+                [[nodiscard]] auto begin() const noexcept
                 {
                     return _dense.data();
                 }
 
-                auto end() noexcept
+                [[nodiscard]] auto end() noexcept
                 {
                     return _end;
                 }
 
-                auto end() const noexcept
+                [[nodiscard]] auto end() const noexcept
                 {
                     return static_cast<const T*>(_end);
                 }
 
-                auto at(sz_t i) const noexcept
+                [[nodiscard]] auto at(sz_t i) const noexcept
                 {
                     VRM_CORE_ASSERT_OP(i, <, size());
                     return dense()[i];
@@ -229,7 +226,6 @@ VRM_CORE_NAMESPACE
                     swap(_end, rhs._end);
                 }
             };
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace sparse_set_storage
+    }     // namespace impl
+} // namespace vrm::core

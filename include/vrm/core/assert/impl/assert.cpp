@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -10,20 +10,13 @@
 
 #include <vrm/core/assert/impl/assert.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core::impl::assert
 {
-    namespace impl
+    [[nodiscard]] VRM_CORE_FN_API state& get_state() noexcept
     {
-        namespace assert
-        {
-            VRM_CORE_FN_API state& VRM_CORE_CONST_FN get_state() noexcept
-            {
-                thread_local state result;
-                return result;
-            }
-        }
+        thread_local state result;
+        return result;
     }
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core::impl::assert
 
 #endif

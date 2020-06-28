@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,13 +6,11 @@
 #pragma once
 
 #include <memory>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/static_if.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resizable_buffer/impl/resizable_buffer.hpp>
-#include <vrm/core/ostream_utils/nullptr_printer.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <typename T, typename TAllocator>
     void resizable_buffer<T, TAllocator>::construct_at(size_type idx)
@@ -28,14 +26,14 @@ VRM_CORE_NAMESPACE
 
 
     template <typename T, typename TAllocator>
-    VRM_CORE_ALWAYS_INLINE void swap(resizable_buffer<T, TAllocator> & lhs,
-        resizable_buffer<T, TAllocator> & rhs) noexcept(noexcept(lhs.swap(rhs)))
+    VRM_CORE_ALWAYS_INLINE void swap(resizable_buffer<T, TAllocator>& lhs,
+        resizable_buffer<T, TAllocator>& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
     }
 
     template <typename T, typename TAllocator>
-    void resizable_buffer<T, TAllocator>::swap(resizable_buffer & rhs) noexcept
+    void resizable_buffer<T, TAllocator>::swap(resizable_buffer& rhs) noexcept
     {
         using std::swap;
 
@@ -85,16 +83,15 @@ VRM_CORE_NAMESPACE
 
     template <typename T, typename TAllocator>
     resizable_buffer<T, TAllocator>::resizable_buffer(
-        resizable_buffer && rhs) noexcept
-        : _allocator{std::move(rhs._allocator)},
-          _data{std::move(rhs._data)}
+        resizable_buffer&& rhs) noexcept
+        : _allocator{std::move(rhs._allocator)}, _data{std::move(rhs._data)}
     {
         rhs._data = nullptr;
     }
 
     template <typename T, typename TAllocator>
     resizable_buffer<T, TAllocator>& resizable_buffer<T, TAllocator>::operator=(
-        resizable_buffer && rhs) noexcept
+        resizable_buffer&& rhs) noexcept
     {
         _allocator = std::move(rhs._allocator);
         _data = std::move(rhs._data);
@@ -122,15 +119,14 @@ VRM_CORE_NAMESPACE
         // Move existing items to new data.
         for(size_type i(0); i < old_capacity; ++i)
         {
-            static_if(std::is_move_constructible<T>{})
-                .then([&](auto& old_data)
-                    {
-                        new(&new_data[i]) T(std::move(old_data[i]));
-                    })
-                .else_([&](auto& old_data)
-                    {
-                        new(&new_data[i]) T(old_data[i]);
-                    })(_data);
+            if constexpr(std::is_move_constructible_v<T>)
+            {
+                new(&new_data[i]) T(std::move(_data[i]));
+            }
+            else
+            {
+                new(&new_data[i]) T(_data[i]);
+            }
         }
 
         destroy_and_deallocate(old_capacity);
@@ -176,8 +172,8 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename T, typename TAllocator>
-    VRM_CORE_ALWAYS_INLINE auto resizable_buffer<T, TAllocator>::data()
-        const noexcept
+    VRM_CORE_ALWAYS_INLINE auto resizable_buffer<T, TAllocator>::data() const
+        noexcept
     {
         return _data;
     }
@@ -199,10 +195,9 @@ VRM_CORE_NAMESPACE
     }
 
     template <typename T, typename TAllocator>
-    VRM_CORE_ALWAYS_INLINE auto resizable_buffer<T, TAllocator>::null()
-        const noexcept
+    VRM_CORE_ALWAYS_INLINE auto resizable_buffer<T, TAllocator>::null() const
+        noexcept
     {
         return data() == nullptr;
     }
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

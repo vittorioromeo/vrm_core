@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -26,7 +26,7 @@
         ::vrm::core::variadic_min(std::tuple_size<std::decay_t<Ts>>()...), \
         Ts...>::exec(FWD(f), FWD(ts)...)
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -96,7 +96,6 @@ VRM_CORE_NAMESPACE
             FWD(xs)...);
     }
 }
-VRM_CORE_NAMESPACE_END
 
 #undef VRM_CORE_IMPL_TPLFOR_CALL
 #undef VRM_CORE_IMPL_DEFINE_TPLFOR_FN

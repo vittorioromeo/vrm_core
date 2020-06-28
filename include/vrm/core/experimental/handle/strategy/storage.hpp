@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,12 +6,12 @@
 #pragma once
 
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/aliases.hpp>
+#include <vrm/core/experimental/handle/impl/settings.hpp>
 #include <vrm/core/experimental/handle/impl/storage.hpp>
+#include <vrm/core/utility_macros.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace handle
     {
@@ -50,7 +50,8 @@ VRM_CORE_NAMESPACE
                 storage_type _storage;
 
             public:
-                auto valid_handle(const handle_type& h) const noexcept
+                [[nodiscard]] auto valid_handle(const handle_type& h) const
+                    noexcept
                 {
                     // Compare local handle instance counter with storage
                     // counter.
@@ -89,12 +90,11 @@ VRM_CORE_NAMESPACE
                     return _storage.metadata_from_handle(h)._target;
                 }
 
-                const auto& access(const handle_type& h) const
+                [[nodiscard]] const auto& access(const handle_type& h) const
                 {
                     return _storage.metadata_from_handle(h)._target;
                 }
             };
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace strategy
+    }     // namespace handle
+} // namespace vrm::core

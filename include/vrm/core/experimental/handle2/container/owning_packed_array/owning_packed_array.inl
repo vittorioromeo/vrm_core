@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,13 +6,12 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/config/names.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle2/settings.hpp>
-#include <vrm/core/experimental/handle2/context.hpp>
 #include <vrm/core/experimental/handle2/container/owning_packed_array/owning_packed_array.hpp>
+#include <vrm/core/experimental/handle2/context.hpp>
+#include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace handle2
     {
@@ -44,9 +43,8 @@ VRM_CORE_NAMESPACE
                 // Invalidate metadata for handle `h`.
                 // Swap the last valid target with the destroyed one to maintain
                 // array packedness.
-                this->destroy_handle(h,
-                    [this](auto invalid_index, auto valid_index)
-                    {
+                this->destroy_handle(
+                    h, [this](auto invalid_index, auto valid_index) {
                         using std::swap;
                         swap(_targets[invalid_index], _targets[valid_index]);
                     });
@@ -57,7 +55,6 @@ VRM_CORE_NAMESPACE
             {
                 this->clear_metadata();
             }
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace container
+    }     // namespace handle2
+} // namespace vrm::core

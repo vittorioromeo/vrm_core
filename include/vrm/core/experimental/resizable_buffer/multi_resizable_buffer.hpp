@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -7,26 +7,26 @@
 
 #include <memory>
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resizable_buffer/resizable_buffer.hpp>
 #include <vrm/core/tuple_utils.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <typename... TBufferTypes>
     class multi_resizable_buffer;
 
     template <typename... Ts>
-    void swap(multi_resizable_buffer<Ts...> & lhs,
-        multi_resizable_buffer<Ts...> & rhs) // .
+    void swap(multi_resizable_buffer<Ts...>& lhs,
+        multi_resizable_buffer<Ts...>& rhs) // .
         noexcept(noexcept(lhs.swap(rhs)));
 
     template <typename... TBufferTypes>
     class VRM_CORE_CLASS_API multi_resizable_buffer
     {
-        VRM_CORE_STATIC_ASSERT_NM(sizeof...(TBufferTypes) > 0);
+        static_assert(sizeof...(TBufferTypes) > 0);
 
     private:
         using this_type = multi_resizable_buffer<TBufferTypes...>;
@@ -70,12 +70,7 @@ VRM_CORE_NAMESPACE
         template <typename TF>
         VRM_CORE_ALWAYS_INLINE void for_buffers(TF&& f)
         {
-            for_tuple(
-                [&f](auto& bx)
-                {
-                    f(bx);
-                },
-                _buffers);
+            for_tuple([&f](auto& bx) { f(bx); }, _buffers);
         }
 
 
@@ -83,21 +78,22 @@ VRM_CORE_NAMESPACE
         template <sz_t TN>
             VRM_CORE_ALWAYS_INLINE auto& nth_buffer() & noexcept
         {
-            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            static_assert(buffer_count > TN);
             return std::get<TN>(_buffers);
         }
 
         template <sz_t TN>
-        VRM_CORE_ALWAYS_INLINE const auto& nth_buffer() const& noexcept
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE const auto&
+        nth_buffer() const& noexcept
         {
-            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            static_assert(buffer_count > TN);
             return std::get<TN>(_buffers);
         }
 
         template <sz_t TN>
             VRM_CORE_ALWAYS_INLINE auto nth_buffer() && noexcept
         {
-            VRM_CORE_STATIC_ASSERT_NM(buffer_count > TN);
+            static_assert(buffer_count > TN);
             return std::move(std::get<TN>(_buffers));
         }
 
@@ -122,68 +118,47 @@ VRM_CORE_NAMESPACE
 
         void construct_at(size_type idx)
         {
-            for_buffers([this, &idx](auto& b)
-                {
-                    b.construct_at(idx);
-                });
+            for_buffers([this, &idx](auto& b) { b.construct_at(idx); });
         }
 
         void destroy_at(size_type idx)
         {
-            for_buffers([this, &idx](auto& b)
-                {
-                    b.destroy_at(idx);
-                });
+            for_buffers([this, &idx](auto& b) { b.destroy_at(idx); });
         }
 
         void destroy(size_type from, size_type to)
         {
-            for_buffers([this, &from, &to](auto& b)
-                {
-                    b.destroy(from, to);
-                });
+            for_buffers([this, &from, &to](auto& b) { b.destroy(from, to); });
         }
 
         void deallocate(size_type n)
         {
-            for_buffers([this, &n](auto& b)
-                {
-                    b.deallocate(n);
-                });
+            for_buffers([this, &n](auto& b) { b.deallocate(n); });
         }
 
         void destroy_and_deallocate(size_type n)
         {
-            for_buffers([this, &n](auto& b)
-                {
-                    b.destroy_and_deallocate(n);
-                });
+            for_buffers([&n](auto& b) { b.destroy_and_deallocate(n); });
         }
 
 
         void grow(size_type old_capacity, size_type new_capacity)
         {
-            for_buffers([this, &old_capacity, &new_capacity](auto& b)
-                {
-                    b.grow(old_capacity, new_capacity);
-                });
+            for_buffers([&old_capacity, &new_capacity](
+                            auto& b) { b.grow(old_capacity, new_capacity); });
         }
 
         void construct(size_type from, size_type to)
         {
-            for_buffers([this, &from, &to](auto& b)
-                {
-                    b.construct(from, to);
-                });
+            for_buffers([this, &from, &to](auto& b) { b.construct(from, to); });
         }
 
 
         void grow_and_construct(size_type old_capacity, size_type new_capacity)
         {
-            for_buffers([this, &old_capacity, &new_capacity](auto& b)
-                {
-                    b.grow_and_construct(old_capacity, new_capacity);
-                });
+            for_buffers([this, &old_capacity, &new_capacity](auto& b) {
+                b.grow_and_construct(old_capacity, new_capacity);
+            });
         }
 
         auto copy(size_type n)
@@ -191,8 +166,7 @@ VRM_CORE_NAMESPACE
             this_type result;
 
             for_tuple_data(
-                [this, &result, &n](auto data, auto&)
-                {
+                [this, &result, &n](auto data, auto&) {
                     auto& my_buffer(this->nth_buffer<decltype(data)::index>());
                     auto& result_buffer(
                         result.template nth_buffer<decltype(data)::index>());
@@ -218,7 +192,8 @@ VRM_CORE_NAMESPACE
         }
 
         template <sz_t... TIs>
-        auto data_builder(std::index_sequence<TIs...>) const noexcept
+        [[nodiscard]] auto data_builder(std::index_sequence<TIs...>) const
+            noexcept
         {
             return data_ptr_tuple{std::get<TIs>(_buffers).data()...};
         }
@@ -229,7 +204,7 @@ VRM_CORE_NAMESPACE
             return data_builder(buffer_indices{});
         }
 
-        auto data() const noexcept
+        [[nodiscard]] auto data() const noexcept
         {
             return data_builder(buffer_indices{});
         }
@@ -250,21 +225,20 @@ VRM_CORE_NAMESPACE
         /// @details Occurs if the buffer was not initialized or was moved.
         /// Checks only one of the buffers, assuming all of them are always
         /// initialized/moved at once.
-        auto null() const noexcept
+        [[nodiscard]] auto null() const noexcept
         {
             return nth_buffer<0>().null();
         }
     };
 
     template <typename... Ts>
-    VRM_CORE_ALWAYS_INLINE void swap(multi_resizable_buffer<Ts...> & lhs,
-        multi_resizable_buffer<Ts...> & rhs) // .
+    VRM_CORE_ALWAYS_INLINE void swap(multi_resizable_buffer<Ts...>& lhs,
+        multi_resizable_buffer<Ts...>& rhs) // .
         noexcept(noexcept(lhs.swap(rhs)))
     {
         lhs.swap(rhs);
     }
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core
 
 // TODO:
 // * split to inl

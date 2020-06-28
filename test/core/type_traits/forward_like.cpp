@@ -1,6 +1,6 @@
 #include "../../utils/test_utils.hpp"
-#include <vrm/core/type_traits/forward_like.hpp>
 #include <vrm/core/assert.hpp>
+#include <vrm/core/type_traits/forward_like.hpp>
 
 using namespace vrm::core;
 
@@ -55,7 +55,9 @@ struct nocopy
 };
 
 template <typename T>
-void g(T) { }
+void g(T)
+{
+}
 
 template <typename T0, typename T1>
 void f(T0&& x0, T1&& x1)

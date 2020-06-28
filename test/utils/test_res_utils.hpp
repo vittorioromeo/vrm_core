@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <vrm/core/experimental/resource.hpp>
 #include "./test_utils.hpp"
+#include <vrm/core/experimental/resource.hpp>
 
 namespace test
 {
@@ -39,7 +39,7 @@ namespace test
             if(h != null_handle()) ++killed;
         }
     };
-    static_assert(resource::is_valid_behavior<test_behavior>{}, "");
+    static_assert(resource::is_valid_behavior<test_behavior>{} );
 
     using unique_test = resource::unique<test_behavior>;
     using shared_test = resource::shared<test_behavior>;
@@ -74,6 +74,6 @@ namespace test
         created = killed = 0;
         f();
     }
-}
+} // namespace test
 
 #define RUN_T(x) run(#x, &x)

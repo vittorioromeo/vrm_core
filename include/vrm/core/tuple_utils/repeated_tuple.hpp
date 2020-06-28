@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,13 +6,13 @@
 #pragma once
 
 #include <tuple>
-#include <vrm/core/config.hpp>
 #include <vrm/core/assert.hpp>
-#include <vrm/core/utility_macros.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/config.hpp>
 #include <vrm/core/tuple_utils/for.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -38,7 +38,7 @@ VRM_CORE_NAMESPACE
             using type =
                 typename tuple_repeat_impl_helper<T, TS, std::tuple<>>::type;
         };
-    }
+    } // namespace impl
 
     /// @brief Type of a tuple with `T` repeated `TN` times.
     /// @code
@@ -54,14 +54,8 @@ VRM_CORE_NAMESPACE
     {
         auto result(repeated_tuple<TN, T>{});
 
-        for_tuple(
-            [&x](auto& elem)
-            {
-                elem = x;
-            },
-            result);
+        for_tuple([&x](auto& elem) { elem = x; }, result);
 
         return result;
     }
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

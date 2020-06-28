@@ -1,19 +1,19 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vector>
 #include <functional>
+#include <vector>
 #include <vrm/core/config.hpp>
-#include <vrm/core/utility_macros/fwd.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/delegate/signature_helper.hpp>
 #include <vrm/core/experimental/delegate/impl/base_delegate.hpp>
+#include <vrm/core/experimental/delegate/signature_helper.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
+#include <vrm/core/utility_macros/fwd.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -53,11 +53,8 @@ VRM_CORE_NAMESPACE
             std::vector<fn_return_type> result;
             result.reserve(self._functions.size());
 
-            call_and_use_result_impl(FWD(self),
-                [&result](auto&& x)
-                {
-                    result.emplace_back(FWD(x));
-                },
+            call_and_use_result_impl(
+                FWD(self), [&result](auto&& x) { result.emplace_back(FWD(x)); },
                 FWD(xs)...);
 
             return result;
@@ -76,7 +73,7 @@ VRM_CORE_NAMESPACE
                                                                             \
     template <typename TSettings>                                           \
     template <typename... Ts>                                               \
-    auto base_delegate<TSettings>::operator()(Ts && ... xs)                 \
+    auto base_delegate<TSettings>::operator()(Ts&&... xs)                   \
         qualifier noexcept(noexcept(call_impl(this_type{}, FWD(xs)...)))    \
     {                                                                       \
         return call_impl(*this, FWD(xs)...);                                \
@@ -114,6 +111,5 @@ VRM_CORE_NAMESPACE
         {
             return _functions.empty();
         }
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace impl
+} // namespace vrm::core

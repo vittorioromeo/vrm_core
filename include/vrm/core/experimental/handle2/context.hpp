@@ -1,16 +1,15 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/core/config/names.hpp>
-#include <vrm/core/utility_macros.hpp>
 #include <vrm/core/assert.hpp>
 #include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/utility_macros.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace handle2
     {
@@ -29,7 +28,7 @@ VRM_CORE_NAMESPACE
             {
                 return static_cast<TDerived&>(*this);
             }
-            const auto& derived() const noexcept
+            [[nodiscard]] const auto& derived() const noexcept
             {
                 return static_cast<const TDerived&>(*this);
             }
@@ -39,22 +38,23 @@ VRM_CORE_NAMESPACE
             {
                 return derived().counter(hd);
             }
-            const auto& counter(const handle_data_type& hd) const
+            [[nodiscard]] const auto& counter(const handle_data_type& hd) const
             {
                 return derived().counter(hd);
             }
 
-            const auto& data(const handle_type& h) const noexcept
+            [[nodiscard]] const auto& data(const handle_type& h) const noexcept
             {
                 return h._data;
             }
-            const auto& local_counter(const handle_type& h) const noexcept
+            [[nodiscard]] const auto& local_counter(const handle_type& h) const
+                noexcept
             {
                 return h._counter;
             }
 
         public:
-            auto valid(const handle_type& h) const
+            [[nodiscard]] auto valid(const handle_type& h) const
             {
                 return counter(data(h)) == local_counter(h);
             }
@@ -72,6 +72,5 @@ VRM_CORE_NAMESPACE
                 ++(counter(hd));
             }
         };
-    }
-}
-VRM_CORE_NAMESPACE_END
+    } // namespace handle2
+} // namespace vrm::core

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -6,12 +6,11 @@
 #pragma once
 
 #include <array>
-#include <vrm/core/config/names.hpp>
-#include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/experimental/handle2/settings.hpp>
 #include <vrm/core/experimental/handle2/context.hpp>
+#include <vrm/core/experimental/handle2/settings.hpp>
+#include <vrm/core/type_aliases/numerical.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace handle2
     {
@@ -45,7 +44,8 @@ VRM_CORE_NAMESPACE
                 // Next usable free metadata index.
                 handle_data_type _next_ref{0};
 
-                auto valid_hd(const handle_data_type& hd) const noexcept
+                [[nodiscard]] auto valid_hd(const handle_data_type& hd) const
+                    noexcept
                 {
                     return hd >= 0 && hd < capacity;
                 }
@@ -64,7 +64,7 @@ VRM_CORE_NAMESPACE
                 {
                     return _metadata[x];
                 }
-                const auto& metadata_at(sz_t x) const noexcept
+                [[nodiscard]] const auto& metadata_at(sz_t x) const noexcept
                 {
                     return _metadata[x];
                 }
@@ -73,7 +73,7 @@ VRM_CORE_NAMESPACE
                 {
                     return metadata_at(x)._counter;
                 }
-                const auto& counter(sz_t x) const
+                [[nodiscard]] const auto& counter(sz_t x) const
                 {
                     return metadata_at(x)._counter;
                 }
@@ -85,7 +85,6 @@ VRM_CORE_NAMESPACE
 
                 void clear_metadata() noexcept;
             };
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace manager
+    }     // namespace handle2
+} // namespace vrm::core

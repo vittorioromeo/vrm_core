@@ -16,10 +16,10 @@ TEST_MAIN()
     return 0;
 }
 
-static_assert(vrm::core::is_strong_typedef_v<my_int>, "");
-static_assert(vrm::core::is_strong_typedef_v<my_float>, "");
-static_assert(!vrm::core::is_strong_typedef_v<int>, "");
-static_assert(!vrm::core::is_strong_typedef_v<float>, "");
+static_assert(vrm::core::is_strong_typedef_v<my_int> );
+static_assert(vrm::core::is_strong_typedef_v<my_float> );
+static_assert(!vrm::core::is_strong_typedef_v<int> );
+static_assert(!vrm::core::is_strong_typedef_v<float> );
 
 SA_SAME((vrm::core::underlying_if_strong_typedef_type<int>), (int));
 SA_SAME((vrm::core::underlying_if_strong_typedef_type<double>), (double));

@@ -8,21 +8,13 @@ template <typename... Ts>
 int TEST_CONST acc(Ts... xs)
 {
     int res = 0;
-    for_args(
-        [&res](auto x)
-        {
-            res += x;
-        },
-        xs...);
+    for_args([&res](auto x) { res += x; }, xs...);
     return res;
 }
 
 TEST_MAIN()
 {
-    auto a = [](auto... ys)
-    {
-        return acc(ys...);
-    };
+    auto a = [](auto... ys) { return acc(ys...); };
 
     TEST_ASSERT_OP(
         a(1, 2, 3, 4, 5, 6, 7, 8), ==, 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8);

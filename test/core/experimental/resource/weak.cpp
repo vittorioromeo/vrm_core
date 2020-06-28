@@ -181,7 +181,7 @@ namespace test
 
         assert_ck(1, 1);
     }
-}
+} // namespace test
 
 TEST_MAIN()
 {

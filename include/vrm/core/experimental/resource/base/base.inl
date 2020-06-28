@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -9,7 +9,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/experimental/resource/base/base.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace resource
     {
@@ -30,7 +30,8 @@ VRM_CORE_NAMESPACE
 
             template <typename TBehavior>
             VRM_CORE_ALWAYS_INLINE base<TBehavior>::base(
-                const handle_type& handle) noexcept : _handle{handle}
+                const handle_type& handle) noexcept
+                : _handle{handle}
             {
             }
 
@@ -80,7 +81,6 @@ VRM_CORE_NAMESPACE
             {
                 return !is_null_handle();
             }
-        }
-    }
-}
-VRM_CORE_NAMESPACE_END
+        } // namespace impl
+    }     // namespace resource
+} // namespace vrm::core

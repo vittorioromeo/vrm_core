@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -10,14 +10,14 @@
 #include <vrm/core/type_aliases/numerical.hpp>
 #include <vrm/core/type_traits/common.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     template <typename T, typename TAllocator = ::std::allocator<T>>
     class resizable_buffer;
 
     template <typename T, typename TAllocator>
-    void swap(resizable_buffer<T, TAllocator> & lhs,
-        resizable_buffer<T, TAllocator> & rhs) // .
+    void swap(resizable_buffer<T, TAllocator>& lhs,
+        resizable_buffer<T, TAllocator>& rhs) // .
         noexcept(noexcept(lhs.swap(rhs)));
 
     template <typename T, typename TAllocator>
@@ -67,14 +67,13 @@ VRM_CORE_NAMESPACE
         auto copy(size_type n);
 
         auto data() noexcept;
-        auto data() const noexcept;
+        [[nodiscard]] auto data() const noexcept;
 
         auto& operator[](size_type idx) noexcept;
         const auto& operator[](size_type idx) const noexcept;
 
         /// @brief Returns `true` if the internal storage points to `nullptr'.
         /// @details Occurs if the buffer was not initialized or was moved.
-        auto null() const noexcept;
+        [[nodiscard]] auto null() const noexcept;
     };
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core

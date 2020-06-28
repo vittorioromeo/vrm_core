@@ -6,7 +6,7 @@ struct base
     virtual ~base()
     {
     }
-    virtual int x() const
+    [[nodiscard]] virtual int x() const
     {
         return 0;
     }
@@ -14,7 +14,7 @@ struct base
 
 struct derived final : base
 {
-    int x() const override
+    [[nodiscard]] int x() const override
     {
         return 1;
     }
@@ -22,7 +22,7 @@ struct derived final : base
 
 using namespace vrm::core;
 
-SA_TYPE((to_derived<derived>(base{})), (derived && ));
+SA_TYPE((to_derived<derived>(base{})), (derived &&));
 
 TEST_MAIN()
 {
@@ -31,8 +31,8 @@ TEST_MAIN()
     SA_TYPE((to_derived<derived>(d0)), (derived&));
     SA_TYPE((to_base<base>(d0)), (base&));
 
-    SA_TYPE((to_derived<derived>(std::move(d0))), (derived && ));
-    SA_TYPE((to_base<base>(std::move(d0))), (base && ));
+    SA_TYPE((to_derived<derived>(std::move(d0))), (derived &&));
+    SA_TYPE((to_base<base>(std::move(d0))), (base &&));
 
     base* bptr(&d0);
     base& bref(d0);

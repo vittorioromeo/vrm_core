@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
@@ -9,7 +9,7 @@
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     namespace impl
     {
@@ -21,11 +21,10 @@ VRM_CORE_NAMESPACE
         template <sz_t TIBegin, sz_t... TIs, typename... Ts>
         constexpr auto build_args_slice(
             std::index_sequence<TIs...>, Ts&&... xs) noexcept;
-    }
+    } // namespace impl
 
     /// @brief Returns a `[TIBegin, TIEnd)` slice of the variadic arguments.
     /// @details A `ref_tuple` is used to store the arguments.
     template <sz_t TIBegin, sz_t TIEnd, typename... Ts>
-    constexpr auto args_slice(Ts && ... xs) noexcept;
-}
-VRM_CORE_NAMESPACE_END
+    constexpr auto args_slice(Ts&&... xs) noexcept;
+} // namespace vrm::core

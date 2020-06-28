@@ -21,8 +21,8 @@ constexpr int test_cexpr()
 
 TEST_MAIN()
 {
-    VRM_CORE_STATIC_ASSERT(true, "");
-    VRM_CORE_STATIC_ASSERT_NM(true);
+    static_assert(true );
+    static_assert(true);
 
     using namespace vrm::core;
 

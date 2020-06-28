@@ -1,27 +1,29 @@
-// Copyright (c) 2015-2016 Vittorio Romeo
+// Copyright (c) 2015-2020 Vittorio Romeo
 // License: Academic Free License ("AFL") v. 3.0
 // AFL License page: http://opensource.org/licenses/AFL-3.0
 // http://vittorioromeo.info | vittorio.romeo@outlook.com
 
 #pragma once
 
-#include <vrm/pp/cat.hpp>
+#include <vrm/core/casts/impl/arithmetic.hpp>
+#include <vrm/core/casts/impl/overflow_check.hpp>
 #include <vrm/core/config.hpp>
 #include <vrm/core/type_aliases/numerical.hpp>
-#include <vrm/core/casts/impl/overflow_check.hpp>
-#include <vrm/core/casts/impl/arithmetic.hpp>
 
-#define VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER(type, name)                 \
-    template <typename T>                                                     \
-    VRM_CORE_ALWAYS_INLINE constexpr auto VRM_PP_CAT(to_, name)(T x) noexcept \
-    {                                                                         \
-        return to_num<type>(x);                                               \
+#include <vrm/pp/cat.hpp>
+
+#define VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER(type, name)                  \
+    template <typename T>                                                      \
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr type VRM_PP_CAT(to_, name)( \
+        T x) noexcept                                                          \
+    {                                                                          \
+        return to_num<type>(x);                                                \
     }
 
 #define VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER_SAME_NAME(type) \
     VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER(type, type)
 
-VRM_CORE_NAMESPACE
+namespace vrm::core
 {
     // Floating-point types.
     /// @brief Converts a number to `float`.
@@ -104,8 +106,7 @@ VRM_CORE_NAMESPACE
     // Special types.
     /// @brief Converts a number to `sz_t`.
     VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER_SAME_NAME(sz_t)
-}
-VRM_CORE_NAMESPACE_END
+} // namespace vrm::core
 
 #undef VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER_SAME_NAME
 #undef VRM_CORE_IMPL_DEFINE_NUM_TO_NUM_CONVERTER
