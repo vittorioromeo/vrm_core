@@ -9,38 +9,34 @@
 #include <vrm/core/assert.hpp>
 #include <vrm/core/type_aliases/integral_constant.hpp>
 
-namespace vrm::core
+namespace vrm::core::literals
 {
-    namespace literals
+    namespace impl
     {
-        namespace impl
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto combine(
+            long long x) noexcept
         {
-            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto combine(
-                long long x) noexcept
-            {
-                return x;
-            }
-
-            template <typename... Ts>
-            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto combine(
-                long long val, long long x, Ts... xs) noexcept
-            {
-                return combine(val * 10 + x, xs...);
-            }
-
-            [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto parse(
-                char c) noexcept
-            {
-                VRM_CORE_CONSTEXPR_ASSERT(c >= '0' && c <= '9');
-                return c - '0';
-            }
-        } // namespace impl
-
-        template <char... TCs>
-        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto
-        operator"" _c() noexcept
-        {
-            return llong_<impl::combine(0, impl::parse(TCs)...)>{};
+            return x;
         }
-    } // namespace literals
-} // namespace vrm::core
+
+        template <typename... Ts>
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto combine(
+            long long val, long long x, Ts... xs) noexcept
+        {
+            return combine(val * 10 + x, xs...);
+        }
+
+        [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto parse(
+            char c) noexcept
+        {
+            VRM_CORE_CONSTEXPR_ASSERT(c >= '0' && c <= '9');
+            return c - '0';
+        }
+    } // namespace impl
+
+    template <char... TCs>
+    [[nodiscard]] VRM_CORE_ALWAYS_INLINE constexpr auto operator"" _c() noexcept
+    {
+        return llong_<impl::combine(0, impl::parse(TCs)...)>{};
+    }
+} // namespace vrm::core::literals
